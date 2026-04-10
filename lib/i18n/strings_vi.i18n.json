@@ -1,0 +1,20 @@
+{
+  "login": {
+    "description": "Bắt đầu hành trình của bạn cùng SAA 2025.\nĐăng nhập để khám phá!",
+    "button": "LOGIN With Google",
+    "copyright": "Bản quyền thuộc về Sun* © 2025"
+  },
+  "language": {
+    "vi": "VN",
+    "en": "EN",
+    "selectorLabel": "Chọn ngôn ngữ"
+  },
+  "error": {
+    "network": "Không có kết nối mạng. Vui lòng thử lại.",
+    "auth": "Đăng nhập thất bại. Vui lòng thử lại."
+  },
+  "accessibility": {
+    "loginButton": "Đăng nhập bằng Google",
+    "languageSelector": "Chọn ngôn ngữ, hiện tại: Tiếng Việt"
+  }
+}

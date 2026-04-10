@@ -1,0 +1,20 @@
+{
+  "login": {
+    "description": "Start your journey with SAA 2025.\nLog in to explore!",
+    "button": "LOGIN With Google",
+    "copyright": "Copyright belongs to Sun* © 2025"
+  },
+  "language": {
+    "vi": "VN",
+    "en": "EN",
+    "selectorLabel": "Select language"
+  },
+  "error": {
+    "network": "No internet connection. Please try again.",
+    "auth": "Login failed. Please try again."
+  },
+  "accessibility": {
+    "loginButton": "Sign in with Google",
+    "languageSelector": "Select language, currently: English"
+  }
+}
