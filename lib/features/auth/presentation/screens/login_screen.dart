@@ -12,11 +12,34 @@ import 'package:saa_mobile/features/auth/presentation/widgets/login_footer.dart'
 import 'package:saa_mobile/features/auth/presentation/widgets/login_header.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  late final AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleListener = AppLifecycleListener(
+      onResume: () {
+        ref.read(authViewModelProvider.notifier).handleAppResumed();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
     // Watch locale to trigger rebuild when language changes
     ref.watch(localeNotifierProvider);

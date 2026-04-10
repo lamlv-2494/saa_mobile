@@ -5,8 +5,6 @@ abstract final class EnvConfig {
 
   static String get supabaseAnonKey => dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
-  static String get googleClientId => dotenv.env['GOOGLE_CLIENT_ID'] ?? '';
-
   static bool get isConfigured =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 }

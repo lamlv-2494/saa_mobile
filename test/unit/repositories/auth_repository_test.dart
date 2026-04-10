@@ -19,41 +19,31 @@ void main() {
   });
 
   group('signInWithGoogle', () {
-    test('should call dataSource.signInWithGoogle', () async {
-      when(() => mockDataSource.signInWithGoogle()).thenAnswer((_) async {});
-      when(() => mockDataSource.currentUser).thenReturn(null);
+    test('should call dataSource.signInWithGoogle and return true', () async {
+      when(
+        () => mockDataSource.signInWithGoogle(),
+      ).thenAnswer((_) async => true);
 
-      try {
-        await repository.signInWithGoogle();
-      } catch (_) {}
+      final result = await repository.signInWithGoogle();
 
       verify(() => mockDataSource.signInWithGoogle()).called(1);
+      expect(result, isTrue);
     });
 
-    test('should return user on successful sign in', () async {
-      final mockUser = MockUser();
-      when(() => mockDataSource.signInWithGoogle()).thenAnswer((_) async {});
-      when(() => mockDataSource.currentUser).thenReturn(mockUser);
+    test('should return false when browser launch fails', () async {
+      when(
+        () => mockDataSource.signInWithGoogle(),
+      ).thenAnswer((_) async => false);
 
       final result = await repository.signInWithGoogle();
 
-      expect(result, equals(mockUser));
+      expect(result, isFalse);
     });
 
-    test('should accept any Google email (no domain restriction)', () async {
-      final mockUser = MockUser();
-      when(() => mockUser.email).thenReturn('test@gmail.com');
-      when(() => mockDataSource.signInWithGoogle()).thenAnswer((_) async {});
-      when(() => mockDataSource.currentUser).thenReturn(mockUser);
-
-      final result = await repository.signInWithGoogle();
-
-      expect(result, equals(mockUser));
-    });
-
-    test('should throw when no user returned after sign in', () async {
-      when(() => mockDataSource.signInWithGoogle()).thenAnswer((_) async {});
-      when(() => mockDataSource.currentUser).thenReturn(null);
+    test('should propagate exception from dataSource', () async {
+      when(
+        () => mockDataSource.signInWithGoogle(),
+      ).thenThrow(Exception('Auth error'));
 
       expect(() => repository.signInWithGoogle(), throwsA(isA<Exception>()));
     });

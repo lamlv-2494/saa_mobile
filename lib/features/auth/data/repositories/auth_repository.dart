@@ -4,10 +4,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:saa_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
 
 abstract class AuthRepository {
-  Future<User> signInWithGoogle();
+  Future<bool> signInWithGoogle();
   Future<void> signOut();
   User? get currentUser;
   Session? get currentSession;
+  Stream<AuthState> get onAuthStateChange;
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -17,15 +18,8 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _dataSource;
 
   @override
-  Future<User> signInWithGoogle() async {
-    await _dataSource.signInWithGoogle();
-
-    final user = _dataSource.currentUser;
-    if (user == null) {
-      throw Exception('No user returned after sign in');
-    }
-
-    return user;
+  Future<bool> signInWithGoogle() async {
+    return _dataSource.signInWithGoogle();
   }
 
   @override
@@ -38,6 +32,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Session? get currentSession => _dataSource.currentSession;
+
+  @override
+  Stream<AuthState> get onAuthStateChange => _dataSource.onAuthStateChange;
 }
 
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
