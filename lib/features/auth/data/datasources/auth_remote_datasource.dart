@@ -1,10 +1,8 @@
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:saa_mobile/core/env/env_config.dart';
-
 abstract class AuthRemoteDataSource {
-  Future<void> signInWithGoogle();
+  Future<bool> signInWithGoogle();
   Future<void> signOut();
   User? get currentUser;
   Session? get currentSession;
@@ -12,46 +10,29 @@ abstract class AuthRemoteDataSource {
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  AuthRemoteDataSourceImpl({
-    required SupabaseClient client,
-    GoogleSignIn? googleSignIn,
-  })  : _client = client,
-        _googleSignIn = googleSignIn ??
-            GoogleSignIn(
-              serverClientId: EnvConfig.googleClientId,
-              scopes: ['email'],
-            );
+  AuthRemoteDataSourceImpl({required SupabaseClient client})
+    : _client = client;
 
   final SupabaseClient _client;
-  final GoogleSignIn _googleSignIn;
 
   GoTrueClient get _auth => _client.auth;
 
   @override
-  Future<void> signInWithGoogle() async {
-    final googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      throw Exception('Google sign-in cancelled');
+  Future<bool> signInWithGoogle() async {
+    try {
+      final success = await _auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'io.supabase.saamobile://login-callback/',
+      );
+      return success;
+    } on AuthException catch (e) {
+      debugPrint('Google sign-in error: ${e.message}');
+      throw Exception(e.message);
     }
-
-    final googleAuth = await googleUser.authentication;
-    final idToken = googleAuth.idToken;
-    final accessToken = googleAuth.accessToken;
-
-    if (idToken == null) {
-      throw Exception('No ID token received from Google');
-    }
-
-    await _auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
   }
 
   @override
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
     await _auth.signOut();
   }
 

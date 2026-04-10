@@ -35,15 +35,16 @@ Chuyển đến màn hình Home.
 
 1. **Given** người dùng chưa đăng nhập và đang ở màn hình Login,
    **When** nhấn nút "LOGIN With Google",
-   **Then** hệ thống hiển thị Google OAuth consent screen.
+   **Then** hệ thống mở trình duyệt hệ thống (external browser) hiển thị Google OAuth consent screen thông qua Supabase OAuth flow.
 
 2. **Given** người dùng đã chọn tài khoản Google (bất kỳ email nào),
-   **When** Google trả về token xác thực thành công,
-   **Then** hệ thống chuyển hướng đến màn hình Home ([iOS] Home).
+   **When** Google trả về xác thực thành công,
+   **Then** Supabase server redirect về app qua deep link (`io.supabase.saamobile://login-callback/`), app nhận session từ auth state stream và chuyển hướng đến màn hình Home ([iOS] Home).
 
 3. **Given** người dùng đang trong quá trình xác thực,
-   **When** Google OAuth đang xử lý,
+   **When** trình duyệt đang mở Google OAuth,
    **Then** nút Login hiển thị trạng thái loading và không cho phép nhấn lại.
+   **Note**: Khi app bị đẩy xuống background (browser foreground), loading state vẫn giữ. Khi user quay lại app (resume) mà OAuth chưa complete, loading state vẫn hiển thị cho đến khi nhận callback hoặc bị cancel.
 
 4. **Given** người dùng đã chọn tài khoản Google,
    **When** xác thực thất bại (lỗi mạng),
@@ -52,6 +53,10 @@ Chuyển đến màn hình Home.
 5. **Given** người dùng đã đăng nhập trước đó và session còn hợp lệ,
    **When** mở lại ứng dụng,
    **Then** hệ thống bỏ qua màn hình Login và chuyển thẳng đến Home.
+
+6. **Given** người dùng đã nhấn Login và browser đã mở,
+   **When** người dùng đóng browser hoặc nhấn back mà không hoàn thành OAuth,
+   **Then** app resume, loading state PHẢI được reset về trạng thái bình thường (unauthenticated). Không hiển thị lỗi.
 
 ---
 
@@ -87,9 +92,11 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 - Người dùng nhấn nút Login nhiều lần liên tục → Chỉ gửi 1 request OAuth (debounce/disable).
 - Mất kết nối internet khi nhấn Login → Hiển thị SnackBar lỗi mạng ở bottom screen.
-- Google OAuth bị hủy bởi người dùng (back/cancel) → Quay lại màn Login, trạng thái bình thường.
+- Google OAuth bị hủy bởi người dùng (back/close browser) → Quay lại màn Login, trạng thái bình thường (loading state reset).
 - Token Google hết hạn trong quá trình xử lý → Retry hoặc hiển thị SnackBar lỗi.
-- Thiết bị không có Google Play Services (Android) → Hiển thị SnackBar yêu cầu cài đặt.
+- Thiết bị không có trình duyệt mặc định (hiếm) → `signInWithOAuth` trả `false`, hiển thị SnackBar lỗi "Không thể mở trình duyệt".
+- Deep link callback không được nhận (browser không redirect về app) → User quay lại app thủ công, loading state cần timeout hoặc reset khi app resume.
+- Supabase local dev trên Android emulator → cần `adb reverse tcp:54321 tcp:54321` để browser reach được Supabase server.
 - Màn hình bị rotate → App PHẢI lock portrait mode trên màn hình Login.
 
 ---
@@ -114,7 +121,7 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 - **From**: App launch (splash screen / cold start)
 - **To**: [iOS] Home (screen_id: OuH1BUTYT0) — sau khi đăng nhập thành công
 - **Triggers**:
-  - Nhấn "LOGIN With Google" → Google OAuth → Home
+  - Nhấn "LOGIN With Google" → mở external browser → Google OAuth → Supabase callback → deep link `io.supabase.saamobile://login-callback/` → app nhận session qua `onAuthStateChange` → GoRouter redirect → Home
   - Nhấn Language Selector → Popup menu bên dưới (VN/EN) → chọn → cập nhật text
 
 ### Visual Requirements
@@ -134,9 +141,11 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 - **Nền**: #EF4444 (đỏ) với opacity 90%
 - **Text**: #FFFFFF, Montserrat 14px, weight 400
 - **Duration**: 4 giây, tự đóng hoặc tap để dismiss
+- **Error messages PHẢI qua i18n (slang)** — KHÔNG hiển thị raw exception message. Map exception type → i18n key.
 - **Nội dung lỗi**:
-  - Lỗi mạng: "Không có kết nối mạng. Vui lòng thử lại."
-  - Lỗi xác thực: "Đăng nhập thất bại. Vui lòng thử lại."
+  - Lỗi mạng: i18n key `errorNetwork` → "Không có kết nối mạng. Vui lòng thử lại." / "No internet connection. Please try again."
+  - Lỗi xác thực: i18n key `errorAuth` → "Đăng nhập thất bại. Vui lòng thử lại." / "Sign in failed. Please try again."
+  - Không mở được browser: i18n key `errorBrowser` → "Không thể mở trình duyệt." / "Could not open browser."
   - OAuth bị hủy: Không hiển thị lỗi, quay lại trạng thái bình thường.
 
 ### Loading State UI
@@ -167,12 +176,13 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 ### Functional Requirements
 
-- **FR-001**: Hệ thống PHẢI hỗ trợ đăng nhập qua Google OAuth 2.0 thông qua Supabase Auth.
+- **FR-001**: Hệ thống PHẢI hỗ trợ đăng nhập qua Google OAuth 2.0 thông qua Supabase OAuth flow (browser-based, `signInWithOAuth`). KHÔNG sử dụng native `google_sign_in` SDK.
 - **FR-002**: Hệ thống PHẢI lưu session/token sau khi đăng nhập thành công.
 - **FR-003**: Hệ thống PHẢI tự động chuyển đến Home nếu user đã có session hợp lệ.
 - **FR-004**: Hệ thống PHẢI hiển thị trạng thái loading khi đang xác thực.
 - **FR-005**: Hệ thống PHẢI ngăn chặn double-tap trên nút Login.
-- **FR-006**: Hệ thống PHẢI hiển thị thông báo lỗi khi xác thực thất bại.
+- **FR-006**: Hệ thống PHẢI hiển thị thông báo lỗi (qua i18n) khi xác thực thất bại. Error messages KHÔNG ĐƯỢC hiển thị raw exception — PHẢI map sang user-friendly i18n string.
+- **FR-011**: Hệ thống PHẢI reset loading state khi user quay lại app mà OAuth chưa hoàn thành (cancel/back từ browser). Có thể detect qua `AppLifecycleState.resumed` + kiểm tra auth state vẫn là loading sau một khoảng delay.
 - **FR-007**: Hệ thống PHẢI hỗ trợ chuyển đổi ngôn ngữ (VN, EN) trước khi đăng nhập qua PopupMenuButton (menu hiển thị bên dưới selector). Chỉ 2 ngôn ngữ.
 - **FR-008**: Hệ thống PHẢI lưu ngôn ngữ đã chọn vào local storage.
 - **FR-009**: Tất cả text hiển thị PHẢI hỗ trợ i18n thông qua slang.
@@ -180,15 +190,22 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 ### Technical Requirements
 
-- **TR-001**: Authentication PHẢI sử dụng Supabase Auth với Google OAuth provider.
-- **TR-002**: Token/session PHẢI được lưu trữ an toàn (secure storage).
+- **TR-001**: Authentication PHẢI sử dụng Supabase Auth với Google OAuth provider qua `signInWithOAuth` (browser-based PKCE flow). KHÔNG dùng native `google_sign_in` SDK.
+- **TR-002**: Token/session PHẢI được lưu trữ an toàn (secure storage — Supabase Flutter SDK tự quản lý).
 - **TR-003**: Thời gian phản hồi đăng nhập KHÔNG ĐƯỢC vượt quá 10 giây (timeout).
 - **TR-004**: Ngôn ngữ preference PHẢI được lưu trữ bằng SharedPreferences hoặc tương đương.
 - **TR-005**: Background image PHẢI load từ asset, KHÔNG phải network.
 - **TR-006**: Màn hình PHẢI hiển thị đúng trên các kích thước iPhone và Android phổ biến.
 - **TR-007**: Màn hình PHẢI lock portrait orientation.
 - **TR-008**: Status bar PHẢI hiển thị light content (text trắng) trên nền tối.
-- **TR-009**: Supabase credentials (URL, Anon Key) PHẢI được lưu trong file `.env` sử dụng package `flutter_dotenv`. File `.env` PHẢI nằm trong `.gitignore`.
+- **TR-009**: Supabase credentials (URL, Anon Key) PHẢI được lưu trong file `.env` sử dụng package `flutter_dotenv`. File `.env` PHẢI nằm trong `.gitignore`. KHÔNG cần `GOOGLE_CLIENT_ID` trong `.env` (OAuth flow do Supabase server xử lý).
+- **TR-010**: Deep link PHẢI được cấu hình cho OAuth callback:
+  - Scheme: `io.supabase.saamobile`
+  - Redirect URL: `io.supabase.saamobile://login-callback/`
+  - Android: `intent-filter` trong `AndroidManifest.xml` với scheme `io.supabase.saamobile`
+  - iOS: `CFBundleURLSchemes` trong `Info.plist` với scheme `io.supabase.saamobile`
+  - Supabase: URL PHẢI được thêm vào `additional_redirect_urls` trong `supabase/config.toml`
+- **TR-011**: Auth state PHẢI được lắng nghe qua `onAuthStateChange` stream (Supabase SDK) để nhận session sau khi browser redirect về app. KHÔNG lấy user trực tiếp sau `signInWithOAuth` (method chỉ trả `bool` cho browser launch).
 
 ### Key Entities (nếu feature liên quan data)
 
@@ -202,9 +219,11 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 | Endpoint | Method | Purpose | Status |
 |----------|--------|---------|--------|
-| Supabase Auth - Google OAuth | POST | Khởi tạo và xử lý Google OAuth flow | Built-in Supabase |
-| Supabase Auth - Get Session | GET | Kiểm tra session hiện tại | Built-in Supabase |
-| Supabase Auth - Refresh Token | POST | Làm mới token khi hết hạn | Built-in Supabase |
+| Supabase Auth - `signInWithOAuth(google)` | Browser redirect | Mở browser → Google consent → callback về app qua deep link | Built-in Supabase |
+| Supabase Auth - `getSessionFromUrl` | Internal | Nhận session từ deep link callback URL (tự động bởi `supabase_flutter`) | Built-in Supabase |
+| Supabase Auth - `onAuthStateChange` | Stream | Lắng nghe thay đổi auth state (signed_in, signed_out) | Built-in Supabase |
+| Supabase Auth - Get Session | GET | Kiểm tra session hiện tại khi app khởi động | Built-in Supabase |
+| Supabase Auth - Refresh Token | POST | Làm mới token khi hết hạn (tự động bởi SDK) | Built-in Supabase |
 
 ---
 
@@ -212,18 +231,16 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 ### Local State (Widget)
 
-- `isLoading`: Boolean — trạng thái đang xác thực (hiển thị spinner, disable button)
-- `errorMessage`: String? — thông báo lỗi (null khi không có lỗi)
+- Không có local state riêng — loading và error được quản lý qua `AuthState` freezed union trong global state (`authViewModelProvider`). Widget chỉ derive `isLoading` từ `AuthState.loading()` để hiển thị UI.
 
 ### Global State (Riverpod)
 
-- `authProvider`: StateNotifierProvider — quản lý AuthSession (login, logout, check session)
-- `localeProvider`: StateProvider<Locale> — quản lý ngôn ngữ đã chọn
-- `userProvider`: FutureProvider — lấy thông tin user từ session
+- `authViewModelProvider`: AsyncNotifierProvider<AuthViewModel, AuthState> — quản lý login flow (signInWithOAuth → loading → lắng nghe onAuthStateChange stream → authenticated/error), check session, sign out
+- `localeNotifierProvider`: StateNotifierProvider<LocaleNotifier, Locale> — quản lý ngôn ngữ đã chọn, persist qua SharedPreferences
 
 ### Cache
 
-- **AuthSession**: Lưu trữ secure (flutter_secure_storage hoặc Supabase built-in)
+- **AuthSession**: Supabase Flutter SDK tự quản lý (persist + auto refresh)
 - **Locale**: SharedPreferences
 - **Background image**: Asset bundle (không cache thêm)
 
@@ -247,7 +264,7 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 - Quên mật khẩu / reset password
 - Xác thực hai yếu tố (2FA) ngoài Google OAuth
 - Chế độ offline
-- Deep linking đến màn hình Login
+- Navigation deep linking đến màn hình Login (lưu ý: OAuth callback deep link `io.supabase.saamobile://login-callback/` IS trong scope — đây là technical deep link, không phải user-facing deep link)
 
 ---
 
@@ -262,7 +279,9 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 
 ## Notes
 
-- Supabase Auth đã built-in hỗ trợ Google OAuth — sử dụng `supabase_flutter` package.
+- Supabase Auth sử dụng **browser-based OAuth flow** (`signInWithOAuth`) — KHÔNG dùng native `google_sign_in` SDK. Ưu điểm: không cần SHA-1 fingerprint hay cấu hình Google Cloud Console cho Android/iOS client.
+- **Deep link callback**: `io.supabase.saamobile://login-callback/` — cần cấu hình trên cả Android (`AndroidManifest.xml`), iOS (`Info.plist`), và Supabase (`config.toml` → `additional_redirect_urls`).
+- **Auth state**: Sau khi browser redirect về app, session được nhận qua `onAuthStateChange` stream (Supabase SDK tự handle deep link qua `app_links` package).
 - Thiết kế gốc dựa trên iPhone (375x812px) — cần responsive cho các thiết bị khác.
 - Hình nền key visual và logo "ROOT FURTHER" là asset tĩnh, cần export từ Figma.
 - Ngôn ngữ hỗ trợ: **VN, EN** (đã cập nhật — bỏ JA, chỉ 2 ngôn ngữ).
@@ -270,5 +289,6 @@ Kiểm tra tất cả text trên màn hình Login đã thay đổi.
 - Không giới hạn email domain — bất kỳ tài khoản Google nào cũng có thể đăng nhập.
 - Font Montserrat: Load qua `google_fonts` package (cần kết nối mạng lần đầu, sau đó cache).
 - Nút Login chỉ có 1 loại (Google) — không cần layout cho nhiều nút social login.
-- **Supabase credentials**: Lưu trong `.env` file dùng `flutter_dotenv` — KHÔNG dùng `--dart-define`. File `.env` phải nằm trong `.gitignore`. Tạo `.env.example` cho team reference.
-- **Packages cần bổ sung vào constitution**: `google_fonts`, `supabase_flutter`, `flutter_secure_storage`, `flutter_riverpod`, `go_router`, `flutter_dotenv`, `google_sign_in` — hiện chưa có trong danh sách approved packages.
+- **Supabase credentials**: Lưu trong `.env` file dùng `flutter_dotenv` — KHÔNG dùng `--dart-define`. File `.env` chỉ cần `SUPABASE_URL` và `SUPABASE_ANON_KEY` (không cần `GOOGLE_CLIENT_ID`). File `.env` phải nằm trong `.gitignore`. Tạo `.env.example` cho team reference.
+- **Local development**: Khi chạy Supabase local trên Android emulator, cần `adb reverse tcp:54321 tcp:54321` để browser trên emulator truy cập được Supabase server trên host.
+- **Packages**: `google_fonts`, `supabase_flutter`, `flutter_riverpod`, `go_router`, `flutter_dotenv`, `shared_preferences`, `flutter_svg`, `freezed_annotation` — KHÔNG dùng `google_sign_in` hay `flutter_secure_storage` (Supabase SDK tự quản lý session).
