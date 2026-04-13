@@ -1,7 +1,7 @@
 # SCREENFLOW - SAA Mobile
 
 > Auto-generated screen flow mapping from Figma designs.
-> Last updated: 2026-04-10
+> Last updated: 2026-04-13
 
 ## Project Info
 
@@ -17,9 +17,9 @@
 | Metric       | Count |
 | ------------ | ----- |
 | Total iOS    | 30    |
-| Discovered   | 1     |
-| Pending      | 29    |
-| Progress     | 3%    |
+| Discovered   | 2     |
+| Pending      | 28    |
+| Progress     | 7%    |
 
 ## Screens
 
@@ -48,7 +48,7 @@
 | 21 | [iOS] Profile bản thân | hSH7L8doXB | pending | | |
 | 22 | [iOS] Profile người khác | bEpdheM0yU | pending | | |
 | 23 | [iOS] Sun*Kudos | _b68CBWKl5 | pending | | |
-| 24 | [iOS] Sun*Kudos_All Kudos | j_a2GQWKDJ | pending | | |
+| 24 | [iOS] Sun*Kudos_All Kudos | j_a2GQWKDJ | discovered | GET /api/kudos, POST /api/kudos/:id/like | Home (FAB), Sun*Kudos → View kudo, View kudo ẩn danh, Profile, Home, Awards, Kudos, Profile (bottom nav) |
 | 25 | [iOS] Sun*Kudos_Gửi lời chúc Kudos | PV7jBVZU1N | pending | | |
 | 26 | [iOS] Sun*Kudos_Searching | hldqjHoSRH | pending | | |
 | 27 | [iOS] Sun*Kudos_Search Sunner | 3jgwke3E8O | pending | | |
@@ -87,6 +87,15 @@ graph TD
     Home -->|Award card: Chi tiết| Awards_TopTalent
     Home -->|FAB: Pencil| SendKudos
     Home -->|FAB: Kudos icon| KudosAllKudos
+    Kudos -->|Xem tất cả| KudosAllKudos
+    KudosAllKudos -->|Back button| Home
+    KudosAllKudos -->|Nhấn thẻ Kudo| ViewKudo["[iOS] Sun*Kudos_View kudo"]
+    KudosAllKudos -->|Nhấn Kudo ẩn danh| ViewKudoAnon["[iOS] Sun*Kudos_View kudo ẩn danh"]
+    KudosAllKudos -->|Nhấn avatar/tên| ProfileOther["[iOS] Profile người khác"]
+    KudosAllKudos -->|Bottom Nav: SAA| Home
+    KudosAllKudos -->|Bottom Nav: Awards| Awards_TopTalent
+    KudosAllKudos -->|Bottom Nav: Kudos| Kudos
+    KudosAllKudos -->|Bottom Nav: Profile| Profile
 ```
 
 ## API Endpoints Summary
@@ -96,6 +105,9 @@ graph TD
 | GET | /api/awards | [iOS] Home | Load award categories list |
 | GET | /api/kudos/info | [iOS] Home | Load Kudos section info |
 | GET | /api/event/countdown | [iOS] Home | Get countdown timer data |
+| GET | /api/kudos | [iOS] Sun*Kudos_All Kudos | Lấy danh sách tất cả Kudos (phân trang) |
+| POST | /api/kudos/:id/like | [iOS] Sun*Kudos_All Kudos | Thả tim cho Kudo |
+| GET | /api/kudos/:id | [iOS] Sun*Kudos_All Kudos | Lấy chi tiết Kudo |
 
 ## Screen Groups
 
@@ -115,3 +127,4 @@ graph TD
 | Date | Screen | Action | Notes |
 |------|--------|--------|-------|
 | 2026-04-10 | [iOS] Home | discovered | Hero screen with countdown, awards section, kudos section, FAB, bottom nav |
+| 2026-04-13 | [iOS] Sun*Kudos_All Kudos | discovered | Danh sách cuộn dọc tất cả Kudos; 4 Kudo cards hiển thị; mỗi card có sender-receiver, nội dung, hashtag, action (like/share); bottom nav; back button |
