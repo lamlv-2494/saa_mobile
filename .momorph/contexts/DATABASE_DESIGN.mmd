@@ -1,0 +1,174 @@
+erDiagram
+    users ||--o{ kudos : "sends"
+    users ||--o{ kudos : "receives"
+    users ||--o{ kudos_reactions : "reacts"
+    users ||--o{ kudos_reports : "reports"
+    users ||--o{ secret_boxes : "owns"
+    users ||--o{ notifications : "receives"
+    users ||--o{ search_history : "searches"
+    users ||--o{ user_badges : "earns"
+    users }o--|| departments : "belongs_to"
+
+    kudos ||--o{ kudos_photos : "has"
+    kudos ||--o{ kudos_hashtags : "tagged_with"
+    kudos ||--o{ kudos_reactions : "receives"
+    kudos ||--o{ kudos_reports : "flagged_by"
+
+    hashtags ||--o{ kudos_hashtags : "used_in"
+    badges ||--o{ user_badges : "awarded_to"
+    events ||--o{ award_categories : "has"
+
+    users {
+        bigint id PK
+        uuid auth_id UK
+        varchar email UK
+        varchar name
+        varchar avatar_url
+        varchar team_code
+        bigint department_id FK
+        varchar hero_tier
+        varchar language_preference
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz deleted_at
+    }
+
+    departments {
+        bigint id PK
+        varchar name
+        varchar code UK
+        timestamptz created_at
+    }
+
+    events {
+        bigint id PK
+        varchar theme_name
+        timestamptz event_date
+        varchar venue
+        text livestream_note
+        text theme_description
+        varchar hero_image_url
+        varchar theme_logo_url
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    award_categories {
+        bigint id PK
+        bigint event_id FK
+        varchar name
+        varchar slug UK
+        text description
+        varchar image_url
+        int quantity
+        varchar unit
+        decimal prize_value
+        varchar prize_note
+        int sort_order
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    hashtags {
+        bigint id PK
+        varchar name UK
+        timestamptz created_at
+    }
+
+    kudos {
+        bigint id PK
+        bigint sender_id FK
+        bigint recipient_id FK
+        text message
+        varchar award_category_name
+        boolean is_anonymous
+        varchar status
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz deleted_at
+    }
+
+    kudos_photos {
+        bigint id PK
+        bigint kudos_id FK
+        varchar image_url
+        int sort_order
+        timestamptz created_at
+    }
+
+    kudos_hashtags {
+        bigint kudos_id PK
+        bigint hashtag_id PK
+    }
+
+    kudos_reactions {
+        bigint id PK
+        bigint kudos_id FK
+        bigint user_id FK
+        timestamptz created_at
+    }
+
+    kudos_reports {
+        bigint id PK
+        bigint kudos_id FK
+        bigint reporter_id FK
+        text reason
+        varchar status
+        timestamptz created_at
+        timestamptz reviewed_at
+    }
+
+    badges {
+        bigint id PK
+        varchar name
+        varchar image_url
+        text description
+        timestamptz created_at
+    }
+
+    user_badges {
+        bigint user_id PK
+        bigint badge_id PK
+        timestamptz earned_at
+    }
+
+    secret_boxes {
+        bigint id PK
+        bigint user_id FK
+        boolean is_opened
+        timestamptz opened_at
+        varchar reward_type
+        varchar reward_value
+        timestamptz created_at
+    }
+
+    notifications {
+        bigint id PK
+        bigint user_id FK
+        varchar type
+        varchar title
+        text message
+        varchar reference_type
+        bigint reference_id
+        boolean is_read
+        timestamptz created_at
+    }
+
+    search_history {
+        bigint id PK
+        bigint user_id FK
+        bigint searched_user_id FK
+        timestamptz searched_at
+    }
+
+    campaigns {
+        bigint id PK
+        varchar name
+        text description
+        timestamptz start_date
+        timestamptz end_date
+        varchar status
+        timestamptz created_at
+        timestamptz updated_at
+    }
