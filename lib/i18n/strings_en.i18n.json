@@ -4,6 +4,32 @@
     "button": "LOGIN With Google",
     "copyright": "Copyright belongs to Sun* © 2025"
   },
+  "home": {
+    "comingSoon": "Coming soon",
+    "days": "DAYS",
+    "hours": "HOURS",
+    "minutes": "MINUTES",
+    "aboutAward": "ABOUT AWARD",
+    "aboutKudos": "ABOUT KUDOS",
+    "eventTime": "Time:",
+    "eventVenue": "Venue:",
+    "awardSystem": "Award System",
+    "awardSectionLabel": "Sun* Annual Awards 2025",
+    "details": "Details",
+    "recognitionMovement": "Recognition Movement",
+    "sunKudos": "Sun* Kudos",
+    "newFeatureSaa": "NEW IN SAA 2025",
+    "kudosDescription": "A recognition and gratitude initiative for colleagues - held for the first time for all Sunners. Launching in November 2025, Sun* Kudos encourages Sunners to share words of recognition and gratitude through the official platform. These messages will serve as valuable input for the Heads Council during the award selection process.",
+    "awardsEmpty": "No award data available",
+    "errorRetry": "Something went wrong. Tap to retry.",
+    "retry": "Retry"
+  },
+  "nav": {
+    "home": "SAA 2025",
+    "awards": "Awards",
+    "kudos": "Kudos",
+    "profile": "Profile"
+  },
   "language": {
     "vi": "VN",
     "en": "EN",
@@ -15,6 +41,10 @@
   },
   "accessibility": {
     "loginButton": "Sign in with Google",
-    "languageSelector": "Select language, currently: English"
+    "languageSelector": "Select language, currently: English",
+    "searchButton": "Search",
+    "notificationButton": "Notifications",
+    "fabWriteKudos": "Write a kudos",
+    "fabViewKudos": "View Kudos"
   }
 }

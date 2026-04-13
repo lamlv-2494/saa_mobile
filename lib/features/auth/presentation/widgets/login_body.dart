@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
+import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class LoginBody extends StatelessWidget {
@@ -13,8 +14,7 @@ class LoginBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
-          'assets/images/root_further.png',
+        Assets.images.rootFurther.image(
           width: 247,
           height: 109,
           fit: BoxFit.cover,

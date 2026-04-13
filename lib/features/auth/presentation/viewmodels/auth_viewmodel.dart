@@ -33,13 +33,19 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
   void _listenAuthStateChanges() {
     final repo = ref.read(authRepositoryProvider);
     _authSubscription = repo.onAuthStateChange.listen((event) {
-      final session = event.session;
-      if (session != null) {
-        state = AsyncValue.data(
-          AuthState.authenticated(user: session.user),
-        );
-      } else if (event.event == sb.AuthChangeEvent.signedOut) {
-        state = const AsyncValue.data(AuthState.unauthenticated());
+      switch (event.event) {
+        case sb.AuthChangeEvent.signedIn:
+        case sb.AuthChangeEvent.tokenRefreshed:
+          final user = event.session?.user;
+          if (user != null) {
+            state = AsyncValue.data(
+              AuthState.authenticated(user: user),
+            );
+          }
+        case sb.AuthChangeEvent.signedOut:
+          state = const AsyncValue.data(AuthState.unauthenticated());
+        default:
+          break;
       }
     });
   }
