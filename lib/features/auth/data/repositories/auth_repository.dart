@@ -6,6 +6,7 @@ import 'package:saa_mobile/features/auth/data/datasources/auth_remote_datasource
 abstract class AuthRepository {
   Future<bool> signInWithGoogle();
   Future<void> signOut();
+  Future<void> ensureUserProfile();
   User? get currentUser;
   Session? get currentSession;
   Stream<AuthState> get onAuthStateChange;
@@ -20,6 +21,11 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<bool> signInWithGoogle() async {
     return _dataSource.signInWithGoogle();
+  }
+
+  @override
+  Future<void> ensureUserProfile() async {
+    await _dataSource.ensureUserProfile();
   }
 
   @override

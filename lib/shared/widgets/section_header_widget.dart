@@ -8,10 +8,12 @@ class SectionHeaderWidget extends StatelessWidget {
     super.key,
     required this.label,
     required this.title,
+    this.trailing,
   });
 
   final String label;
   final String title;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +33,20 @@ class SectionHeaderWidget extends StatelessWidget {
         const SizedBox(height: 4),
         Container(height: 1, color: AppColors.divider),
         const SizedBox(height: 4),
-        Text(
-          title,
-          style: GoogleFonts.montserrat(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-            height: 28 / 22,
-            color: AppColors.textAccent,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.montserrat(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                height: 28 / 22,
+                color: AppColors.textAccent,
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
         ),
       ],
     );

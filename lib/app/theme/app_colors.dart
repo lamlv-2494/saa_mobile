@@ -44,6 +44,13 @@ abstract final class AppColors {
   // Loading
   static const Color loadingSpinner = Color(0xFF00101A);
 
+  // Kudos feature
+  static const Color surfaceCard = Color(0xFFFFF8E1);
+  static const Color surfaceDark = Color(0xFF00070C);
+  static const Color textSecondary = Color(0xFF999999);
+  static const Color heart = Color(0xFFF17676);
+  static const Color primary15 = Color.fromRGBO(255, 234, 158, 0.15);
+
   // Gradient header stops (top-to-bottom, 180deg)
   static const List<Color> headerGradientColors = [
     Color.fromRGBO(0, 16, 26, 1),
