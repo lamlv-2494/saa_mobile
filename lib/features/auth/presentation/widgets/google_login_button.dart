@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
+import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class GoogleLoginButton extends StatelessWidget {
@@ -78,7 +78,7 @@ class GoogleLoginButton extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        SvgPicture.asset('assets/icons/ic_google.svg', width: 24, height: 24),
+        Assets.icons.icGoogle.svg(width: 24, height: 24),
       ],
     );
   }

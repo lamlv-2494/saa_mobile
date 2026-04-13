@@ -12,6 +12,32 @@ abstract final class AppColors {
   static const Color buttonText = Color(0xFF00101A);
   static const Color buttonPressed = Color(0xFFE6D28E);
 
+  // Accent (highlighted text: date, venue, section titles, active tab)
+  static const Color textAccent = Color(0xFFFFEA9E);
+
+  // Button — Outline variant
+  static const Color outlineBtnBg = Color.fromRGBO(255, 234, 158, 0.10);
+  static const Color outlineBtnBorder = Color(0xFF998C5F);
+  static const Color outlineBtnPressedBg = Color.fromRGBO(255, 234, 158, 0.20);
+
+  // Notification badge
+  static const Color notificationBadge = Color(0xFFD4271D);
+
+  // Countdown
+  static const Color countdownBorder = Color(0xFFFFEA9E);
+
+  // Divider (section header separator)
+  static const Color divider = Color.fromRGBO(46, 57, 64, 1);
+
+  // Bottom navigation bar
+  static const Color navBg = Color.fromRGBO(255, 234, 158, 0.15);
+
+  // Kudos banner text
+  static const Color kudosBannerText = Color(0xFFDBD1C1);
+
+  // Award card image border
+  static const Color awardImgBorder = Color(0xFFFFEA9E);
+
   // Error
   static const Color errorBg = Color(0xFFEF4444);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:saa_mobile/app/main_scaffold.dart';
 import 'package:saa_mobile/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:saa_mobile/features/auth/presentation/screens/login_screen.dart';
 
@@ -26,11 +27,7 @@ GoRouter createRouter(Ref ref) {
     },
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
-      GoRoute(
-        path: '/home',
-        builder: (_, _) =>
-            const Scaffold(body: Center(child: Text('Home — coming soon'))),
-      ),
+      GoRoute(path: '/home', builder: (_, _) => const MainScaffold()),
     ],
   );
 }
