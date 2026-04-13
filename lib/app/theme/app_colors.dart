@@ -6,6 +6,7 @@ abstract final class AppColors {
 
   // Text
   static const Color textWhite = Color(0xFFFFFFFF);
+  static const Color textRed = Color(0xFFD4271D);
 
   // Button
   static const Color buttonBg = Color(0xFFFFEA9E);
@@ -36,6 +37,7 @@ abstract final class AppColors {
   static const Color kudosBannerText = Color(0xFFDBD1C1);
 
   // Award card image border
+  static const Color awardMessageContent = Color(0xFFFFEA9E);
   static const Color awardImgBorder = Color(0xFFFFEA9E);
 
   // Error
@@ -43,6 +45,13 @@ abstract final class AppColors {
 
   // Loading
   static const Color loadingSpinner = Color(0xFF00101A);
+
+  // Kudos feature
+  static const Color surfaceCard = Color(0xFFFFF8E1);
+  static const Color surfaceDark = Color(0xFF00070C);
+  static const Color textSecondary = Color(0xFF999999);
+  static const Color heart = Color(0xFFF17676);
+  static const Color primary15 = Color.fromRGBO(255, 234, 158, 0.15);
 
   // Gradient header stops (top-to-bottom, 180deg)
   static const List<Color> headerGradientColors = [

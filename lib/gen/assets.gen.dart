@@ -34,8 +34,31 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_award.svg
   SvgGenImage get icAward => const SvgGenImage('assets/icons/ic_award.svg');
 
+  /// File path: assets/icons/ic_copy_link.svg
+  SvgGenImage get icCopyLink =>
+      const SvgGenImage('assets/icons/ic_copy_link.svg');
+
+  /// File path: assets/icons/ic_dot.svg
+  SvgGenImage get icDot => const SvgGenImage('assets/icons/ic_dot.svg');
+
+  /// File path: assets/icons/ic_gift_box.svg
+  SvgGenImage get icGiftBox =>
+      const SvgGenImage('assets/icons/ic_gift_box.svg');
+
+  /// File path: assets/icons/ic_gift_open.svg
+  SvgGenImage get icGiftOpen =>
+      const SvgGenImage('assets/icons/ic_gift_open.svg');
+
   /// File path: assets/icons/ic_google.svg
   SvgGenImage get icGoogle => const SvgGenImage('assets/icons/ic_google.svg');
+
+  /// File path: assets/icons/ic_heart_filled.svg
+  SvgGenImage get icHeartFilled =>
+      const SvgGenImage('assets/icons/ic_heart_filled.svg');
+
+  /// File path: assets/icons/ic_heart_outlined.svg
+  SvgGenImage get icHeartOutlined =>
+      const SvgGenImage('assets/icons/ic_heart_outlined.svg');
 
   /// File path: assets/icons/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/icons/ic_home.svg');
@@ -47,6 +70,15 @@ class $AssetsIconsGen {
   SvgGenImage get icKudosLogo =>
       const SvgGenImage('assets/icons/ic_kudos_logo.svg');
 
+  /// File path: assets/icons/ic_link.svg
+  SvgGenImage get icLink => const SvgGenImage('assets/icons/ic_link.svg');
+
+  /// File path: assets/icons/ic_media.svg
+  SvgGenImage get icMedia => const SvgGenImage('assets/icons/ic_media.svg');
+
+  /// File path: assets/icons/ic_next.svg
+  SvgGenImage get icNext => const SvgGenImage('assets/icons/ic_next.svg');
+
   /// File path: assets/icons/ic_notification.svg
   SvgGenImage get icNotification =>
       const SvgGenImage('assets/icons/ic_notification.svg');
@@ -54,11 +86,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_pen.svg
   SvgGenImage get icPen => const SvgGenImage('assets/icons/ic_pen.svg');
 
+  /// File path: assets/icons/ic_prev.svg
+  SvgGenImage get icPrev => const SvgGenImage('assets/icons/ic_prev.svg');
+
   /// File path: assets/icons/ic_profile.svg
   SvgGenImage get icProfile => const SvgGenImage('assets/icons/ic_profile.svg');
 
   /// File path: assets/icons/ic_search.svg
   SvgGenImage get icSearch => const SvgGenImage('assets/icons/ic_search.svg');
+
+  /// File path: assets/icons/ic_sent.svg
+  SvgGenImage get icSent => const SvgGenImage('assets/icons/ic_sent.svg');
 
   /// List of all assets
   List<dynamic> get values => [
@@ -66,14 +104,25 @@ class $AssetsIconsGen {
     icArrowDown,
     icArrowOpen,
     icAward,
+    icCopyLink,
+    icDot,
+    icGiftBox,
+    icGiftOpen,
     icGoogle,
+    icHeartFilled,
+    icHeartOutlined,
     icHome,
     icKudos,
     icKudosLogo,
+    icLink,
+    icMedia,
+    icNext,
     icNotification,
     icPen,
+    icPrev,
     icProfile,
     icSearch,
+    icSent,
   ];
 }
 
@@ -89,6 +138,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/keyvisual_bg.png
   AssetGenImage get keyvisualBg =>
       const AssetGenImage('assets/images/keyvisual_bg.png');
+
+  /// Directory path: assets/images/kudos
+  $AssetsImagesKudosGen get kudos => const $AssetsImagesKudosGen();
 
   /// File path: assets/images/root_further.png
   AssetGenImage get rootFurther =>
@@ -144,6 +196,29 @@ class $AssetsImagesHomeGen {
     logoSaa,
     rootFurtherLogo,
   ];
+}
+
+class $AssetsImagesKudosGen {
+  const $AssetsImagesKudosGen();
+
+  /// File path: assets/images/kudos/ic_fire.png
+  AssetGenImage get icFire =>
+      const AssetGenImage('assets/images/kudos/ic_fire.png');
+
+  /// File path: assets/images/kudos/key_visual_bg.png
+  AssetGenImage get keyVisualBg =>
+      const AssetGenImage('assets/images/kudos/key_visual_bg.png');
+
+  /// File path: assets/images/kudos/kudos_logo.png
+  AssetGenImage get kudosLogo =>
+      const AssetGenImage('assets/images/kudos/kudos_logo.png');
+
+  /// File path: assets/images/kudos/spotlight.png
+  AssetGenImage get spotlight =>
+      const AssetGenImage('assets/images/kudos/spotlight.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [icFire, keyVisualBg, kudosLogo, spotlight];
 }
 
 class Assets {

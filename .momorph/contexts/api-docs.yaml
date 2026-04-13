@@ -1,0 +1,1214 @@
+openapi: 3.0.3
+info:
+  title: SAA 2025 Mobile API – Sun*Kudos
+  description: |
+    RESTful API specification for the **Sun*Kudos** feature of the SAA 2025 Mobile application.
+    Covers Kudos CRUD, reactions (hearts), filtering, Spotlight network, personal statistics,
+    Secret Box, Top 10 Gift Recipients, and supporting resources (hashtags, departments, user search).
+
+    **Authentication**: All endpoints require a valid JWT Bearer token unless otherwise noted.
+
+    **Pagination**: List endpoints use cursor/offset-based pagination with `page` and `limit` query params.
+
+    **Internationalization**: Response messages are locale-aware (vi/en) based on the `Accept-Language` header.
+  version: 1.0.0
+  contact:
+    name: SAA 2025 Backend Team
+
+servers:
+  - url: https://api.saa2025.dev/api/v1
+    description: Development
+  - url: https://api.saa2025.staging/api/v1
+    description: Staging
+  - url: https://api.saa2025.com/api/v1
+    description: Production
+
+tags:
+  - name: Kudos
+    description: Kudos CRUD and listing operations
+  - name: Reactions
+    description: Heart (like/unlike) operations on Kudos
+  - name: Spotlight
+    description: Spotlight Board – network visualization and stats
+  - name: User Stats
+    description: Personal statistics for the authenticated user
+  - name: Secret Box
+    description: Secret Box opening flow
+  - name: Top Recipients
+    description: Top 10 Gift Recipients leaderboard
+  - name: Hashtags
+    description: Hashtag reference data for filters
+  - name: Departments
+    description: Department reference data for filters
+  - name: Users
+    description: User search and profile
+  - name: Config
+    description: Application configuration (special days, bonus multiplier)
+
+paths:
+  # =============================================
+  # KUDOS
+  # =============================================
+  /kudos:
+    get:
+      tags: [Kudos]
+      summary: List all Kudos (paginated, filterable)
+      description: |
+        Returns a paginated list of active Kudos. Supports filtering by hashtag and department.
+        Used by the **All Kudos** feed section on the Sun*Kudos screen.
+      operationId: listKudos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/HashtagIdParam"
+        - $ref: "#/components/parameters/DepartmentIdParam"
+        - $ref: "#/components/parameters/AcceptLanguageHeader"
+      responses:
+        "200":
+          description: Paginated list of Kudos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KudosListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      tags: [Kudos]
+      summary: Send a new Kudos
+      description: |
+        Create a new Kudos from the authenticated user to a recipient.
+        Supports hashtags, image attachments, award category name, and anonymous sending.
+        Used by the **Send Kudos** screen (Gửi lời chúc Kudos).
+      operationId: createKudos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguageHeader"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CreateKudosRequest"
+      responses:
+        "201":
+          description: Kudos created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KudosDetailResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /kudos/highlight:
+    get:
+      tags: [Kudos]
+      summary: Get top 5 Highlight Kudos
+      description: |
+        Returns the top 5 Kudos sorted by heart count (descending).
+        Supports filtering by hashtag and department (AND logic).
+        Used by the **Highlight Kudos** carousel on the Sun*Kudos screen.
+      operationId: getHighlightKudos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/HashtagIdParam"
+        - $ref: "#/components/parameters/DepartmentIdParam"
+        - $ref: "#/components/parameters/AcceptLanguageHeader"
+      responses:
+        "200":
+          description: Top 5 Highlight Kudos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HighlightKudosResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /kudos/{kudosId}:
+    get:
+      tags: [Kudos]
+      summary: Get Kudos detail
+      description: |
+        Returns full detail of a single Kudos including sender, receiver, message,
+        hashtags, photos, and reaction status.
+        Used by the **View Kudo** and **View Kudo ẩn danh** screens.
+      operationId: getKudosDetail
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/KudosIdPath"
+        - $ref: "#/components/parameters/AcceptLanguageHeader"
+      responses:
+        "200":
+          description: Kudos detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KudosDetailResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # REACTIONS (Hearts)
+  # =============================================
+  /kudos/{kudosId}/reactions:
+    post:
+      tags: [Reactions]
+      summary: Like (heart) a Kudos
+      description: |
+        Add a heart reaction to a Kudos. Each user can only like once per Kudos.
+        The sender of the Kudos cannot like their own Kudos.
+        On special days (admin-configured), the heart adds 2 points instead of 1.
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_007: One like per user per Kudos
+        - TC_IOS_KUDOS_FUN_008: Sender cannot like own Kudos
+        - TC_IOS_KUDOS_FUN_010: Special day → 2 hearts instead of 1
+      operationId: likeKudos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/KudosIdPath"
+      responses:
+        "201":
+          description: Reaction added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReactionResponse"
+        "400":
+          description: Cannot like own Kudos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Already liked this Kudos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Reactions]
+      summary: Unlike (remove heart) a Kudos
+      description: |
+        Remove a heart reaction from a Kudos.
+        Hearts are withdrawn: 1 on normal days, 2 on special days.
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_009: Heart withdrawal (1 or 2 depending on day type)
+      operationId: unlikeKudos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/KudosIdPath"
+      responses:
+        "200":
+          description: Reaction removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReactionResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Reaction not found (was not liked)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # SPOTLIGHT
+  # =============================================
+  /kudos/spotlight:
+    get:
+      tags: [Spotlight]
+      summary: Get Spotlight Board network data
+      description: |
+        Returns the network graph data for the Spotlight Board visualization.
+        Includes nodes (users) and edges (kudos connections) for the network chart.
+        Used by the **Spotlight Board** section (B.7) on the Sun*Kudos screen.
+      operationId: getSpotlightData
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Spotlight network data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpotlightResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /kudos/spotlight/search:
+    get:
+      tags: [Spotlight]
+      summary: Search Sunner in Spotlight network
+      description: |
+        Search for a Sunner within the Spotlight network chart.
+        Returns matched node(s) to highlight on the chart.
+        Debounced live search from the Spotlight search bar (B.7.3).
+
+        **Validation (from test cases):**
+        - TC_IOS_KUDOS_FUN_034: Max 100 characters
+        - TC_IOS_KUDOS_FUN_036: Returns empty result with inline "no results" message
+      operationId: searchSpotlight
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query (Sunner name). Max 100 characters.
+          schema:
+            type: string
+            maxLength: 100
+            minLength: 1
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpotlightSearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /kudos/stats/total:
+    get:
+      tags: [Spotlight]
+      summary: Get total Kudos count
+      description: |
+        Returns the total count of active Kudos in the system.
+        Displayed on the Spotlight Board header (B.7.1), e.g., "388 KUDOS".
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_012: Reactive update – reflects latest DB count
+      operationId: getKudosTotalCount
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Total Kudos count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      totalKudos:
+                        type: integer
+                        example: 388
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # USER STATS
+  # =============================================
+  /users/me/stats:
+    get:
+      tags: [User Stats]
+      summary: Get personal statistics
+      description: |
+        Returns the authenticated user's personal statistics including:
+        - Kudos received count (D.1.2)
+        - Kudos sent count (D.1.3)
+        - Hearts received count (D.1.4)
+        - Opened Secret Boxes count (D.1.6)
+        - Unopened Secret Boxes count (D.1.7)
+        - x2 Fire Bonus active status (S)
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_006: Star badge levels (10→1★, 20→2★, 50→3★)
+        - TC_IOS_KUDOS_FUN_013: x2 bonus badge conditional display
+      operationId: getMyStats
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Personal statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStatsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # SECRET BOX
+  # =============================================
+  /users/me/secret-boxes/{boxId}/open:
+    post:
+      tags: [Secret Box]
+      summary: Open a Secret Box
+      description: |
+        Open a specific Secret Box for the authenticated user.
+        Returns the reward received from the box.
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_024: Only when unopened count > 0
+        - TC_IOS_KUDOS_FUN_025: Double-tap prevention (idempotent)
+        - TC_IOS_KUDOS_FUN_039: Button disabled when count = 0
+      operationId: openSecretBox
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: boxId
+          in: path
+          required: true
+          description: Secret Box ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Secret Box opened successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretBoxOpenResponse"
+        "400":
+          description: Box already opened
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Box does not belong to user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /users/me/secret-boxes/next:
+    get:
+      tags: [Secret Box]
+      summary: Get next unopened Secret Box
+      description: |
+        Returns the next unopened Secret Box for the authenticated user.
+        Used to determine which box to open when the "Mở Secret Box" button is tapped.
+      operationId: getNextSecretBox
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Next unopened Secret Box
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretBoxResponse"
+        "204":
+          description: No unopened Secret Boxes available
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # TOP RECIPIENTS
+  # =============================================
+  /kudos/top-recipients:
+    get:
+      tags: [Top Recipients]
+      summary: Get Top 10 Gift Recipients
+      description: |
+        Returns the top 10 Sunners who received the most recent gifts/rewards.
+        Used by the **Top 10 Gift Recipients** section (D.3) on the Sun*Kudos screen.
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_003: Shows "Chưa có dữ liệu" when empty
+      operationId: getTopRecipients
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguageHeader"
+      responses:
+        "200":
+          description: Top 10 Gift Recipients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopRecipientsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # HASHTAGS
+  # =============================================
+  /hashtags:
+    get:
+      tags: [Hashtags]
+      summary: List all hashtags
+      description: |
+        Returns all available hashtags for the filter dropdown (B.1.1).
+        Used by the Hashtag bottom sheet on Sun*Kudos screen.
+      operationId: listHashtags
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of hashtags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HashtagsListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # DEPARTMENTS
+  # =============================================
+  /departments:
+    get:
+      tags: [Departments]
+      summary: List all departments
+      description: |
+        Returns all departments for the filter dropdown (B.1.2).
+        Used by the Phòng ban bottom sheet on Sun*Kudos screen.
+      operationId: listDepartments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of departments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartmentsListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # USERS (Search)
+  # =============================================
+  /users/search:
+    get:
+      tags: [Users]
+      summary: Search Sunners
+      description: |
+        Search for Sunners by name. Used by the **Search Sunner** screen (hldqjHoSRH)
+        and the recipient selection field in Send Kudos.
+        Returns user name, avatar, and department.
+      operationId: searchUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query (Sunner name)
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # =============================================
+  # CONFIG
+  # =============================================
+  /config/bonus:
+    get:
+      tags: [Config]
+      summary: Get current bonus configuration
+      description: |
+        Returns the current bonus multiplier configuration.
+        Determines whether the x2 Fire Bonus badge is active and the heart multiplier.
+
+        **Business Rules (from test cases):**
+        - TC_IOS_KUDOS_FUN_010: Special day → 2 hearts per like
+        - TC_IOS_KUDOS_FUN_013: x2 badge display when active
+      operationId: getBonusConfig
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Bonus configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BonusConfigResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+# =============================================
+# COMPONENTS
+# =============================================
+components:
+  # ----- Security -----
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT access token
+
+  # ----- Reusable Parameters -----
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number (1-based)
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      description: Items per page
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+
+    HashtagIdParam:
+      name: hashtag_id
+      in: query
+      description: Filter by hashtag ID
+      schema:
+        type: integer
+        format: int64
+
+    DepartmentIdParam:
+      name: department_id
+      in: query
+      description: Filter by department ID (of the Kudos recipient)
+      schema:
+        type: integer
+        format: int64
+
+    KudosIdPath:
+      name: kudosId
+      in: path
+      required: true
+      description: Kudos ID
+      schema:
+        type: integer
+        format: int64
+
+    AcceptLanguageHeader:
+      name: Accept-Language
+      in: header
+      description: Preferred language (vi or en)
+      schema:
+        type: string
+        enum: [vi, en]
+        default: vi
+
+  # ----- Reusable Responses -----
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Unauthorized:
+      description: Missing or invalid authentication token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authentication required"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: "NOT_FOUND"
+              message: "Resource not found"
+
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationErrorResponse"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            error:
+              code: "INTERNAL_ERROR"
+              message: "An unexpected error occurred"
+
+  # ----- Schemas -----
+  schemas:
+    # === Pagination ===
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          example: 1
+        totalPages:
+          type: integer
+          example: 10
+        totalItems:
+          type: integer
+          example: 195
+        limit:
+          type: integer
+          example: 20
+        hasNextPage:
+          type: boolean
+          example: true
+
+    # === Error ===
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "BAD_REQUEST"
+            message:
+              type: string
+              example: "Invalid request parameters"
+          required: [code, message]
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              example: "Validation failed"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: "recipient_id"
+                  message:
+                    type: string
+                    example: "Recipient is required"
+          required: [code, message]
+
+    # === User (embedded) ===
+    UserSummary:
+      type: object
+      description: Compact user info embedded in Kudos cards
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 42
+        name:
+          type: string
+          example: "Dương Huỳnh Xuân Nhất"
+        avatarUrl:
+          type: string
+          format: uri
+          example: "https://storage.saa2025.com/avatars/42.jpg"
+        departmentCode:
+          type: string
+          example: "CECV1"
+        heroTier:
+          type: string
+          enum: [none, new_hero, rising_hero, super_hero, legend_hero]
+          example: "rising_hero"
+        starBadgeLevel:
+          type: integer
+          description: "Star badge count based on Kudos received (10→1, 20→2, 50→3)"
+          enum: [0, 1, 2, 3]
+          example: 2
+
+    # === Hashtag ===
+    Hashtag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "#teamwork"
+
+    # === Kudos Item (list view) ===
+    KudosItem:
+      type: object
+      description: Kudos entry for list/card views
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 101
+        sender:
+          $ref: "#/components/schemas/UserSummary"
+        recipient:
+          $ref: "#/components/schemas/UserSummary"
+        message:
+          type: string
+          description: Kudos message content (truncated in list views)
+          example: "Cảm ơn sự chăm chỉ, cảm nhận của em..."
+        awardCategoryName:
+          type: string
+          nullable: true
+          description: Optional award category/title (e.g., "NGƯỜI HÙNG CỦA LONG EM")
+          example: "NGƯỜI HÙNG CỦA LONG EM"
+        isAnonymous:
+          type: boolean
+          description: Whether the sender is anonymous
+          example: false
+        anonymousNickname:
+          type: string
+          nullable: true
+          description: Displayed when isAnonymous = true
+          example: "Doraemon"
+        hashtags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hashtag"
+        photos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              imageUrl:
+                type: string
+                format: uri
+              sortOrder:
+                type: integer
+        heartCount:
+          type: integer
+          description: Total heart reactions on this Kudos
+          example: 15
+        isLikedByMe:
+          type: boolean
+          description: Whether the authenticated user has liked this Kudos
+          example: false
+        canLike:
+          type: boolean
+          description: "false if the authenticated user is the sender"
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-12-20T10:30:00+07:00"
+        shareUrl:
+          type: string
+          format: uri
+          description: Deep link URL for sharing / Copy Link
+          example: "https://saa2025.com/kudos/101"
+
+    # === Kudos List Response ===
+    KudosListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/KudosItem"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    # === Highlight Kudos Response ===
+    HighlightKudosResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          description: Top 5 Kudos by heart count (descending)
+          maxItems: 5
+          items:
+            $ref: "#/components/schemas/KudosItem"
+
+    # === Kudos Detail Response ===
+    KudosDetailResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/KudosItem"
+
+    # === Create Kudos Request ===
+    CreateKudosRequest:
+      type: object
+      required: [recipient_id, message]
+      properties:
+        recipient_id:
+          type: integer
+          format: int64
+          description: ID of the Kudos recipient
+          example: 42
+        message:
+          type: string
+          description: Kudos message content (rich text supported)
+          minLength: 1
+          maxLength: 5000
+          example: "Cảm ơn sự chăm chỉ và cống hiến của bạn!"
+        award_category_name:
+          type: string
+          nullable: true
+          description: Optional award category/title
+          example: "NGƯỜI HÙNG CỦA LONG EM"
+        hashtag_ids:
+          type: array
+          description: List of hashtag IDs to attach
+          items:
+            type: integer
+            format: int64
+          example: [1, 3, 5]
+        is_anonymous:
+          type: boolean
+          default: false
+          description: Send anonymously
+        anonymous_nickname:
+          type: string
+          nullable: true
+          description: Nickname to display when anonymous
+          maxLength: 50
+          example: "Doraemon"
+        photos:
+          type: array
+          description: Image files to attach (max 5)
+          maxItems: 5
+          items:
+            type: string
+            format: binary
+
+    # === Reaction Response ===
+    ReactionResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            kudosId:
+              type: integer
+              format: int64
+              example: 101
+            heartCount:
+              type: integer
+              description: Updated total heart count after the action
+              example: 16
+            isLikedByMe:
+              type: boolean
+              example: true
+            heartsAwarded:
+              type: integer
+              description: "Hearts added/removed (1 normal, 2 special day)"
+              example: 1
+
+    # === Spotlight ===
+    SpotlightResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalKudos:
+              type: integer
+              description: Total active Kudos count
+              example: 388
+            nodes:
+              type: array
+              description: Users in the network graph
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  name:
+                    type: string
+                  avatarUrl:
+                    type: string
+                    format: uri
+                  departmentCode:
+                    type: string
+                  kudosCount:
+                    type: integer
+                    description: Number of Kudos involving this user
+            edges:
+              type: array
+              description: Kudos connections between users
+              items:
+                type: object
+                properties:
+                  sourceId:
+                    type: integer
+                    format: int64
+                    description: Sender user ID
+                  targetId:
+                    type: integer
+                    format: int64
+                    description: Recipient user ID
+                  weight:
+                    type: integer
+                    description: Number of Kudos from source to target
+
+    SpotlightSearchResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+              avatarUrl:
+                type: string
+                format: uri
+              departmentCode:
+                type: string
+
+    # === User Stats ===
+    UserStatsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            kudosReceivedCount:
+              type: integer
+              example: 25
+            kudosSentCount:
+              type: integer
+              example: 18
+            heartsReceivedCount:
+              type: integer
+              example: 142
+            secretBoxesOpened:
+              type: integer
+              example: 5
+            secretBoxesUnopened:
+              type: integer
+              example: 2
+            starBadgeLevel:
+              type: integer
+              description: "Star badge (10→1★, 20→2★, 50→3★)"
+              enum: [0, 1, 2, 3]
+              example: 2
+            isBonusActive:
+              type: boolean
+              description: "Whether x2 Fire Bonus is currently active"
+              example: false
+
+    # === Secret Box ===
+    SecretBoxResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 77
+            isOpened:
+              type: boolean
+              example: false
+            createdAt:
+              type: string
+              format: date-time
+
+    SecretBoxOpenResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 77
+            rewardType:
+              type: string
+              enum: [badge, points, message, special]
+              example: "badge"
+            rewardValue:
+              type: string
+              description: Reward description or value
+              example: "Golden Star Badge"
+            openedAt:
+              type: string
+              format: date-time
+
+    # === Top Recipients ===
+    TopRecipientsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            properties:
+              rank:
+                type: integer
+                example: 1
+              user:
+                $ref: "#/components/schemas/UserSummary"
+              giftCount:
+                type: integer
+                description: Number of gifts received
+                example: 12
+              latestGiftAt:
+                type: string
+                format: date-time
+
+    # === Hashtags List ===
+    HashtagsListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hashtag"
+
+    # === Departments List ===
+    DepartmentsListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1
+              name:
+                type: string
+                example: "Division A"
+              code:
+                type: string
+                example: "CECV1"
+
+    # === User Search ===
+    UserSearchResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserSummary"
+
+    # === Bonus Config ===
+    BonusConfigResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            isBonusActive:
+              type: boolean
+              description: Whether x2 bonus is currently active
+              example: true
+            heartMultiplier:
+              type: integer
+              description: "Hearts per like (1 normal, 2 bonus)"
+              example: 2
+            bonusStartDate:
+              type: string
+              format: date-time
+              nullable: true
+            bonusEndDate:
+              type: string
+              format: date-time
+              nullable: true
+
+security:
+  - bearerAuth: []

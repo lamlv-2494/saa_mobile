@@ -32,12 +32,19 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
 
   void _listenAuthStateChanges() {
     final repo = ref.read(authRepositoryProvider);
-    _authSubscription = repo.onAuthStateChange.listen((event) {
+    _authSubscription = repo.onAuthStateChange.listen((event) async {
       switch (event.event) {
         case sb.AuthChangeEvent.signedIn:
         case sb.AuthChangeEvent.tokenRefreshed:
           final user = event.session?.user;
           if (user != null) {
+            // Upsert user profile vào bảng users (app-level)
+            // để các feature khác (Kudos, Profile) có data
+            try {
+              await repo.ensureUserProfile();
+            } catch (_) {
+              // Non-blocking — không ảnh hưởng auth flow
+            }
             state = AsyncValue.data(
               AuthState.authenticated(user: user),
             );
