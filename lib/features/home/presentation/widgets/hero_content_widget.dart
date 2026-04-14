@@ -41,7 +41,7 @@ class HeroContentWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Root Further logo
-              Assets.images.home.rootFurtherLogo.image(
+              Assets.images.rootFurtherLogo.image(
                 width: 247,
                 height: 109,
                 errorBuilder: (_, _, _) => Text(
@@ -138,7 +138,7 @@ class _HeroBackground extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         // Key Visual BG
-        Assets.images.home.keyVisualBg.image(
+        Assets.images.keyVisualBg.image(
           fit: BoxFit.cover,
           errorBuilder: (_, _, _) => const ColoredBox(color: AppColors.bgDark),
         ),

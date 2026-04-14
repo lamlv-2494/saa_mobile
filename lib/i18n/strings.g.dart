@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 160 (80 per locale)
+/// Strings: 174 (87 per locale)
 ///
-/// Built on 2026-04-13 at 07:58 UTC
+/// Built on 2026-04-14 at 06:29 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -153,6 +153,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final _StringsNavEn nav = _StringsNavEn._(_root);
 	late final _StringsLanguageEn language = _StringsLanguageEn._(_root);
 	late final _StringsErrorEn error = _StringsErrorEn._(_root);
+	late final _StringsAwardEn award = _StringsAwardEn._(_root);
 	late final _StringsKudosEn kudos = _StringsKudosEn._(_root);
 	late final _StringsAccessibilityEn accessibility = _StringsAccessibilityEn._(_root);
 }
@@ -232,6 +233,20 @@ class _StringsErrorEn {
 	String get auth => 'Login failed. Please try again.';
 }
 
+// Path: award
+class _StringsAwardEn {
+	_StringsAwardEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get recognitionSystem => 'Recognition and Gratitude System';
+	String get awardSystemTitle => 'Award System\nSAA 2025';
+	String get awardQuantityLabel => 'Number of Awards';
+	String get awardValueLabel => 'Award Value';
+	String get dropdownHint => 'Select award type';
+}
+
 // Path: kudos
 class _StringsKudosEn {
 	_StringsKudosEn._(this._root);
@@ -298,6 +313,8 @@ class _StringsAccessibilityEn {
 	String get notificationButton => 'Notifications';
 	String get fabWriteKudos => 'Write a kudos';
 	String get fabViewKudos => 'View Kudos';
+	String get kudosDetailButton => 'Open Sun* Kudos detail page';
+	String get awardBadge => 'Award badge';
 }
 
 // Path: <root>
@@ -329,6 +346,7 @@ class _StringsVi implements Translations {
 	@override late final _StringsNavVi nav = _StringsNavVi._(_root);
 	@override late final _StringsLanguageVi language = _StringsLanguageVi._(_root);
 	@override late final _StringsErrorVi error = _StringsErrorVi._(_root);
+	@override late final _StringsAwardVi award = _StringsAwardVi._(_root);
 	@override late final _StringsKudosVi kudos = _StringsKudosVi._(_root);
 	@override late final _StringsAccessibilityVi accessibility = _StringsAccessibilityVi._(_root);
 }
@@ -408,6 +426,20 @@ class _StringsErrorVi implements _StringsErrorEn {
 	@override String get auth => 'Đăng nhập thất bại. Vui lòng thử lại.';
 }
 
+// Path: award
+class _StringsAwardVi implements _StringsAwardEn {
+	_StringsAwardVi._(this._root);
+
+	@override final _StringsVi _root; // ignore: unused_field
+
+	// Translations
+	@override String get recognitionSystem => 'Hệ thống ghi nhận và cảm ơn';
+	@override String get awardSystemTitle => 'Hệ thống giải thưởng\nSAA 2025';
+	@override String get awardQuantityLabel => 'Số lượng giải thưởng';
+	@override String get awardValueLabel => 'Giá trị giải thưởng';
+	@override String get dropdownHint => 'Chọn loại giải thưởng';
+}
+
 // Path: kudos
 class _StringsKudosVi implements _StringsKudosEn {
 	_StringsKudosVi._(this._root);
@@ -474,6 +506,8 @@ class _StringsAccessibilityVi implements _StringsAccessibilityEn {
 	@override String get notificationButton => 'Thông báo';
 	@override String get fabWriteKudos => 'Viết lời cảm ơn';
 	@override String get fabViewKudos => 'Xem Kudos';
+	@override String get kudosDetailButton => 'Mở trang chi tiết Sun* Kudos';
+	@override String get awardBadge => 'Huy hiệu giải';
 }
 
 /// Flat map(s) containing all translations.
@@ -512,6 +546,11 @@ extension on Translations {
 			case 'language.selectorLabel': return 'Select language';
 			case 'error.network': return 'No internet connection. Please try again.';
 			case 'error.auth': return 'Login failed. Please try again.';
+			case 'award.recognitionSystem': return 'Recognition and Gratitude System';
+			case 'award.awardSystemTitle': return 'Award System\nSAA 2025';
+			case 'award.awardQuantityLabel': return 'Number of Awards';
+			case 'award.awardValueLabel': return 'Award Value';
+			case 'award.dropdownHint': return 'Select award type';
 			case 'kudos.sectionLabel': return 'Sun* Annual Awards 2025';
 			case 'kudos.tagline': return 'Recognition and appreciation system';
 			case 'kudos.ctaText': return 'Today, who do you want to send kudos to?';
@@ -562,6 +601,8 @@ extension on Translations {
 			case 'accessibility.notificationButton': return 'Notifications';
 			case 'accessibility.fabWriteKudos': return 'Write a kudos';
 			case 'accessibility.fabViewKudos': return 'View Kudos';
+			case 'accessibility.kudosDetailButton': return 'Open Sun* Kudos detail page';
+			case 'accessibility.awardBadge': return 'Award badge';
 			default: return null;
 		}
 	}
@@ -600,6 +641,11 @@ extension on _StringsVi {
 			case 'language.selectorLabel': return 'Chọn ngôn ngữ';
 			case 'error.network': return 'Không có kết nối mạng. Vui lòng thử lại.';
 			case 'error.auth': return 'Đăng nhập thất bại. Vui lòng thử lại.';
+			case 'award.recognitionSystem': return 'Hệ thống ghi nhận và cảm ơn';
+			case 'award.awardSystemTitle': return 'Hệ thống giải thưởng\nSAA 2025';
+			case 'award.awardQuantityLabel': return 'Số lượng giải thưởng';
+			case 'award.awardValueLabel': return 'Giá trị giải thưởng';
+			case 'award.dropdownHint': return 'Chọn loại giải thưởng';
 			case 'kudos.sectionLabel': return 'Sun* Annual Awards 2025';
 			case 'kudos.tagline': return 'Hệ thống ghi nhận và cảm ơn';
 			case 'kudos.ctaText': return 'Hôm nay, bạn muốn gửi kudos đến ai?';
@@ -650,6 +696,8 @@ extension on _StringsVi {
 			case 'accessibility.notificationButton': return 'Thông báo';
 			case 'accessibility.fabWriteKudos': return 'Viết lời cảm ơn';
 			case 'accessibility.fabViewKudos': return 'Xem Kudos';
+			case 'accessibility.kudosDetailButton': return 'Mở trang chi tiết Sun* Kudos';
+			case 'accessibility.awardBadge': return 'Huy hiệu giải';
 			default: return null;
 		}
 	}

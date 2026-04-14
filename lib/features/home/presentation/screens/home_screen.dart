@@ -6,9 +6,11 @@ import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/home/data/models/event_info.dart';
 import 'package:saa_mobile/features/home/data/models/home_state.dart';
 import 'package:saa_mobile/features/home/presentation/viewmodels/home_viewmodel.dart';
+import 'package:saa_mobile/app/main_scaffold.dart';
+import 'package:saa_mobile/features/award/presentation/screens/award_screen.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/awards_section_widget.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/hero_content_widget.dart';
-import 'package:saa_mobile/features/home/presentation/widgets/home_header_widget.dart';
+import 'package:saa_mobile/shared/widgets/home_header_widget.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/kudos_fab_widget.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/kudos_section_widget.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/theme_description_widget.dart';
@@ -86,8 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       children: [
         // Scrollable content
         RefreshIndicator(
-          onRefresh: () =>
-              ref.read(homeViewModelProvider.notifier).refresh(),
+          onRefresh: () => ref.read(homeViewModelProvider.notifier).refresh(),
           color: AppColors.textAccent,
           backgroundColor: AppColors.bgDark,
           child: CustomScrollView(
@@ -118,7 +119,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: AwardsSectionWidget(
                   awards: homeState.awards,
                   onAwardTap: (id) {
-                    // TODO: context.push('/awards/$id')
+                    final award = homeState.awards.firstWhere(
+                      (a) => a.id == id,
+                      orElse: () => homeState.awards.first,
+                    );
+                    ref.read(initialAwardSlugProvider.notifier).state =
+                        award.slug;
+                    ref.read(currentTabIndexProvider.notifier).state = 1;
                   },
                 ),
               ),
@@ -129,7 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: KudosSectionWidget(
                     kudosInfo: homeState.kudosInfo,
                     onDetailsTap: () {
-                      // TODO: context.push('/kudos/detail')
+                      ref.read(currentTabIndexProvider.notifier).state = 2;
                     },
                   ),
                 ),
@@ -187,11 +194,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 12),
             GestureDetector(
-              onTap: () =>
-                  ref.read(homeViewModelProvider.notifier).refresh(),
+              onTap: () => ref.read(homeViewModelProvider.notifier).refresh(),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.outlineBtnBorder),
                   borderRadius: BorderRadius.circular(4),
@@ -210,5 +218,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     );
   }
-
 }

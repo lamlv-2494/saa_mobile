@@ -23,11 +23,11 @@
 
 - [x] T001 Tạo cấu trúc thư mục `lib/features/kudos/` theo plan (data/models, data/datasources, data/repositories, presentation/viewmodels, presentation/screens, presentation/widgets) | `lib/features/kudos/`
 - [x] T000 [P] Download SVG icons từ Figma (ic_pencil, ic_heart_outlined, ic_heart_filled, ic_copy_link, ic_sent, ic_fire, ic_gift_box, ic_next, ic_prev) vào `assets/icons/`. Dùng momorph tool `get_media_files` | `assets/icons/`
-- [x] T000 [P] Download hero banner background PNG từ Figma vào `assets/images/kudos/key_visual_bg.png`. Dùng momorph tool `get_media_files` | `assets/images/kudos/`
+- [x] T000 [P] Download hero banner background PNG từ Figma vào `assets/images/kudos_key_visual_bg.png`. Dùng momorph tool `get_media_files` | `assets/images/`
 - [x] T000 [P] Bổ sung colors mới vào `AppColors`: `surfaceCard` (#FFF8E1), `surfaceDark` (#00070C), `textSecondary` (#999999), `heart` (#F17676), `primary15` (rgba(255,234,158,0.15)) | `lib/app/theme/app_colors.dart`
 - [x] T000 [P] Thêm i18n strings cho kudos section vào cả VN và EN. Bao gồm: section titles, CTA text, empty states, error messages, stats labels, filter labels, accessibility labels | `lib/i18n/strings_vi.i18n.json`, `lib/i18n/strings_en.i18n.json`
 - [x] T000 Chạy `dart run build_runner build` để generate flutter_gen assets + slang strings | `lib/gen/`, `lib/i18n/strings.g.dart`
-- [x] T000 Đăng ký asset folders mới trong pubspec.yaml nếu chưa có: `assets/images/kudos/` | `pubspec.yaml`
+- [x] T000 Đăng ký asset folders mới trong pubspec.yaml nếu chưa có: `assets/images/` | `pubspec.yaml`
 
 **Checkpoint**: Assets, colors, i18n sẵn sàng. Chạy `flutter analyze` đạt 0 warnings.
 
@@ -109,7 +109,7 @@
 
 ### Hero Banner
 
-- [x] T045 [P] [US1] Tạo `KudosHeroBannerWidget` — Stack: background image (Assets.images.kudos.keyVisualBg) + gradient shadows (left + bottom) + Column: tagline "Hệ thống ghi nhận và cảm ơn" (14px/500 #FFEA9E) + KUDOS logo (221x39) | `lib/features/kudos/presentation/widgets/kudos_hero_banner_widget.dart`
+- [x] T045 [P] [US1] Tạo `KudosHeroBannerWidget` — Stack: background image (Assets.images.kudosKeyVisualBg) + gradient shadows (left + bottom) + Column: tagline "Hệ thống ghi nhận và cảm ơn" (14px/500 #FFEA9E) + KUDOS logo (221x39) | `lib/features/kudos/presentation/widgets/kudos_hero_banner_widget.dart`
 
 ### Highlight Section Container
 
@@ -337,10 +337,10 @@ Các thay đổi được thực hiện SAU khi hoàn thành 75 tasks gốc, tro
 - [x] P017 Gộp `HighlightKudosCard` + `KudosFeedCard` → `KudosCard` unified với `KudosCardVariant` enum | `kudos_card.dart` (mới), xóa `highlight_kudos_card.dart` + `kudos_feed_card.dart`
 - [x] P018 Thêm `awardTitle` (nullable String) + `imageUrls` (List<String>) vào Kudos model + migration | `kudos.dart`, `20260413000001_add_kudos_award_title_image.sql`
 - [x] P019 DB: Thêm `hero_tier_url` column vào users + Supabase Storage bucket `hero-tiers` + public read policy | `20260413000002_add_hero_tier_url.sql`
-- [x] P020 Upload 4 hero tier badge PNGs lên Supabase Storage (legend_hero, new_hero, rising_hero, super_hero) | `assets/images/kudos/badges/*.png`
+- [x] P020 Upload 4 hero tier badge PNGs lên Supabase Storage (legend_hero, new_hero, rising_hero, super_hero) | `assets/images/badges/*.png`
 - [x] P021 Thêm `heroTierUrl` field vào UserSummary model + regenerate freezed | `user_summary.dart`
 - [x] P022 Cập nhật `_mapUserSummary` + tất cả select queries thêm `hero_tier_url` | `kudos_remote_datasource.dart`
 - [x] P023 `_UserAvatar`: hiển thị department + dot + hero tier image (Image.network) dưới name | `kudos_card.dart`
-- [x] P024 PersonalStatsCard fire icon: SVG monochrome → PNG multi-color gradient | `personal_stats_card.dart`, `assets/images/kudos/ic_fire.png`
+- [x] P024 PersonalStatsCard fire icon: SVG monochrome → PNG multi-color gradient | `personal_stats_card.dart`, `assets/images/kudos_fire.png`
 - [x] P025 Theme colors: thêm `textRed`, `awardMessageContent` + assets `ic_dot.svg`, `ic_media.svg`, `ic_link.svg` | `app_colors.dart`, `assets/icons/`
 - [x] P026 Seed data: cập nhật badges image_url, users hero_tier_url, kudos award_title | `seed.sql`

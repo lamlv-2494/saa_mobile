@@ -38,7 +38,7 @@ class KudosSectionWidget extends StatelessWidget {
               width: double.infinity,
               height: 145,
               color: AppColors.bgDark,
-              child: Assets.images.home.kudosBanner.image(
+              child: Assets.images.kudosBanner.image(
                 width: double.infinity,
                 height: 145,
                 fit: BoxFit.cover,

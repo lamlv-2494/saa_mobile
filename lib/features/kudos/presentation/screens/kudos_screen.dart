@@ -143,7 +143,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Assets.images.kudos.keyVisualBg.image(
+                  Assets.images.kudosKeyVisualBg.image(
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
                   ),

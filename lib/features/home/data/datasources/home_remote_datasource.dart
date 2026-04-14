@@ -82,6 +82,8 @@ class HomeRemoteDatasourceImpl implements HomeRemoteDatasource {
     final result = Map<String, dynamic>.from(row);
     _swapIfPresent(result, 'name', 'name_en');
     _swapIfPresent(result, 'description', 'description_en');
+    _swapIfPresent(result, 'unit', 'unit_en');
+    _swapIfPresent(result, 'prize_note', 'prize_note_en');
     return result;
   }
 

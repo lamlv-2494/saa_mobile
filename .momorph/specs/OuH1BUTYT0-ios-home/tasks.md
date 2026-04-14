@@ -10,7 +10,7 @@
 
 > Mục tiêu: Assets, fonts, theme tokens, i18n keys sẵn sàng
 
-- [x] T001 Tải assets từ Figma (Key Visual BG, Root Further logo, award images, Kudos banner) vào `assets/images/home/` — directories created, actual images pending manual Figma export
+- [x] T001 Tải assets từ Figma (Key Visual BG, Root Further logo, award images, Kudos banner) vào `assets/images/` — directories created, actual images pending manual Figma export
 - [x] T002 [P] Tải SVG icons từ Figma (search, bell, pen, kudos logo, nav icons, flag VN/EN) vào `assets/icons/` — directories exist, pending manual export
 - [x] T003 [P] Thêm custom fonts `Digital Numbers` và `SVN-Gotham` vào `assets/fonts/` và khai báo trong `pubspec.yaml` — directory created, pending font files
 - [x] T004 Mở rộng theme tokens trong `lib/app/theme/app_colors.dart` — thêm: divider, navBg, countdownBorder, outlineBtnBg, outlineBtnBorder, notificationBadge, kudosBannerText (theo design-style.md §1.1)
@@ -128,13 +128,13 @@
 - [x] T051 Thêm `flutter_gen_runner` vào `dev_dependencies` trong `pubspec.yaml`
 - [x] T052 Thêm config `flutter_gen:` vào `pubspec.yaml` — output: `lib/gen/`, integrations: flutter_svg: true
 - [x] T053 Chạy `dart run build_runner build` để generate `lib/gen/assets.gen.dart` + `lib/gen/fonts.gen.dart`
-- [x] T054 Verify generated file: `Assets.images.home.*`, `Assets.icons.*` tồn tại và đúng
+- [x] T054 Verify generated file: `Assets.images.*`, `Assets.icons.*` tồn tại và đúng
 
 ### 9.2 Migrate Home widgets
 
-- [x] T055 [P] Migrate `lib/features/home/presentation/widgets/hero_content_widget.dart` — 3 assets → `Assets.images.home.*` / `Assets.icons.*`
-- [x] T056 [P] Migrate `lib/features/home/presentation/widgets/home_header_widget.dart` — 3 assets → `Assets.images.home.*` / `Assets.icons.*`
-- [x] T057 [P] Migrate `lib/features/home/presentation/widgets/kudos_section_widget.dart` — 2 assets → `Assets.images.home.*` / `Assets.icons.*`
+- [x] T055 [P] Migrate `lib/features/home/presentation/widgets/hero_content_widget.dart` — 3 assets → `Assets.images.*` / `Assets.icons.*`
+- [x] T056 [P] Migrate `lib/features/home/presentation/widgets/home_header_widget.dart` — 3 assets → `Assets.images.*` / `Assets.icons.*`
+- [x] T057 [P] Migrate `lib/features/home/presentation/widgets/kudos_section_widget.dart` — 2 assets → `Assets.images.*` / `Assets.icons.*`
 - [x] T058 [P] Migrate `lib/features/home/presentation/widgets/kudos_fab_widget.dart` — 2 assets → `Assets.icons.*`
 
 ### 9.3 Migrate Shared widgets

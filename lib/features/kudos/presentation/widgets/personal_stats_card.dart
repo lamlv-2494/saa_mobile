@@ -101,7 +101,7 @@ class _StatRow extends StatelessWidget {
             ),
             if (showBonusBadge) ...[
               const SizedBox(width: 30),
-              Assets.images.kudos.icFire.image(width: 24, height: 24),
+              Assets.images.kudosFire.image(width: 24, height: 24),
             ],
           ],
         ),

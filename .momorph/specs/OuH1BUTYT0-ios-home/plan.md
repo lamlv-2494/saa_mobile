@@ -131,7 +131,7 @@ Các packages còn lại đã có: `flutter_riverpod`, `go_router`, `supabase_fl
 8. Tạo `HomeRemoteDatasource` + `HomeRepository` (interface + impl)
 
 > **Quy tắc asset access (constitution v1.3.0)**:
-> - Image: `Assets.images.home.keyVisualBg.image(fit: BoxFit.cover)`
+> - Image: `Assets.images.keyVisualBg.image(fit: BoxFit.cover)`
 > - SVG: `Assets.icons.icSearch.svg(width: 24, height: 24)`
 > - KHÔNG hardcode string path: ~~`Image.asset('assets/images/...')`~~
 > - Xem đầy đủ mapping tại `design-style.md` §6
@@ -156,8 +156,8 @@ Các packages còn lại đã có: `flutter_riverpod`, `go_router`, `supabase_fl
 **Pattern thay thế**:
 ```dart
 // Image (PNG/JPG)
-Image.asset('assets/images/home/key_visual_bg.png', ...) 
-→ Assets.images.home.keyVisualBg.image(...)
+Image.asset('assets/images/key_visual_bg.png', ...) 
+→ Assets.images.keyVisualBg.image(...)
 
 // SVG
 SvgPicture.asset('assets/icons/ic_search.svg', ...)

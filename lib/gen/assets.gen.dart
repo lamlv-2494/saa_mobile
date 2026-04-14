@@ -31,12 +31,23 @@ class $AssetsIconsGen {
   SvgGenImage get icArrowOpen =>
       const SvgGenImage('assets/icons/ic_arrow_open.svg');
 
+  /// File path: assets/icons/ic_arrow_right.svg
+  SvgGenImage get icArrowRight =>
+      const SvgGenImage('assets/icons/ic_arrow_right.svg');
+
   /// File path: assets/icons/ic_award.svg
   SvgGenImage get icAward => const SvgGenImage('assets/icons/ic_award.svg');
+
+  /// File path: assets/icons/ic_award_flag.svg
+  SvgGenImage get icAwardFlag =>
+      const SvgGenImage('assets/icons/ic_award_flag.svg');
 
   /// File path: assets/icons/ic_copy_link.svg
   SvgGenImage get icCopyLink =>
       const SvgGenImage('assets/icons/ic_copy_link.svg');
+
+  /// File path: assets/icons/ic_diamond.svg
+  SvgGenImage get icDiamond => const SvgGenImage('assets/icons/ic_diamond.svg');
 
   /// File path: assets/icons/ic_dot.svg
   SvgGenImage get icDot => const SvgGenImage('assets/icons/ic_dot.svg');
@@ -103,8 +114,11 @@ class $AssetsIconsGen {
     aGitkeep,
     icArrowDown,
     icArrowOpen,
+    icArrowRight,
     icAward,
+    icAwardFlag,
     icCopyLink,
+    icDiamond,
     icDot,
     icGiftBox,
     icGiftOpen,
@@ -132,26 +146,65 @@ class $AssetsImagesGen {
   /// File path: assets/images/.gitkeep
   String get aGitkeep => 'assets/images/.gitkeep';
 
-  /// Directory path: assets/images/home
-  $AssetsImagesHomeGen get home => const $AssetsImagesHomeGen();
+  /// File path: assets/images/key_visual_bg.png
+  AssetGenImage get keyVisualBg =>
+      const AssetGenImage('assets/images/key_visual_bg.png');
 
   /// File path: assets/images/keyvisual_bg.png
   AssetGenImage get keyvisualBg =>
       const AssetGenImage('assets/images/keyvisual_bg.png');
 
-  /// Directory path: assets/images/kudos
-  $AssetsImagesKudosGen get kudos => const $AssetsImagesKudosGen();
+  /// File path: assets/images/kudos_banner.png
+  AssetGenImage get kudosBanner =>
+      const AssetGenImage('assets/images/kudos_banner.png');
+
+  /// File path: assets/images/kudos_fire.png
+  AssetGenImage get kudosFire =>
+      const AssetGenImage('assets/images/kudos_fire.png');
+
+  /// File path: assets/images/kudos_key_visual_bg.png
+  AssetGenImage get kudosKeyVisualBg =>
+      const AssetGenImage('assets/images/kudos_key_visual_bg.png');
+
+  /// File path: assets/images/kudos_logo.png
+  AssetGenImage get kudosLogo =>
+      const AssetGenImage('assets/images/kudos_logo.png');
+
+  /// File path: assets/images/kudos_spotlight.png
+  AssetGenImage get kudosSpotlight =>
+      const AssetGenImage('assets/images/kudos_spotlight.png');
+
+  /// File path: assets/images/logo_saa.png
+  AssetGenImage get logoSaa =>
+      const AssetGenImage('assets/images/logo_saa.png');
 
   /// File path: assets/images/root_further.png
   AssetGenImage get rootFurther =>
       const AssetGenImage('assets/images/root_further.png');
+
+  /// File path: assets/images/root_further_logo.png
+  AssetGenImage get rootFurtherLogo =>
+      const AssetGenImage('assets/images/root_further_logo.png');
 
   /// File path: assets/images/saa_logo.png
   AssetGenImage get saaLogo =>
       const AssetGenImage('assets/images/saa_logo.png');
 
   /// List of all assets
-  List<dynamic> get values => [aGitkeep, keyvisualBg, rootFurther, saaLogo];
+  List<dynamic> get values => [
+    aGitkeep,
+    keyVisualBg,
+    keyvisualBg,
+    kudosBanner,
+    kudosFire,
+    kudosKeyVisualBg,
+    kudosLogo,
+    kudosSpotlight,
+    logoSaa,
+    rootFurther,
+    rootFurtherLogo,
+    saaLogo,
+  ];
 }
 
 class $AssetsIconsFlagsGen {
@@ -168,57 +221,6 @@ class $AssetsIconsFlagsGen {
 
   /// List of all assets
   List<dynamic> get values => [aGitkeep, en, vn];
-}
-
-class $AssetsImagesHomeGen {
-  const $AssetsImagesHomeGen();
-
-  /// File path: assets/images/home/key_visual_bg.png
-  AssetGenImage get keyVisualBg =>
-      const AssetGenImage('assets/images/home/key_visual_bg.png');
-
-  /// File path: assets/images/home/kudos_banner.png
-  AssetGenImage get kudosBanner =>
-      const AssetGenImage('assets/images/home/kudos_banner.png');
-
-  /// File path: assets/images/home/logo_saa.png
-  AssetGenImage get logoSaa =>
-      const AssetGenImage('assets/images/home/logo_saa.png');
-
-  /// File path: assets/images/home/root_further_logo.png
-  AssetGenImage get rootFurtherLogo =>
-      const AssetGenImage('assets/images/home/root_further_logo.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values => [
-    keyVisualBg,
-    kudosBanner,
-    logoSaa,
-    rootFurtherLogo,
-  ];
-}
-
-class $AssetsImagesKudosGen {
-  const $AssetsImagesKudosGen();
-
-  /// File path: assets/images/kudos/ic_fire.png
-  AssetGenImage get icFire =>
-      const AssetGenImage('assets/images/kudos/ic_fire.png');
-
-  /// File path: assets/images/kudos/key_visual_bg.png
-  AssetGenImage get keyVisualBg =>
-      const AssetGenImage('assets/images/kudos/key_visual_bg.png');
-
-  /// File path: assets/images/kudos/kudos_logo.png
-  AssetGenImage get kudosLogo =>
-      const AssetGenImage('assets/images/kudos/kudos_logo.png');
-
-  /// File path: assets/images/kudos/spotlight.png
-  AssetGenImage get spotlight =>
-      const AssetGenImage('assets/images/kudos/spotlight.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values => [icFire, keyVisualBg, kudosLogo, spotlight];
 }
 
 class Assets {
