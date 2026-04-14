@@ -1,9 +1,10 @@
 <!--
 === Sync Impact Report ===
-Version change: 1.2.0 → 1.3.0 (MINOR — thêm flutter_gen cho type-safe asset access)
+Version change: 1.3.0 → 1.3.1 (PATCH — bỏ subfolder feature-specific trong assets/images/)
 
 Modified principles:
-  - Principle II (Clean Code): Mở rộng Asset Rules — thêm flutter_gen bắt buộc
+  - Principle II (Clean Code) > Asset Rules: Xóa `images/home/` subfolder,
+    images giờ đặt phẳng trong `assets/images/` dùng chung cho mọi screen.
 
 Added sections: N/A
 
@@ -15,9 +16,8 @@ Templates requiring updates:
   ✅ .momorph/templates/tasks-template.md — không cần cập nhật
 
 Follow-up TODOs:
-  - Thêm flutter_gen + flutter_gen_runner vào pubspec.yaml
-  - Chạy `dart run build_runner build` để generate asset classes
-  - Migrate toàn bộ hardcoded asset paths sang Assets.xxx / Assets.icons.xxx
+  - ✅ Di chuyển ảnh từ assets/images/home/ sang assets/images/ — DONE
+  - Chạy `dart run build_runner build` để regenerate asset classes
 === End Report ===
 -->
 
@@ -140,8 +140,7 @@ Mọi code PHẢI tuân thủ nguyên tắc clean code để đảm bảo khả 
 assets/
 ├── icons/           # SVG only — ic_search.svg, ic_notification.svg
 │   └── flags/       # SVG flags — vn.svg, en.svg
-├── images/          # PNG/JPG — backgrounds, key visuals, logos
-│   └── home/        # Feature-specific images
+├── images/          # PNG/JPG — backgrounds, key visuals, logos (shared across screens)
 └── fonts/           # Custom fonts
 ```
 
@@ -165,7 +164,7 @@ KHÔNG ĐƯỢC hardcode đường dẫn asset dưới dạng string literal.
       flutter_svg: true
   ```
 - **Quy tắc sử dụng**:
-  - Ảnh PNG/JPG: `Assets.images.home.keyVisualBg.image(fit: BoxFit.cover)`
+  - Ảnh PNG/JPG: `Assets.images.keyVisualBg.image(fit: BoxFit.cover)`
   - SVG icons: `Assets.icons.icSearch.svg(width: 24, height: 24)`
   - Fonts: `Assets.fonts.digitalNumbersRegular` (nếu cần path)
 - **KHÔNG ĐƯỢC** viết `'assets/icons/ic_search.svg'` trực tiếp.
@@ -177,11 +176,11 @@ KHÔNG ĐƯỢC hardcode đường dẫn asset dưới dạng string literal.
 ```dart
 // ✅ ĐÚNG — type-safe qua flutter_gen
 Assets.icons.icSearch.svg(width: 24, height: 24)
-Assets.images.home.keyVisualBg.image(fit: BoxFit.cover)
+Assets.images.keyVisualBg.image(fit: BoxFit.cover)
 
 // ❌ SAI — hardcode string path
 SvgPicture.asset('assets/icons/ic_search.svg', width: 24, height: 24)
-Image.asset('assets/images/home/key_visual_bg.png', fit: BoxFit.cover)
+Image.asset('assets/images/key_visual_bg.png', fit: BoxFit.cover)
 ```
 
 ### III. Test-First (KHÔNG THƯƠNG LƯỢNG)
@@ -308,4 +307,4 @@ test/
   - **PATCH**: Sửa lỗi chính tả, làm rõ nội dung
 - Complexity PHẢI được justify — nếu có giải pháp đơn giản hơn, PHẢI dùng giải pháp đó.
 
-**Version**: 1.3.0 | **Ratified**: 2026-04-09 | **Last Amended**: 2026-04-13
+**Version**: 1.3.1 | **Ratified**: 2026-04-09 | **Last Amended**: 2026-04-14

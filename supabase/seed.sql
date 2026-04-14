@@ -12,13 +12,13 @@
 -- 1. DEPARTMENTS
 -- ==========================================
 
-INSERT INTO departments (id, name, code) VALUES
-    (1, 'CECV1', 'CECV1'),
-    (2, 'CECV3', 'CECV3'),
-    (3, 'CECV10', 'CECV10'),
-    (4, 'CEVC3', 'CEVC3'),
-    (5, 'D1', 'D1'),
-    (6, 'D2', 'D2')
+INSERT INTO departments (name, code) VALUES
+    ('CECV1', 'CECV1'),
+    ('CECV2', 'CECV2'),
+    ('CECV3', 'CECV3'),
+    ('CECV4', 'CECV4'),
+    ('ODP', 'ODP'),
+    ('Infra', 'Infra');
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('departments_id_seq', GREATEST((SELECT MAX(id) FROM departments), 6));
@@ -41,43 +41,51 @@ ON CONFLICT (id) DO NOTHING;
 SELECT setval('events_id_seq', GREATEST((SELECT MAX(id) FROM events), 1));
 
 -- ==========================================
--- 3. AWARD CATEGORIES (6 giải — theo Figma design)
+-- 3. AWARD CATEGORIES (6 giải — data từ Figma Award Detail screens)
 -- ==========================================
 
-INSERT INTO award_categories (id, event_id, name, name_en, slug, description, description_en, image_url, quantity, unit, prize_value, prize_note, sort_order) VALUES
-    (1, 1, 'Top Talent', 'Top Talent', 'top-talent',
-     'Giải thưởng Top Talent vinh danh những cá nhân xuất sắc toàn diện trên mọi phương diện trong năm. Được bình chọn bởi toàn bộ nhân viên và Ban Giám đốc.',
-     'The Top Talent award honors outstanding individuals across all aspects throughout the year. Selected by all employees and the Board of Directors.',
-     '/storage/v1/object/public/award/top_talent.png',
-     10, 'Cá nhân', 7000000, 'cho mỗi giải thưởng', 1),
-    (2, 1, 'Top Project', 'Top Project', 'top-project',
-     'Giải thưởng Top Project vinh danh các tập thể dự án xuất sắc nhất trong năm. Đánh giá dựa trên chất lượng, hiệu quả và tác động.',
-     'The Top Project award honors the best project teams of the year. Evaluated based on quality, efficiency, and impact.',
-     '/storage/v1/object/public/award/top_project.png',
-     5, 'Tập thể', 10000000, 'cho mỗi dự án', 2),
-    (3, 1, 'Top Project Leader', 'Top Project Leader', 'top-project-leader',
-     'Giải thưởng Top Project Leader vinh danh những nhà lãnh đạo dự án xuất sắc nhất, người đã dẫn dắt team đạt kết quả vượt trội.',
-     'The Top Project Leader award honors the best project leaders who have led their teams to outstanding results.',
-     '/storage/v1/object/public/award/top_project_leader.png',
-     5, 'Cá nhân', 7000000, 'cho mỗi giải thưởng', 3),
-    (4, 1, 'Best Manager', 'Best Manager', 'best-manager',
-     'Giải thưởng Best Manager vinh danh những quản lý xuất sắc nhất có đóng góp nổi bật trong việc phát triển đội ngũ và tổ chức.',
-     'The Best Manager award honors the most outstanding managers with remarkable contributions to team and organizational development.',
-     '/storage/v1/object/public/award/best_manager.png',
-     5, 'Cá nhân', 7000000, 'cho mỗi giải thưởng', 4),
-    (5, 1, 'MVP', 'MVP', 'mvp',
-     'Giải thưởng MVP vinh danh cá nhân có đóng góp giá trị nhất cho tổ chức. Người được chọn thể hiện sự xuất sắc vượt trội.',
-     'The MVP award honors the individual with the most valuable contribution to the organization. The selected person demonstrates exceptional excellence.',
-     '/storage/v1/object/public/award/mvp.png',
-     3, 'Cá nhân', 10000000, 'cho mỗi giải thưởng', 5),
-    (6, 1, 'Signature 2025 - Creator', 'Signature 2025 - Creator', 'signature-2025-creator',
-     'Giải thưởng Signature 2025 Creator vinh danh những sáng tạo đột phá trong năm. Tôn vinh tinh thần đổi mới và dám nghĩ dám làm.',
-     'The Signature 2025 Creator award honors breakthrough innovations of the year. Celebrating the spirit of renewal and daring to dream big.',
-     '/storage/v1/object/public/award/signature_creator.png',
-     3, 'Cá nhân', 7000000, 'cho mỗi giải thưởng', 6)
+INSERT INTO award_categories (event_id, name, name_en, slug, description, description_en, image_url, quantity, unit, unit_en, prize_value, prize_note, prize_note_en, sort_order) VALUES
+    (1, 'Top Talent', 'Top Talent', 'top-talent',
+     'Giải thưởng Top Talent vinh danh những cá nhân xuất sắc toàn diện – những người không ngừng khẳng định năng lực chuyên môn vững vàng, hiệu suất công việc vượt trội, luôn mang lại giá trị vượt kỳ vọng, được đánh giá cao bởi khách hàng và đồng đội. Với tinh thần sẵn sàng nhận mọi nhiệm vụ tổ chức giao phó, họ luôn là nguồn cảm hứng, thúc đẩy động lực và tạo ảnh hưởng tích cực đến cả tập thể.',
+     'The Top Talent award honors well-rounded outstanding individuals – those who continuously demonstrate solid professional competence, exceptional work performance, consistently deliver beyond expectations, and are highly regarded by clients and colleagues. With a spirit of readiness to take on any task assigned by the organization, they are always a source of inspiration, driving motivation and creating a positive impact on the entire team.',
+     '/storage/v1/object/public/awards/top_talent.png',
+     10, 'Cá nhân', 'Individual', 7000000, 'cho mỗi giải thưởng', 'per award', 1),
+    (1, 'Top Project', 'Top Project', 'top-project',
+     'Giải thưởng Top Project vinh danh các tập thể dự án xuất sắc với kết quả kinh doanh vượt kỳ vọng, hiệu quả vận hành tối ưu và tinh thần làm việc tận tâm. Đây là các dự án có độ phức tạp kỹ thuật cao, hiệu quả tối ưu hóa nguồn lực và chi phí tốt, đề xuất các ý tưởng có giá trị cho khách hàng, đem lại lợi nhuận vượt trội và nhận được phản hồi tích cực từ khách hàng. Các thành viên tuân thủ nghiêm ngặt các tiêu chuẩn phát triển nội bộ trong phát triển dự án, tạo nên một hình mẫu về sự xuất sắc và chuyên nghiệp.',
+     'The Top Project award honors outstanding project teams with business results exceeding expectations, optimal operational efficiency, and a dedicated work ethic. These are projects with high technical complexity, excellent resource and cost optimization, valuable ideas proposed to clients, outstanding profitability, and positive client feedback. Team members strictly adhere to internal development standards, creating a model of excellence and professionalism.',
+     '/storage/v1/object/public/awards/top_project.png',
+     2, 'Tập thể', 'Team', 15000000, 'cho mỗi giải thưởng', 'per award', 2),
+    (1, 'Top Project Leader', 'Top Project Leader', 'top-project-leader',
+     'Giải thưởng Top Project Leader vinh danh những nhà quản lý dự án xuất sắc – những người hội tụ năng lực quản lý vững vàng, khả năng truyền cảm hứng mạnh mẽ, và tư duy "Aim High – Be Agile" trong mọi bài toán và bối cảnh. Dưới sự dẫn dắt của họ, các thành viên không chỉ cùng nhau vượt qua thử thách và đạt được mục tiêu đề ra, mà còn giữ vững ngọn lửa nhiệt huyết, tinh thần Wasshoi, và trưởng thành để trở thành phiên bản tinh hoa – hạnh phúc hơn của chính mình.',
+     'The Top Project Leader award honors outstanding project managers – those who combine solid management capabilities, strong inspirational skills, and an "Aim High – Be Agile" mindset in every challenge and context. Under their leadership, team members not only overcome challenges together and achieve set goals, but also maintain the fire of enthusiasm, the Wasshoi spirit, and grow to become the finest, happiest version of themselves.',
+     '/storage/v1/object/public/awards/top_project_leader.png',
+     3, 'Cá nhân', 'Individual', 7000000, 'cho mỗi giải thưởng', 'per award', 3),
+    (1, 'Best Manager', 'Best Manager', 'best-manager',
+     'Giải thưởng Best Manager vinh danh những nhà lãnh đạo tiêu biểu – người đã dẫn dắt đội ngũ của mình tạo ra kết quả vượt kỳ vọng, tác động nổi bật đến hiệu quả kinh doanh và sự phát triển bền vững của tổ chức. Dưới sự lãnh đạo của họ, đội ngũ luôn chinh phục và làm chủ mọi mục tiêu bằng năng lực đa nhiệm, khả năng phối hợp hiệu quả, và tư duy ứng dụng công nghệ linh hoạt trong kỷ nguyên số. Họ truyền cảm hứng để tập thể trở nên tự tin tràn đầy năng lượng, sẵn sàng đón nhận, thậm chí dẫn dắt tạo ra những thay đổi có tính cách mạng.',
+     'The Best Manager award honors exemplary leaders – those who have led their teams to deliver results exceeding expectations, making a remarkable impact on business efficiency and the sustainable development of the organization. Under their leadership, teams consistently conquer and master every goal through multitasking capabilities, effective coordination, and flexible technology-driven thinking in the digital era. They inspire their teams to become confident, energized, and ready to embrace – even lead – revolutionary changes.',
+     '/storage/v1/object/public/awards/best_manager.png',
+     1, 'Cá nhân', 'Individual', 10000000, 'cho mỗi giải thưởng', 'per award', 4),
+    (1, 'MVP', 'MVP (Most Valuable Person)', 'mvp',
+     'Giải thưởng MVP vinh danh cá nhân xuất sắc nhất năm – gương mặt tiêu biểu đại diện cho toàn bộ tập thể Sun*. Họ là người đã thể hiện năng lực vượt trội, tinh thần cống hiến bền bỉ, và tầm ảnh hưởng sâu rộng, để lại dấu ấn mạnh mẽ trong hành trình của Sun* suốt năm qua. Không chỉ nổi bật bởi hiệu suất và kết quả công việc, họ còn là nguồn cảm hứng lan tỏa – thông qua suy nghĩ, hành động và ảnh hưởng tích cực của mình đối với tập thể. MVP là người hội tụ đầy đủ phẩm chất của người Sun* ưu tú, đồng thời mang trên mình trọng trách lớn lao: trở thành hình mẫu đại diện cho con người và tinh thần Sun*, góp phần dẫn dắt tập thể vươn tới những đỉnh cao mới.',
+     'The MVP award honors the most outstanding individual of the year – the representative face of the entire Sun* community. They have demonstrated exceptional capabilities, persistent dedication, and far-reaching influence, leaving a strong mark on Sun*''s journey throughout the past year. Not only standing out for their performance and work results, they are also a spreading source of inspiration – through their thinking, actions, and positive influence on the team. The MVP embodies all the qualities of an elite Sun* member, while carrying the great responsibility of becoming a role model representing the people and spirit of Sun*, helping to lead the community toward new heights.',
+     '/storage/v1/object/public/awards/mvp.png',
+     1, 'Cá nhân', 'Individual', 15000000, 'cho giải cá nhân', 'for individual award', 5),
+    (1, 'Signature 2025 - Creator', 'Signature 2025 - Creator', 'signature-2025-creator',
+     'Giải thưởng Signature vinh danh cá nhân hoặc tập thể thể hiện tinh thần đặc trưng mà Sun* hướng tới trong từng thời kỳ. Trong năm 2025, giải thưởng Signature vinh danh Creator - cá nhân/tập thể mang tư duy chủ động và nhạy bén, luôn nhìn thấy cơ hội trong thách thức và tiên phong trong hành động. Họ không chỉ dừng lại ở việc thực hiện nhiệm vụ mà còn kiến tạo giá trị mới, mở ra hướng đi sáng tạo cho tập thể và tổ chức. Creator là người dám nghĩ khác, dám làm khác và truyền cảm hứng để những người xung quanh cùng bứt phá.',
+     'The Signature award honors individuals or teams that embody the distinctive spirit Sun* strives for in each era. In 2025, the Signature award celebrates the Creator – individuals/teams with a proactive and agile mindset, who always see opportunities in challenges and pioneer in action. They go beyond just executing tasks to create new value, opening creative pathways for the team and organization. The Creator dares to think differently, act differently, and inspires those around them to break through together.',
+     '/storage/v1/object/public/awards/signature_creator.png',
+     1, 'Cá nhân hoặc tập thể', 'Individual or Team', NULL, NULL, NULL, 6);
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('award_categories_id_seq', GREATEST((SELECT MAX(id) FROM award_categories), 6));
+-- ==========================================
+-- 3.1 AWARD PRIZES (cho giải có nhiều mức giá trị)
+-- Signature 2025 - Creator có 2 mức: cá nhân + tập thể
+-- ==========================================
+
+INSERT INTO award_prizes (award_category_id, prize_type, value_amount, note_vi, note_en, sort_order) VALUES
+    ((SELECT id FROM award_categories WHERE slug = 'signature-2025-creator'), 'individual', 5000000, 'cho giải cá nhân', 'for individual award', 1),
+    ((SELECT id FROM award_categories WHERE slug = 'signature-2025-creator'), 'team', 8000000, 'cho giải tập thể', 'for team award', 2);
 
 -- ==========================================
 -- 4. KUDOS CONFIG (Home screen Kudos section)

@@ -62,6 +62,6 @@ class _SpotlightChart extends StatelessWidget {
         ),
       );
     }
-    return Image.asset(Assets.images.kudos.spotlight.path, fit: BoxFit.cover);
+    return Image.asset(Assets.images.kudosSpotlight.path, fit: BoxFit.cover);
   }
 }

@@ -1,7 +1,7 @@
 # SCREENFLOW - SAA Mobile
 
 > Auto-generated screen flow mapping from Figma designs.
-> Last updated: 2026-04-10
+> Last updated: 2026-04-14
 
 ## Project Info
 
@@ -17,9 +17,9 @@
 | Metric       | Count |
 | ------------ | ----- |
 | Total iOS    | 30    |
-| Discovered   | 1     |
-| Pending      | 29    |
-| Progress     | 3%    |
+| Discovered   | 7     |
+| Pending      | 23    |
+| Progress     | 23%   |
 
 ## Screens
 
@@ -29,12 +29,12 @@
 | 2 | [iOS] Login | 8HGlvYGJWq | pending | | |
 | 3 | [iOS] 404 | sn2mdavs1a | pending | | |
 | 4 | [iOS] Access denied | k-7zJk2B7s | pending | | |
-| 5 | [iOS] Award_Best Manager | 7y195PPTxQ | pending | | |
-| 6 | [iOS] Award_MVP | b2BuS8HYIt | pending | | |
-| 7 | [iOS] Award_Signature 2025 - Creator | O98TwiHaJe | pending | | |
-| 8 | [iOS] Award_Top project | FQoJZLkG_d | pending | | |
-| 9 | [iOS] Award_Top project leader | QQvsfK3yaK | pending | | |
-| 10 | [iOS] Award_Top talent | c-QM3_zjkG | pending | | |
+| 5 | [iOS] Award_Best Manager | 7y195PPTxQ | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
+| 6 | [iOS] Award_MVP | b2BuS8HYIt | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
+| 7 | [iOS] Award_Signature 2025 - Creator | O98TwiHaJe | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
+| 8 | [iOS] Award_Top project | FQoJZLkG_d | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
+| 9 | [iOS] Award_Top project leader | QQvsfK3yaK | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
+| 10 | [iOS] Award_Top talent | c-QM3_zjkG | discovered | GET /api/awards, GET /api/awards/:id | Home -> Awards, Dropdown filter, Bottom Nav (SAA 2025, Kudos, Profile), Nút Chi tiết Kudos |
 | 11 | [iOS] Language dropdown | uUvW6Qm1ve | pending | | |
 | 12 | [iOS] Open secret box | kQk65hSYF2 | pending | | |
 | 13 | [iOS] Open secret box- action | KUmv414uC9 | pending | | |
@@ -87,6 +87,19 @@ graph TD
     Home -->|Award card: Chi tiết| Awards_TopTalent
     Home -->|FAB: Pencil| SendKudos
     Home -->|FAB: Kudos icon| KudosAllKudos
+
+    %% Award Detail điều hướng (chung cho 6 biến thể)
+    Awards_TopTalent -->|Bottom Nav: SAA 2025| Home
+    Awards_TopTalent -->|Bottom Nav: Kudos| Kudos
+    Awards_TopTalent -->|Bottom Nav: Profile| Profile
+    Awards_TopTalent -->|Nút Chi tiết Kudos| Kudos
+    Awards_TopTalent -->|Header: Language| LanguageDropdown
+    Awards_TopTalent -->|Header: Search| Search
+    Awards_TopTalent -->|Dropdown filter| Awards_TopProject
+    Awards_TopTalent -->|Dropdown filter| Awards_TopProjectLeader
+    Awards_TopTalent -->|Dropdown filter| Awards_BestManager
+    Awards_TopTalent -->|Dropdown filter| Awards_Signature
+    Awards_TopTalent -->|Dropdown filter| Awards_MVP
 ```
 
 ## API Endpoints Summary
@@ -96,6 +109,8 @@ graph TD
 | GET | /api/awards | [iOS] Home | Load award categories list |
 | GET | /api/kudos/info | [iOS] Home | Load Kudos section info |
 | GET | /api/event/countdown | [iOS] Home | Get countdown timer data |
+| GET | /api/awards | Award Detail (6 biến thể) | Lấy danh sách giải thưởng cho dropdown |
+| GET | /api/awards/:id | Award Detail (6 biến thể) | Lấy chi tiết giải thưởng (tên, mô tả, số lượng, giá trị, hình ảnh) |
 
 ## Screen Groups
 
@@ -103,7 +118,7 @@ graph TD
 |-------|---------|
 | Auth | Login |
 | Home | Home |
-| Awards | Award_Best Manager, Award_MVP, Award_Signature 2025 - Creator, Award_Top project, Award_Top project leader, Award_Top talent |
+| Awards | Award Detail (6 biến thể cùng layout: Top Talent, Top Project, Top Project Leader, Best Manager, Signature 2025 - Creator, MVP) - chuyển đổi qua dropdown filter |
 | Kudos | Sun*Kudos, Sun*Kudos_All Kudos, Sun*Kudos_Gửi lời chúc Kudos, Sun*Kudos_Searching, Sun*Kudos_Search Sunner, Sun*Kudos_View kudo, Sun*Kudos_View kudo ẩn danh |
 | Profile | Profile bản thân, Profile người khác |
 | Secret Box | Open secret box (x8 variants) |
@@ -115,3 +130,4 @@ graph TD
 | Date | Screen | Action | Notes |
 |------|--------|--------|-------|
 | 2026-04-10 | [iOS] Home | discovered | Hero screen with countdown, awards section, kudos section, FAB, bottom nav |
+| 2026-04-14 | [iOS] Award Detail (6 biến thể) | discovered | 6 biến thể cùng layout: Top Talent, Top Project, Top Project Leader, Best Manager, Signature 2025 - Creator, MVP. Chuyển đổi qua dropdown filter. Signature Creator có layout khác biệt nhỏ (2 dòng giá trị: cá nhân + tập thể). Spec chung: ios_award_detail.md |

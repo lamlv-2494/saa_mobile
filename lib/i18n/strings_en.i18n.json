@@ -39,6 +39,13 @@
     "network": "No internet connection. Please try again.",
     "auth": "Login failed. Please try again."
   },
+  "award": {
+    "recognitionSystem": "Recognition and Gratitude System",
+    "awardSystemTitle": "Award System\nSAA 2025",
+    "awardQuantityLabel": "Number of Awards",
+    "awardValueLabel": "Award Value",
+    "dropdownHint": "Select award type"
+  },
   "kudos": {
     "sectionLabel": "Sun* Annual Awards 2025",
     "tagline": "Recognition and appreciation system",
@@ -91,6 +98,8 @@
     "searchButton": "Search",
     "notificationButton": "Notifications",
     "fabWriteKudos": "Write a kudos",
-    "fabViewKudos": "View Kudos"
+    "fabViewKudos": "View Kudos",
+    "kudosDetailButton": "Open Sun* Kudos detail page",
+    "awardBadge": "Award badge"
   }
 }

@@ -40,6 +40,12 @@ abstract final class AppColors {
   static const Color awardMessageContent = Color(0xFFFFEA9E);
   static const Color awardImgBorder = Color(0xFFFFEA9E);
 
+  // Award badge glow shadow
+  static const Color awardGlow = Color(0xFFFAE287);
+
+  // Kudos banner background
+  static const Color kudosBannerBg = Color(0xFF0F0F0F);
+
   // Error
   static const Color errorBg = Color(0xFFEF4444);
 

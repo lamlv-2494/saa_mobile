@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:saa_mobile/features/home/presentation/widgets/home_header_widget.dart';
+import 'package:saa_mobile/shared/widgets/home_header_widget.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
 
 class MockSharedPrefs extends Mock implements SharedPreferences {}

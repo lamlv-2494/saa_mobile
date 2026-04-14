@@ -31,7 +31,7 @@ Triển khai màn hình chính Sun*Kudos — feed kudos với 5 section: Hero Ba
 | Feature-based module | `lib/features/kudos/` với data/presentation/domain | ✅ Tuân thủ |
 | Freezed models | Tất cả state + model dùng freezed | ✅ Tuân thủ |
 | Widget con = StatelessWidget | Screen dùng ConsumerWidget, widget con StatelessWidget | ✅ Tuân thủ |
-| SVG icons, PNG images | Icons → `assets/icons/`, backgrounds → `assets/images/kudos/` | ✅ Tuân thủ |
+| SVG icons, PNG images | Icons → `assets/icons/`, backgrounds → `assets/images/` | ✅ Tuân thủ |
 | flutter_gen (Assets.xxx) | Không hardcode path | ✅ Tuân thủ |
 | i18n (slang) VN/EN | Tất cả text qua `context.t.kudos.*` | ✅ Tuân thủ |
 | TDD | Viết test trước → implement → refactor | ✅ Tuân thủ |
@@ -205,7 +205,7 @@ Không cần thêm package mới — tất cả đã có trong `pubspec.yaml`:
 ### Phase 0: Chuẩn bị Assets & Theme (Nền tảng)
 
 - Download SVG icons từ Figma (pencil, heart, copy, sent, fire, gift, nav arrows) vào `assets/icons/`
-- Download hero banner background vào `assets/images/kudos/`
+- Download hero banner background vào `assets/images/`
 - Chạy `dart run build_runner build` để generate flutter_gen assets
 - Bổ sung colors mới vào `AppColors` (chỉ thêm những chưa có):
   - `surfaceCard` = `#FFF8E1` — **MỚI**
@@ -236,7 +236,7 @@ Không cần thêm package mới — tất cả đã có trong `pubspec.yaml`:
 
 1. **`KudosScreen`** — `CustomScrollView` + `SliverAppBar` + `RefreshIndicator` (pull-to-refresh từ đầu) + sections
 2. **Extend `SectionHeaderWidget`** — Thêm optional `trailing` widget (để truyền "Xem tất cả →" cho All Kudos header). Sửa trực tiếp `lib/shared/widgets/section_header_widget.dart` vì là backward-compatible change.
-3. **`KudosHeroBanner`** — Hero banner + tagline + logo (dùng `Assets.images.kudos.keyVisualBg`)
+3. **`KudosHeroBanner`** — Hero banner + tagline + logo (dùng `Assets.images.kudosKeyVisualBg`)
 4. **Reuse `OutlineButtonWidget`** cho CTA button — KHÔNG tạo `kudos_cta_button.dart` mới. Truyền `icon` (pencil SVG) + `label` + `onPressed`. Nếu cần customization vượt quá OutlineButtonWidget, mới tạo widget riêng.
 5. **`HighlightCarousel`** + **`HighlightKudosCard`** — PageView + cards + gradient overlays + shimmer loading + empty state
 6. **`PageIndicator`** — "2/5" format + arrow buttons (disabled state ở boundary)
@@ -424,9 +424,9 @@ Không cần thêm package mới — tất cả đã có trong `pubspec.yaml`:
 | 21 | **_UserAvatar widget**: Hiển thị hero tier image (Image.network) + dot separator dưới department. URL = `${EnvConfig.supabaseUrl}$heroTierUrl` | Match Figma design B.3.2 — badge danh hiệu bên cạnh thông tin user |
 | 22 | **_mapUserSummary**: Thêm mapping `hero_tier_url` → `heroTierUrl`. Cập nhật tất cả select queries (sender, recipient, searchSpotlight, topGiftRecipients) thêm `hero_tier_url` | Data flow end-to-end: DB → API → Model → UI |
 | 23 | **Kudos model**: Thêm fields `awardTitle` (nullable String) và `imageUrls` (List<String>) | Hỗ trợ hiển thị award title + photos trên card |
-| 24 | **PersonalStatsCard fire icon**: Đổi từ SVG (`ic_fire.svg` + ColorFilter monochrome) → PNG multi-color (`Assets.images.kudos.icFire`) | Match Figma — icon lửa gradient cam/đỏ, không phải monochrome vàng |
+| 24 | **PersonalStatsCard fire icon**: Đổi từ SVG (`ic_fire.svg` + ColorFilter monochrome) → PNG multi-color (`Assets.images.kudosFire`) | Match Figma — icon lửa gradient cam/đỏ, không phải monochrome vàng |
 | 25 | **Theme colors mới**: `textRed` (#FFD4271D), `awardMessageContent` (#FFFFEA9E) | Dùng cho award title text và message background |
-| 26 | **Assets mới**: `ic_dot.svg` (dot separator), `ic_media.svg` (sender→receiver icon), `ic_link.svg`, badge PNGs trong `assets/images/kudos/badges/` | Icons UI mới + hero tier badge images |
+| 26 | **Assets mới**: `ic_dot.svg` (dot separator), `ic_media.svg` (sender→receiver icon), `ic_link.svg`, badge PNGs trong `assets/images/` | Icons UI mới + hero tier badge images |
 | 27 | **Migration**: `20260413000001_add_kudos_award_title_image.sql` (award_title column) + `20260413000002_add_hero_tier_url.sql` (hero_tier_url + storage bucket) | DB schema updates |
 | 28 | **Seed data**: Cập nhật `seed.sql` — badges image_url → Supabase Storage paths, users có `hero_tier_url`, kudos có `award_title` | Mock data phản ánh schema mới |
 
@@ -436,7 +436,7 @@ Không cần thêm package mới — tất cả đã có trong `pubspec.yaml`:
 **Widget gộp**: `highlight_kudos_card.dart` + `kudos_feed_card.dart` → `kudos_card.dart` (unified với enum variant)
 **Sửa**: `main_scaffold.dart`, `app_colors.dart`, `section_header_widget.dart`, `pubspec.yaml`, `strings_vi.i18n.json`, `strings_en.i18n.json`, `auth_remote_datasource.dart`, `auth_repository.dart`, `auth_viewmodel.dart`, `kudos_remote_datasource.dart`, `personal_stats_card.dart`, `highlight_carousel_widget.dart`, `kudos_screen.dart`
 **Migrations**: `20260413000000_add_users_insert_policy.sql`, `20260413000001_add_kudos_award_title_image.sql`, `20260413000002_add_hero_tier_url.sql`
-**Assets mới**: `ic_dot.svg`, `ic_media.svg`, `ic_link.svg`, `assets/images/kudos/ic_fire.png`, `assets/images/kudos/badges/*.png` (4 files)
+**Assets mới**: `ic_dot.svg`, `ic_media.svg`, `ic_link.svg`, `assets/images/kudos_fire.png`, `assets/images/badges/*.png` (4 files)
 **Seed data**: `seed.sql` (cập nhật hero_tier_url + award_title)
 
 ---

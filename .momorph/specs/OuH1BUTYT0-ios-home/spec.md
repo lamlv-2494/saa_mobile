@@ -323,8 +323,8 @@ Không có — Màn hình Home chỉ hiển thị và điều hướng.
 
 | Trường | Nguồn | Kiểu | Ghi chú |
 |--------|-------|------|---------|
-| Ảnh nền hero (Key Visual) | Asset tĩnh (bundled) | Image | `Assets.images.home.keyVisualBg` — background hero, gradient overlay |
-| Logo chủ đề sự kiện | Asset tĩnh | Image | `Assets.images.home.rootFurtherLogo` — branding "ROOT FURTHER" |
+| Ảnh nền hero (Key Visual) | Asset tĩnh (bundled) | Image | `Assets.images.keyVisualBg` — background hero, gradient overlay |
+| Logo chủ đề sự kiện | Asset tĩnh | Image | `Assets.images.rootFurtherLogo` — branding "ROOT FURTHER" |
 | Ngày sự kiện | API | DateTime | Định dạng: dd/MM/yyyy |
 | Địa điểm sự kiện | API | String | Tên địa điểm |
 | Thông tin livestream | API | String | Text tĩnh, KHÔNG nhấn được (chỉ hiển thị, không link) |

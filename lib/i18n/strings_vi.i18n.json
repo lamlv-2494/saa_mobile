@@ -39,6 +39,13 @@
     "network": "Không có kết nối mạng. Vui lòng thử lại.",
     "auth": "Đăng nhập thất bại. Vui lòng thử lại."
   },
+  "award": {
+    "recognitionSystem": "Hệ thống ghi nhận và cảm ơn",
+    "awardSystemTitle": "Hệ thống giải thưởng\nSAA 2025",
+    "awardQuantityLabel": "Số lượng giải thưởng",
+    "awardValueLabel": "Giá trị giải thưởng",
+    "dropdownHint": "Chọn loại giải thưởng"
+  },
   "kudos": {
     "sectionLabel": "Sun* Annual Awards 2025",
     "tagline": "Hệ thống ghi nhận và cảm ơn",
@@ -91,6 +98,8 @@
     "searchButton": "Tìm kiếm",
     "notificationButton": "Thông báo",
     "fabWriteKudos": "Viết lời cảm ơn",
-    "fabViewKudos": "Xem Kudos"
+    "fabViewKudos": "Xem Kudos",
+    "kudosDetailButton": "Mở trang chi tiết Sun* Kudos",
+    "awardBadge": "Huy hiệu giải"
   }
 }

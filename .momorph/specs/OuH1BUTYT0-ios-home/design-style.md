@@ -347,19 +347,19 @@
 
 | Asset file | flutter_gen reference | Sử dụng | Component |
 |------------|----------------------|---------|-----------|
-| `assets/images/home/key_visual_bg.png` | `Assets.images.home.keyVisualBg` | Ảnh nền hero | `HeroContentWidget` |
-| `assets/images/home/root_further_logo.png` | `Assets.images.home.rootFurtherLogo` | Logo chủ đề | `HeroContentWidget` |
-| `assets/images/home/logo_saa.png` | `Assets.images.home.logoSaa` | Logo header | `HomeHeaderWidget` |
-| `assets/images/home/kudos_banner.png` | `Assets.images.home.kudosBanner` | Banner Kudos | `KudosSectionWidget` |
+| `assets/images/key_visual_bg.png` | `Assets.images.keyVisualBg` | Ảnh nền hero | `HeroContentWidget` |
+| `assets/images/root_further_logo.png` | `Assets.images.rootFurtherLogo` | Logo chủ đề | `HeroContentWidget` |
+| `assets/images/logo_saa.png` | `Assets.images.logoSaa` | Logo header | `HomeHeaderWidget` |
+| `assets/images/kudos_banner.png` | `Assets.images.kudosBanner` | Banner Kudos | `KudosSectionWidget` |
 
 **Cách sử dụng**:
 ```dart
 // ✅ ĐÚNG
-Assets.images.home.keyVisualBg.image(fit: BoxFit.cover)
-Assets.images.home.rootFurtherLogo.image(width: 247, height: 109)
+Assets.images.keyVisualBg.image(fit: BoxFit.cover)
+Assets.images.rootFurtherLogo.image(width: 247, height: 109)
 
 // ❌ SAI
-Image.asset('assets/images/home/key_visual_bg.png', fit: BoxFit.cover)
+Image.asset('assets/images/key_visual_bg.png', fit: BoxFit.cover)
 ```
 
 ### 6.2 Icons (SVG) — `Assets.icons.*`
