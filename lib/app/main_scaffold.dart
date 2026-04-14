@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:saa_mobile/features/home/presentation/screens/home_screen.dart';
+import 'package:saa_mobile/features/kudos/presentation/screens/kudos_screen.dart';
 import 'package:saa_mobile/shared/widgets/bottom_nav_bar.dart';
 
 final currentTabIndexProvider = StateProvider<int>((ref) => 0);
@@ -19,7 +20,7 @@ class MainScaffold extends ConsumerWidget {
         children: const [
           HomeScreen(),
           _PlaceholderTab(title: 'Awards'),
-          _PlaceholderTab(title: 'Kudos'),
+          KudosScreen(),
           _PlaceholderTab(title: 'Profile'),
         ],
       ),

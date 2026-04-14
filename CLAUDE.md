@@ -22,3 +22,9 @@ SELF-CHECK:
 Asset paths qua flutter_gen (`Assets.xxx`), không hardcode string.
 
 Mọi setup liên quan tới text ở i18n hoặc là update lên supabase đều phải hỗ trợ đa ngôn ngữ (VN/EN)
+
+Mọi file .md đều phải được viết bằng tiếng Việt
+
+Các text không get từ supabase sẽ không được hard cứng string mà phải khai báo trong i18n
+
+Khi update supabase đừng xoá bất kỳ data nào đang có trong DB, chỉ update thêm thôi

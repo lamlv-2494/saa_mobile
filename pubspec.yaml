@@ -48,6 +48,7 @@ flutter:
     - assets/images/home/
     - assets/icons/
     - assets/icons/flags/
+    - assets/images/kudos/
 
   fonts:
     - family: DigitalNumbers

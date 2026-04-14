@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 72 (36 per locale)
+/// Strings: 160 (80 per locale)
 ///
-/// Built on 2026-04-13 at 02:56 UTC
+/// Built on 2026-04-13 at 07:58 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -153,6 +153,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final _StringsNavEn nav = _StringsNavEn._(_root);
 	late final _StringsLanguageEn language = _StringsLanguageEn._(_root);
 	late final _StringsErrorEn error = _StringsErrorEn._(_root);
+	late final _StringsKudosEn kudos = _StringsKudosEn._(_root);
 	late final _StringsAccessibilityEn accessibility = _StringsAccessibilityEn._(_root);
 }
 
@@ -231,6 +232,59 @@ class _StringsErrorEn {
 	String get auth => 'Login failed. Please try again.';
 }
 
+// Path: kudos
+class _StringsKudosEn {
+	_StringsKudosEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get sectionLabel => 'Sun* Annual Awards 2025';
+	String get tagline => 'Recognition and appreciation system';
+	String get ctaText => 'Today, who do you want to send kudos to?';
+	String get highlightTitle => 'HIGHLIGHT KUDOS';
+	String get spotlightTitle => 'SPOTLIGHT BOARD';
+	String get allKudosTitle => 'ALL KUDOS';
+	String get viewAll => 'View all';
+	String get viewDetail => 'View detail';
+	String get copyLink => 'Copy Link';
+	String get linkCopied => 'Link copied';
+	String get filterHashtag => 'Hashtag';
+	String get filterDepartment => 'Department';
+	String get emptyHighlight => 'No Kudos available yet.';
+	String get emptyFeed => 'No Kudos have been sent yet.';
+	String get emptySpotlight => 'No data available.';
+	String get emptyTop10 => 'No ranking data yet.';
+	String get emptyFilter => 'No matching Kudos found.';
+	String get errorRetry => 'Something went wrong. Tap to retry.';
+	String get retry => 'Retry';
+	String get statsKudosReceived => 'Kudos received';
+	String get statsKudosSent => 'Kudos sent';
+	String get statsHeartsReceived => 'Hearts received';
+	String get statsBoxesOpened => 'Secret boxes opened';
+	String get statsBoxesUnopened => 'Secret boxes unopened';
+	String get openSecretBox => 'Open secret box';
+	String get top10Title => '10 SUNNERS WITH LATEST GIFTS';
+	String get searchSunner => 'Search sunner';
+	String get totalKudos => '{count} KUDOS';
+	String get pageIndicator => '{current}/{total}';
+	String get sent => 'sent';
+	String get timeAgo => '{time} ago';
+	String get justNow => 'Just now';
+	String get daysAgo => '{count} days ago';
+	String get hoursAgo => '{count} hours ago';
+	String get minutesAgo => '{count} minutes ago';
+	String get anonymous => 'Anonymous';
+	String get selectHashtag => 'Select Hashtag';
+	String get selectDepartment => 'Select Department';
+	String get clearFilter => 'Clear filter';
+	String get ctaComingSoon => 'Send Kudos — coming soon';
+	String get ctaAccessibilityLabel => 'Send kudos. Today, who do you want to send kudos to?';
+	String get copyLinkAccessibility => 'Copy link';
+	String get viewDetailAccessibility => 'View kudos detail';
+	String get viewAllKudos => 'View all Kudos';
+}
+
 // Path: accessibility
 class _StringsAccessibilityEn {
 	_StringsAccessibilityEn._(this._root);
@@ -275,6 +329,7 @@ class _StringsVi implements Translations {
 	@override late final _StringsNavVi nav = _StringsNavVi._(_root);
 	@override late final _StringsLanguageVi language = _StringsLanguageVi._(_root);
 	@override late final _StringsErrorVi error = _StringsErrorVi._(_root);
+	@override late final _StringsKudosVi kudos = _StringsKudosVi._(_root);
 	@override late final _StringsAccessibilityVi accessibility = _StringsAccessibilityVi._(_root);
 }
 
@@ -353,6 +408,59 @@ class _StringsErrorVi implements _StringsErrorEn {
 	@override String get auth => 'Đăng nhập thất bại. Vui lòng thử lại.';
 }
 
+// Path: kudos
+class _StringsKudosVi implements _StringsKudosEn {
+	_StringsKudosVi._(this._root);
+
+	@override final _StringsVi _root; // ignore: unused_field
+
+	// Translations
+	@override String get sectionLabel => 'Sun* Annual Awards 2025';
+	@override String get tagline => 'Hệ thống ghi nhận và cảm ơn';
+	@override String get ctaText => 'Hôm nay, bạn muốn gửi kudos đến ai?';
+	@override String get highlightTitle => 'HIGHLIGHT KUDOS';
+	@override String get spotlightTitle => 'SPOTLIGHT BOARD';
+	@override String get allKudosTitle => 'ALL KUDOS';
+	@override String get viewAll => 'Xem tất cả';
+	@override String get viewDetail => 'Xem chi tiết';
+	@override String get copyLink => 'Copy Link';
+	@override String get linkCopied => 'Đã sao chép liên kết';
+	@override String get filterHashtag => 'Hashtag';
+	@override String get filterDepartment => 'Phòng ban';
+	@override String get emptyHighlight => 'Hiện tại chưa có Kudos nào.';
+	@override String get emptyFeed => 'Chưa có Kudos nào được gửi.';
+	@override String get emptySpotlight => 'Chưa có dữ liệu.';
+	@override String get emptyTop10 => 'Chưa có dữ liệu xếp hạng.';
+	@override String get emptyFilter => 'Không tìm thấy Kudos phù hợp.';
+	@override String get errorRetry => 'Đã xảy ra lỗi. Nhấn để thử lại.';
+	@override String get retry => 'Thử lại';
+	@override String get statsKudosReceived => 'Số kudos nhận được';
+	@override String get statsKudosSent => 'Số kudos đã gửi';
+	@override String get statsHeartsReceived => 'Số hearts nhận được';
+	@override String get statsBoxesOpened => 'Số hộp bí mật đã mở';
+	@override String get statsBoxesUnopened => 'Số hộp bí mật chưa mở';
+	@override String get openSecretBox => 'Mở hộp bí mật';
+	@override String get top10Title => '10 SUNNER NHẬN QUÀ MỚI NHẤT';
+	@override String get searchSunner => 'Tìm kiếm sunner';
+	@override String get totalKudos => '{count} KUDOS';
+	@override String get pageIndicator => '{current}/{total}';
+	@override String get sent => 'sent';
+	@override String get timeAgo => '{time} trước';
+	@override String get justNow => 'Vừa xong';
+	@override String get daysAgo => '{count} ngày trước';
+	@override String get hoursAgo => '{count} giờ trước';
+	@override String get minutesAgo => '{count} phút trước';
+	@override String get anonymous => 'Ẩn danh';
+	@override String get selectHashtag => 'Chọn Hashtag';
+	@override String get selectDepartment => 'Chọn Phòng ban';
+	@override String get clearFilter => 'Xóa bộ lọc';
+	@override String get ctaComingSoon => 'Chức năng gửi Kudos — coming soon';
+	@override String get ctaAccessibilityLabel => 'Gửi kudos. Hôm nay, bạn muốn gửi kudos đến ai?';
+	@override String get copyLinkAccessibility => 'Sao chép liên kết';
+	@override String get viewDetailAccessibility => 'Xem chi tiết kudos';
+	@override String get viewAllKudos => 'View all Kudos';
+}
+
 // Path: accessibility
 class _StringsAccessibilityVi implements _StringsAccessibilityEn {
 	_StringsAccessibilityVi._(this._root);
@@ -404,6 +512,50 @@ extension on Translations {
 			case 'language.selectorLabel': return 'Select language';
 			case 'error.network': return 'No internet connection. Please try again.';
 			case 'error.auth': return 'Login failed. Please try again.';
+			case 'kudos.sectionLabel': return 'Sun* Annual Awards 2025';
+			case 'kudos.tagline': return 'Recognition and appreciation system';
+			case 'kudos.ctaText': return 'Today, who do you want to send kudos to?';
+			case 'kudos.highlightTitle': return 'HIGHLIGHT KUDOS';
+			case 'kudos.spotlightTitle': return 'SPOTLIGHT BOARD';
+			case 'kudos.allKudosTitle': return 'ALL KUDOS';
+			case 'kudos.viewAll': return 'View all';
+			case 'kudos.viewDetail': return 'View detail';
+			case 'kudos.copyLink': return 'Copy Link';
+			case 'kudos.linkCopied': return 'Link copied';
+			case 'kudos.filterHashtag': return 'Hashtag';
+			case 'kudos.filterDepartment': return 'Department';
+			case 'kudos.emptyHighlight': return 'No Kudos available yet.';
+			case 'kudos.emptyFeed': return 'No Kudos have been sent yet.';
+			case 'kudos.emptySpotlight': return 'No data available.';
+			case 'kudos.emptyTop10': return 'No ranking data yet.';
+			case 'kudos.emptyFilter': return 'No matching Kudos found.';
+			case 'kudos.errorRetry': return 'Something went wrong. Tap to retry.';
+			case 'kudos.retry': return 'Retry';
+			case 'kudos.statsKudosReceived': return 'Kudos received';
+			case 'kudos.statsKudosSent': return 'Kudos sent';
+			case 'kudos.statsHeartsReceived': return 'Hearts received';
+			case 'kudos.statsBoxesOpened': return 'Secret boxes opened';
+			case 'kudos.statsBoxesUnopened': return 'Secret boxes unopened';
+			case 'kudos.openSecretBox': return 'Open secret box';
+			case 'kudos.top10Title': return '10 SUNNERS WITH LATEST GIFTS';
+			case 'kudos.searchSunner': return 'Search sunner';
+			case 'kudos.totalKudos': return '{count} KUDOS';
+			case 'kudos.pageIndicator': return '{current}/{total}';
+			case 'kudos.sent': return 'sent';
+			case 'kudos.timeAgo': return '{time} ago';
+			case 'kudos.justNow': return 'Just now';
+			case 'kudos.daysAgo': return '{count} days ago';
+			case 'kudos.hoursAgo': return '{count} hours ago';
+			case 'kudos.minutesAgo': return '{count} minutes ago';
+			case 'kudos.anonymous': return 'Anonymous';
+			case 'kudos.selectHashtag': return 'Select Hashtag';
+			case 'kudos.selectDepartment': return 'Select Department';
+			case 'kudos.clearFilter': return 'Clear filter';
+			case 'kudos.ctaComingSoon': return 'Send Kudos — coming soon';
+			case 'kudos.ctaAccessibilityLabel': return 'Send kudos. Today, who do you want to send kudos to?';
+			case 'kudos.copyLinkAccessibility': return 'Copy link';
+			case 'kudos.viewDetailAccessibility': return 'View kudos detail';
+			case 'kudos.viewAllKudos': return 'View all Kudos';
 			case 'accessibility.loginButton': return 'Sign in with Google';
 			case 'accessibility.languageSelector': return 'Select language, currently: English';
 			case 'accessibility.searchButton': return 'Search';
@@ -448,6 +600,50 @@ extension on _StringsVi {
 			case 'language.selectorLabel': return 'Chọn ngôn ngữ';
 			case 'error.network': return 'Không có kết nối mạng. Vui lòng thử lại.';
 			case 'error.auth': return 'Đăng nhập thất bại. Vui lòng thử lại.';
+			case 'kudos.sectionLabel': return 'Sun* Annual Awards 2025';
+			case 'kudos.tagline': return 'Hệ thống ghi nhận và cảm ơn';
+			case 'kudos.ctaText': return 'Hôm nay, bạn muốn gửi kudos đến ai?';
+			case 'kudos.highlightTitle': return 'HIGHLIGHT KUDOS';
+			case 'kudos.spotlightTitle': return 'SPOTLIGHT BOARD';
+			case 'kudos.allKudosTitle': return 'ALL KUDOS';
+			case 'kudos.viewAll': return 'Xem tất cả';
+			case 'kudos.viewDetail': return 'Xem chi tiết';
+			case 'kudos.copyLink': return 'Copy Link';
+			case 'kudos.linkCopied': return 'Đã sao chép liên kết';
+			case 'kudos.filterHashtag': return 'Hashtag';
+			case 'kudos.filterDepartment': return 'Phòng ban';
+			case 'kudos.emptyHighlight': return 'Hiện tại chưa có Kudos nào.';
+			case 'kudos.emptyFeed': return 'Chưa có Kudos nào được gửi.';
+			case 'kudos.emptySpotlight': return 'Chưa có dữ liệu.';
+			case 'kudos.emptyTop10': return 'Chưa có dữ liệu xếp hạng.';
+			case 'kudos.emptyFilter': return 'Không tìm thấy Kudos phù hợp.';
+			case 'kudos.errorRetry': return 'Đã xảy ra lỗi. Nhấn để thử lại.';
+			case 'kudos.retry': return 'Thử lại';
+			case 'kudos.statsKudosReceived': return 'Số kudos nhận được';
+			case 'kudos.statsKudosSent': return 'Số kudos đã gửi';
+			case 'kudos.statsHeartsReceived': return 'Số hearts nhận được';
+			case 'kudos.statsBoxesOpened': return 'Số hộp bí mật đã mở';
+			case 'kudos.statsBoxesUnopened': return 'Số hộp bí mật chưa mở';
+			case 'kudos.openSecretBox': return 'Mở hộp bí mật';
+			case 'kudos.top10Title': return '10 SUNNER NHẬN QUÀ MỚI NHẤT';
+			case 'kudos.searchSunner': return 'Tìm kiếm sunner';
+			case 'kudos.totalKudos': return '{count} KUDOS';
+			case 'kudos.pageIndicator': return '{current}/{total}';
+			case 'kudos.sent': return 'sent';
+			case 'kudos.timeAgo': return '{time} trước';
+			case 'kudos.justNow': return 'Vừa xong';
+			case 'kudos.daysAgo': return '{count} ngày trước';
+			case 'kudos.hoursAgo': return '{count} giờ trước';
+			case 'kudos.minutesAgo': return '{count} phút trước';
+			case 'kudos.anonymous': return 'Ẩn danh';
+			case 'kudos.selectHashtag': return 'Chọn Hashtag';
+			case 'kudos.selectDepartment': return 'Chọn Phòng ban';
+			case 'kudos.clearFilter': return 'Xóa bộ lọc';
+			case 'kudos.ctaComingSoon': return 'Chức năng gửi Kudos — coming soon';
+			case 'kudos.ctaAccessibilityLabel': return 'Gửi kudos. Hôm nay, bạn muốn gửi kudos đến ai?';
+			case 'kudos.copyLinkAccessibility': return 'Sao chép liên kết';
+			case 'kudos.viewDetailAccessibility': return 'Xem chi tiết kudos';
+			case 'kudos.viewAllKudos': return 'View all Kudos';
 			case 'accessibility.loginButton': return 'Đăng nhập bằng Google';
 			case 'accessibility.languageSelector': return 'Chọn ngôn ngữ, hiện tại: Tiếng Việt';
 			case 'accessibility.searchButton': return 'Tìm kiếm';
