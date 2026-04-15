@@ -55,6 +55,38 @@ void main() {
     });
   });
 
+  group('SenderInfoWidget - sender bị xóa tài khoản (isAnonymous=false, name rỗng)', () {
+    testWidgets('hiển thị "User not found." — không nhầm với anonymous', (tester) async {
+      final kudos = createKudos(
+        isAnonymous: false,
+        sender: createUserSummary(name: '', avatar: '', heroTierUrl: ''),
+      );
+
+      await tester.pumpWidget(buildTestWidget(kudos));
+      await tester.pumpAndSettle();
+
+      expect(find.text('User not found.'), findsOneWidget);
+      // Không hiển thị fallback anonymous sender text
+      expect(find.text('Anonymous sender'), findsNothing);
+    });
+
+    testWidgets('tap KHÔNG navigate — sender đã xóa không có profile', (tester) async {
+      var tapped = false;
+      final kudos = createKudos(
+        isAnonymous: false,
+        sender: createUserSummary(name: '', avatar: '', heroTierUrl: ''),
+      );
+
+      await tester.pumpWidget(
+        buildTestWidget(kudos, onTap: () => tapped = true),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('User not found.'));
+      expect(tapped, false);
+    });
+  });
+
   group('SenderInfoWidget - kudos ẩn danh (isAnonymous=true)', () {
     testWidgets('hiển thị alias thay tên thật', (tester) async {
       final kudos = createKudos(

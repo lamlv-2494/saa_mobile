@@ -33,6 +33,7 @@ void main() {
     ).thenAnswer((_) async => [createUserSummary(id: 'u1', name: 'User 1')]);
     when(() => mockRepo.upsertSendKudosDraft(any())).thenAnswer((_) async {});
     when(() => mockRepo.deleteSendKudosDraft()).thenAnswer((_) async {});
+    when(() => mockRepo.getCurrentUserId()).thenAnswer((_) async => '99');
   });
 
   // ─────────────────────────────────────────────────────────────
@@ -433,6 +434,48 @@ void main() {
       final state = container.read(sendKudosViewModelProvider).value!;
       expect(state.isAnonymous, isFalse);
       expect(state.senderAlias, isNull);
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────
+  group('SendKudosViewModel — self-send validation', () {
+    test('validate fails with recipient_self_send when recipientId == currentUserId', () async {
+      when(() => mockRepo.getCurrentUserId()).thenAnswer((_) async => '42');
+
+      final container = makeContainer(mockRepo);
+      addTearDown(container.dispose);
+      await container.read(sendKudosViewModelProvider.future);
+
+      final vm = container.read(sendKudosViewModelProvider.notifier);
+      vm.selectRecipient(id: '42', name: 'Myself', avatar: '');
+      vm.updateTitle('HERO');
+      vm.updateMessage('Cảm ơn!');
+      vm.toggleHashtag(createHashtag(id: 1, name: '#teamwork'));
+
+      final valid = vm.validate();
+
+      expect(valid, isFalse);
+      final state = container.read(sendKudosViewModelProvider).value!;
+      expect(state.validationErrors['recipient'], 'recipient_self_send');
+    });
+
+    test('validate passes when recipientId != currentUserId', () async {
+      when(() => mockRepo.getCurrentUserId()).thenAnswer((_) async => '99');
+
+      final container = makeContainer(mockRepo);
+      addTearDown(container.dispose);
+      await container.read(sendKudosViewModelProvider.future);
+
+      final vm = container.read(sendKudosViewModelProvider.notifier);
+      vm.selectRecipient(id: '42', name: 'Other User', avatar: '');
+      vm.updateTitle('HERO');
+      vm.updateMessage('Cảm ơn!');
+      vm.toggleHashtag(createHashtag(id: 1, name: '#teamwork'));
+
+      final valid = vm.validate();
+
+      expect(valid, isTrue);
     });
   });
 

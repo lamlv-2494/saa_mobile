@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:saa_mobile/features/kudos/data/datasources/kudos_remote_datasource.dart';
-import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/send_kudos_state.dart';
 import 'package:saa_mobile/features/kudos/data/repositories/kudos_repository.dart';
 
