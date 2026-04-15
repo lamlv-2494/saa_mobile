@@ -29,7 +29,10 @@ mixin _$KudosState {
   bool get hasMoreKudos => throw _privateConstructorUsedError;
   List<Hashtag> get availableHashtags => throw _privateConstructorUsedError;
   List<Department> get availableDepartments =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // All Kudos page (page index 1 trong PageView)
+  List<Kudos> get allKudosPageList => throw _privateConstructorUsedError;
+  bool get hasMoreAllKudosPage => throw _privateConstructorUsedError;
+  bool get isLoadingMoreAllKudos => throw _privateConstructorUsedError;
 
   /// Create a copy of KudosState
   /// with the given fields replaced by the non-null parameter values.
@@ -57,6 +60,9 @@ abstract class $KudosStateCopyWith<$Res> {
     bool hasMoreKudos,
     List<Hashtag> availableHashtags,
     List<Department> availableDepartments,
+    List<Kudos> allKudosPageList,
+    bool hasMoreAllKudosPage,
+    bool isLoadingMoreAllKudos,
   });
 
   $PersonalStatsCopyWith<$Res>? get personalStats;
@@ -91,6 +97,9 @@ class _$KudosStateCopyWithImpl<$Res, $Val extends KudosState>
     Object? hasMoreKudos = null,
     Object? availableHashtags = null,
     Object? availableDepartments = null,
+    Object? allKudosPageList = null,
+    Object? hasMoreAllKudosPage = null,
+    Object? isLoadingMoreAllKudos = null,
   }) {
     return _then(
       _value.copyWith(
@@ -138,6 +147,18 @@ class _$KudosStateCopyWithImpl<$Res, $Val extends KudosState>
                 ? _value.availableDepartments
                 : availableDepartments // ignore: cast_nullable_to_non_nullable
                       as List<Department>,
+            allKudosPageList: null == allKudosPageList
+                ? _value.allKudosPageList
+                : allKudosPageList // ignore: cast_nullable_to_non_nullable
+                      as List<Kudos>,
+            hasMoreAllKudosPage: null == hasMoreAllKudosPage
+                ? _value.hasMoreAllKudosPage
+                : hasMoreAllKudosPage // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isLoadingMoreAllKudos: null == isLoadingMoreAllKudos
+                ? _value.isLoadingMoreAllKudos
+                : isLoadingMoreAllKudos // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -221,6 +242,9 @@ abstract class _$$KudosStateImplCopyWith<$Res>
     bool hasMoreKudos,
     List<Hashtag> availableHashtags,
     List<Department> availableDepartments,
+    List<Kudos> allKudosPageList,
+    bool hasMoreAllKudosPage,
+    bool isLoadingMoreAllKudos,
   });
 
   @override
@@ -258,6 +282,9 @@ class __$$KudosStateImplCopyWithImpl<$Res>
     Object? hasMoreKudos = null,
     Object? availableHashtags = null,
     Object? availableDepartments = null,
+    Object? allKudosPageList = null,
+    Object? hasMoreAllKudosPage = null,
+    Object? isLoadingMoreAllKudos = null,
   }) {
     return _then(
       _$KudosStateImpl(
@@ -305,6 +332,18 @@ class __$$KudosStateImplCopyWithImpl<$Res>
             ? _value._availableDepartments
             : availableDepartments // ignore: cast_nullable_to_non_nullable
                   as List<Department>,
+        allKudosPageList: null == allKudosPageList
+            ? _value._allKudosPageList
+            : allKudosPageList // ignore: cast_nullable_to_non_nullable
+                  as List<Kudos>,
+        hasMoreAllKudosPage: null == hasMoreAllKudosPage
+            ? _value.hasMoreAllKudosPage
+            : hasMoreAllKudosPage // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isLoadingMoreAllKudos: null == isLoadingMoreAllKudos
+            ? _value.isLoadingMoreAllKudos
+            : isLoadingMoreAllKudos // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -325,11 +364,15 @@ class _$KudosStateImpl implements _KudosState {
     this.hasMoreKudos = true,
     final List<Hashtag> availableHashtags = const [],
     final List<Department> availableDepartments = const [],
+    final List<Kudos> allKudosPageList = const [],
+    this.hasMoreAllKudosPage = true,
+    this.isLoadingMoreAllKudos = false,
   }) : _highlightKudos = highlightKudos,
        _allKudos = allKudos,
        _topGiftRecipients = topGiftRecipients,
        _availableHashtags = availableHashtags,
-       _availableDepartments = availableDepartments;
+       _availableDepartments = availableDepartments,
+       _allKudosPageList = allKudosPageList;
 
   final List<Kudos> _highlightKudos;
   @override
@@ -393,9 +436,28 @@ class _$KudosStateImpl implements _KudosState {
     return EqualUnmodifiableListView(_availableDepartments);
   }
 
+  // All Kudos page (page index 1 trong PageView)
+  final List<Kudos> _allKudosPageList;
+  // All Kudos page (page index 1 trong PageView)
+  @override
+  @JsonKey()
+  List<Kudos> get allKudosPageList {
+    if (_allKudosPageList is EqualUnmodifiableListView)
+      return _allKudosPageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allKudosPageList);
+  }
+
+  @override
+  @JsonKey()
+  final bool hasMoreAllKudosPage;
+  @override
+  @JsonKey()
+  final bool isLoadingMoreAllKudos;
+
   @override
   String toString() {
-    return 'KudosState(highlightKudos: $highlightKudos, allKudos: $allKudos, personalStats: $personalStats, topGiftRecipients: $topGiftRecipients, spotlightData: $spotlightData, selectedHashtag: $selectedHashtag, selectedDepartment: $selectedDepartment, currentHighlightPage: $currentHighlightPage, hasMoreKudos: $hasMoreKudos, availableHashtags: $availableHashtags, availableDepartments: $availableDepartments)';
+    return 'KudosState(highlightKudos: $highlightKudos, allKudos: $allKudos, personalStats: $personalStats, topGiftRecipients: $topGiftRecipients, spotlightData: $spotlightData, selectedHashtag: $selectedHashtag, selectedDepartment: $selectedDepartment, currentHighlightPage: $currentHighlightPage, hasMoreKudos: $hasMoreKudos, availableHashtags: $availableHashtags, availableDepartments: $availableDepartments, allKudosPageList: $allKudosPageList, hasMoreAllKudosPage: $hasMoreAllKudosPage, isLoadingMoreAllKudos: $isLoadingMoreAllKudos)';
   }
 
   @override
@@ -431,7 +493,15 @@ class _$KudosStateImpl implements _KudosState {
             const DeepCollectionEquality().equals(
               other._availableDepartments,
               _availableDepartments,
-            ));
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._allKudosPageList,
+              _allKudosPageList,
+            ) &&
+            (identical(other.hasMoreAllKudosPage, hasMoreAllKudosPage) ||
+                other.hasMoreAllKudosPage == hasMoreAllKudosPage) &&
+            (identical(other.isLoadingMoreAllKudos, isLoadingMoreAllKudos) ||
+                other.isLoadingMoreAllKudos == isLoadingMoreAllKudos));
   }
 
   @override
@@ -448,6 +518,9 @@ class _$KudosStateImpl implements _KudosState {
     hasMoreKudos,
     const DeepCollectionEquality().hash(_availableHashtags),
     const DeepCollectionEquality().hash(_availableDepartments),
+    const DeepCollectionEquality().hash(_allKudosPageList),
+    hasMoreAllKudosPage,
+    isLoadingMoreAllKudos,
   );
 
   /// Create a copy of KudosState
@@ -472,6 +545,9 @@ abstract class _KudosState implements KudosState {
     final bool hasMoreKudos,
     final List<Hashtag> availableHashtags,
     final List<Department> availableDepartments,
+    final List<Kudos> allKudosPageList,
+    final bool hasMoreAllKudosPage,
+    final bool isLoadingMoreAllKudos,
   }) = _$KudosStateImpl;
 
   @override
@@ -495,7 +571,13 @@ abstract class _KudosState implements KudosState {
   @override
   List<Hashtag> get availableHashtags;
   @override
-  List<Department> get availableDepartments;
+  List<Department> get availableDepartments; // All Kudos page (page index 1 trong PageView)
+  @override
+  List<Kudos> get allKudosPageList;
+  @override
+  bool get hasMoreAllKudosPage;
+  @override
+  bool get isLoadingMoreAllKudos;
 
   /// Create a copy of KudosState
   /// with the given fields replaced by the non-null parameter values.

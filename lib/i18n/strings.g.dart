@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 338 (169 per locale)
+/// Strings: 344 (172 per locale)
 ///
-/// Built on 2026-04-15 at 02:23 UTC
+/// Built on 2026-04-15 at 03:20 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -303,6 +303,9 @@ class _StringsKudosEn {
 	String get allKudosNavbarTitle => 'All Kudos';
 	String get allKudosPullToRefresh => 'Pull to refresh';
 	String get allKudosLoadingMore => 'Loading more...';
+	String get allKudosEmpty => 'No kudos yet';
+	String get allKudosLoadError => 'Failed to load kudos. Please try again.';
+	String get allKudosRetry => 'Retry';
 	String get filterAll => 'All';
 	String get filterNoHashtags => 'No hashtags available';
 	String get filterNoDepartments => 'No departments available';
@@ -598,6 +601,9 @@ class _StringsKudosVi implements _StringsKudosEn {
 	@override String get allKudosNavbarTitle => 'All Kudos';
 	@override String get allKudosPullToRefresh => 'Kéo xuống để tải lại';
 	@override String get allKudosLoadingMore => 'Đang tải thêm...';
+	@override String get allKudosEmpty => 'Chưa có kudos nào';
+	@override String get allKudosLoadError => 'Không thể tải danh sách kudos. Vui lòng thử lại.';
+	@override String get allKudosRetry => 'Thử lại';
 	@override String get filterAll => 'Tất cả';
 	@override String get filterNoHashtags => 'Chưa có hashtag nào';
 	@override String get filterNoDepartments => 'Chưa có phòng ban nào';
@@ -802,6 +808,9 @@ extension on Translations {
 			case 'kudos.allKudosNavbarTitle': return 'All Kudos';
 			case 'kudos.allKudosPullToRefresh': return 'Pull to refresh';
 			case 'kudos.allKudosLoadingMore': return 'Loading more...';
+			case 'kudos.allKudosEmpty': return 'No kudos yet';
+			case 'kudos.allKudosLoadError': return 'Failed to load kudos. Please try again.';
+			case 'kudos.allKudosRetry': return 'Retry';
 			case 'kudos.filterAll': return 'All';
 			case 'kudos.filterNoHashtags': return 'No hashtags available';
 			case 'kudos.filterNoDepartments': return 'No departments available';
@@ -979,6 +988,9 @@ extension on _StringsVi {
 			case 'kudos.allKudosNavbarTitle': return 'All Kudos';
 			case 'kudos.allKudosPullToRefresh': return 'Kéo xuống để tải lại';
 			case 'kudos.allKudosLoadingMore': return 'Đang tải thêm...';
+			case 'kudos.allKudosEmpty': return 'Chưa có kudos nào';
+			case 'kudos.allKudosLoadError': return 'Không thể tải danh sách kudos. Vui lòng thử lại.';
+			case 'kudos.allKudosRetry': return 'Thử lại';
 			case 'kudos.filterAll': return 'Tất cả';
 			case 'kudos.filterNoHashtags': return 'Chưa có hashtag nào';
 			case 'kudos.filterNoDepartments': return 'Chưa có phòng ban nào';

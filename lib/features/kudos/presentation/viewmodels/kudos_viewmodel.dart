@@ -196,6 +196,114 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
     } catch (_) {}
   }
 
+  /// Tìm kudos theo ID: kiểm tra cache (allKudos + highlightKudos + allKudosPageList) trước,
+  /// nếu không có thì gọi API. Trả về null nếu không tìm thấy (404).
+  Future<Kudos?> getKudosById(String kudosId) async {
+    final currentState = state.valueOrNull;
+    if (currentState != null) {
+      // Cache hit: tìm trong allKudos
+      final fromAll = currentState.allKudos
+          .where((k) => k.id == kudosId)
+          .firstOrNull;
+      if (fromAll != null) return fromAll;
+
+      // Cache hit: tìm trong highlightKudos
+      final fromHighlight = currentState.highlightKudos
+          .where((k) => k.id == kudosId)
+          .firstOrNull;
+      if (fromHighlight != null) return fromHighlight;
+
+      // Cache hit: tìm trong allKudosPageList
+      final fromPageList = currentState.allKudosPageList
+          .where((k) => k.id == kudosId)
+          .firstOrNull;
+      if (fromPageList != null) return fromPageList;
+    }
+
+    // Cache miss: gọi API
+    try {
+      return await _repository.getKudosDetail(kudosId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // === All Kudos Page (page index 1 trong PageView) ===
+
+  int _allKudosPage = 1;
+
+  Future<void> loadAllKudosPage() async {
+    final currentState = state.valueOrNull;
+    if (currentState == null) return;
+
+    _allKudosPage = 1;
+    try {
+      final kudos = await _repository.getKudos(
+        page: 1,
+        limit: _pageLimit,
+      );
+      state = AsyncValue.data(
+        currentState.copyWith(
+          allKudosPageList: kudos,
+          hasMoreAllKudosPage: kudos.length >= _pageLimit,
+        ),
+      );
+    } catch (_) {}
+  }
+
+  Future<void> loadMoreAllKudos() async {
+    final currentState = state.valueOrNull;
+    if (currentState == null ||
+        !currentState.hasMoreAllKudosPage ||
+        currentState.isLoadingMoreAllKudos) return;
+
+    state = AsyncValue.data(
+      currentState.copyWith(isLoadingMoreAllKudos: true),
+    );
+
+    _allKudosPage++;
+    try {
+      final newKudos = await _repository.getKudos(
+        page: _allKudosPage,
+        limit: _pageLimit,
+      );
+      state = AsyncValue.data(
+        state.valueOrNull!.copyWith(
+          allKudosPageList: [
+            ...state.valueOrNull!.allKudosPageList,
+            ...newKudos,
+          ],
+          hasMoreAllKudosPage: newKudos.length >= _pageLimit,
+          isLoadingMoreAllKudos: false,
+        ),
+      );
+    } catch (_) {
+      _allKudosPage--;
+      state = AsyncValue.data(
+        state.valueOrNull!.copyWith(isLoadingMoreAllKudos: false),
+      );
+    }
+  }
+
+  Future<void> refreshAllKudos() async {
+    final currentState = state.valueOrNull;
+    if (currentState == null) return;
+
+    _allKudosPage = 1;
+    try {
+      final kudos = await _repository.getKudos(
+        page: 1,
+        limit: _pageLimit,
+      );
+      state = AsyncValue.data(
+        currentState.copyWith(
+          allKudosPageList: kudos,
+          hasMoreAllKudosPage: kudos.length >= _pageLimit,
+        ),
+      );
+    } catch (_) {}
+  }
+
   KudosState _updateKudosInState(
     KudosState currentState,
     String kudosId,
@@ -209,9 +317,14 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
       return k.id == kudosId ? updatedKudos : k;
     }).toList();
 
+    final updatedAllKudosPageList = currentState.allKudosPageList.map((k) {
+      return k.id == kudosId ? updatedKudos : k;
+    }).toList();
+
     return currentState.copyWith(
       allKudos: updatedAllKudos,
       highlightKudos: updatedHighlightKudos,
+      allKudosPageList: updatedAllKudosPageList,
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
+import 'package:saa_mobile/core/utils/time_utils.dart';
 import 'package:saa_mobile/features/kudos/presentation/viewmodels/kudos_viewmodel.dart';
+import 'package:saa_mobile/features/kudos/presentation/widgets/all_kudos_page_view.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/all_kudos_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/highlight_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_card.dart';
@@ -27,6 +29,7 @@ class KudosScreen extends ConsumerStatefulWidget {
 
 class _KudosScreenState extends ConsumerState<KudosScreen> {
   final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -38,7 +41,26 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  void _navigateToAllKudos() {
+    final vm = ref.read(kudosViewModelProvider.notifier);
+    vm.loadAllKudosPage();
+    _pageController.animateToPage(
+      1,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _navigateBackToFeed() {
+    _pageController.animateToPage(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _onScroll() {
@@ -48,19 +70,6 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
     }
   }
 
-  String _formatTimeAgo(DateTime createdAt) {
-    final diff = DateTime.now().difference(createdAt);
-    if (diff.inDays > 0) {
-      return t.kudos.daysAgo.replaceAll('{count}', '${diff.inDays}');
-    }
-    if (diff.inHours > 0) {
-      return t.kudos.hoursAgo.replaceAll('{count}', '${diff.inHours}');
-    }
-    if (diff.inMinutes > 0) {
-      return t.kudos.minutesAgo.replaceAll('{count}', '${diff.inMinutes}');
-    }
-    return t.kudos.justNow;
-  }
 
   void _navigateToSendKudos() {
     // Placeholder — sẽ thay bằng go_router push khi màn hình gửi kudos được build
@@ -129,7 +138,13 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
             ),
           );
         },
-        data: (state) => Stack(
+        data: (state) => PageView(
+          key: const Key('kudosScreenPageView'),
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            // ─── Page 0: Kudos Feed ───
+            Stack(
           children: [
             // ─── Background Image Layer ───
             // Trải dài từ top (behind AppBar) xuống ~500px.
@@ -354,7 +369,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                           return KudosCard(
                             variant: KudosCardVariant.feed,
                             kudos: kudos,
-                            timeText: _formatTimeAgo(kudos.createdAt),
+                            timeText: formatKudosTimeAgo(kudos.createdAt),
                             onHeartTap: () => vm.toggleHeart(kudos.id),
                             onAvatarTap: (userId) {
                               // Placeholder — navigate to profile
@@ -370,9 +385,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                   SliverToBoxAdapter(
                     child: Center(
                       child: GestureDetector(
-                        onTap: () {
-                          // TODO: Navigate to full kudos feed screen
-                        },
+                        onTap: _navigateToAllKudos,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
@@ -408,6 +421,22 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               ),
             ),
           ], // Stack children
+        ),
+            // ─── Page 1: All Kudos ───
+            AllKudosPageView(
+              kudosList: state.allKudosPageList,
+              hasMore: state.hasMoreAllKudosPage,
+              isLoadingMore: state.isLoadingMoreAllKudos,
+              onBackToFeed: _navigateBackToFeed,
+              onLoadMore: () => vm.loadMoreAllKudos(),
+              onRefresh: () => vm.refreshAllKudos(),
+              onHeartTap: (id) => vm.toggleHeart(id),
+              onAvatarTap: (userId) {
+                // Placeholder — navigate to profile
+              },
+              formatTimeAgo: formatKudosTimeAgo,
+            ),
+          ], // PageView children
         ),
       ),
     );

@@ -64,10 +64,10 @@
 
 **Kiem thu doc lap**: Bam "Xem tat ca" → animate sang page 1. Bam back → animate ve page 0. Khong the swipe giua 2 pages.
 
-- [ ] T017 Viet widget test cho KudosScreen PageView: verify PageView co 2 pages, `NeverScrollableScrollPhysics`, "Xem tat ca" tap → animate sang page 1, back button → animate ve page 0. Verify scroll position page 0 giu nguyen sau khi back | `test/widget/kudos/kudos_screen_pageview_test.dart`
+- [x] T017 Viet widget test cho KudosScreen PageView: verify PageView co 2 pages, `NeverScrollableScrollPhysics`, "Xem tat ca" tap → animate sang page 1, back button → animate ve page 0. Verify scroll position page 0 giu nguyen sau khi back | `test/widget/kudos/kudos_screen_pageview_test.dart`
 - [x] T018 [US2] Sua `KudosScreen`: them `PageController _pageController` trong `_KudosScreenState`. Wrap content hien tai (Stack + RefreshIndicator) thanh page 0 trong `PageView(controller: _pageController, physics: NeverScrollableScrollPhysics(), children: [page0, page1])`. Page 1 = placeholder `AllKudosPageView` (tam thoi Container rong) | `lib/features/kudos/presentation/screens/kudos_screen.dart`
-- [ ] T019 [US2] Ket noi "Xem tat ca" GestureDetector.onTap: thay `// TODO: Navigate to full kudos feed screen` bang `_pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOut)`. Dong thoi goi `vm.loadAllKudosPage()` de lazy load data | `lib/features/kudos/presentation/screens/kudos_screen.dart`
-- [ ] T020 [US2] Dispose `_pageController` trong `dispose()` method cua `_KudosScreenState` | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T019 [US2] Ket noi "Xem tat ca" GestureDetector.onTap: thay `// TODO: Navigate to full kudos feed screen` bang `_pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOut)`. Dong thoi goi `vm.loadAllKudosPage()` de lazy load data | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T020 [US2] Dispose `_pageController` trong `dispose()` method cua `_KudosScreenState` | `lib/features/kudos/presentation/screens/kudos_screen.dart`
 
 **Checkpoint**: PageView navigation hoat dong. "Xem tat ca" animate sang page 1. Page 0 khong bi swipe.
 
@@ -81,16 +81,16 @@
 
 ### Widget AllKudosPageView
 
-- [ ] T021 Viet widget test cho `AllKudosPageView`: verify render danh sach KudosCard dung, back button goi callback, empty state khi list rong, loading more indicator khi `isLoadingMore == true`, header hien thi "ALL KUDOS" | `test/widget/kudos/all_kudos_page_view_test.dart`
-- [ ] T022 Viet widget test cho infinite scroll trong `AllKudosPageView`: simulate scroll gan cuoi (200px threshold) → verify goi `onLoadMore` callback | `test/widget/kudos/all_kudos_page_view_test.dart`
-- [ ] T023 Viet widget test cho pull-to-refresh trong `AllKudosPageView`: verify trigger `onRefresh` callback | `test/widget/kudos/all_kudos_page_view_test.dart`
-- [ ] T024 [US1] [US4] Tao `AllKudosPageView` widget (`StatelessWidget`). Nhan params: `List<Kudos> kudosList`, `bool hasMore`, `bool isLoadingMore`, `VoidCallback onBackToFeed`, `VoidCallback onLoadMore`, `Future<void> Function() onRefresh`, `void Function(String) onHeartTap`, `void Function(String) onAvatarTap`, `String Function(DateTime) formatTimeAgo`. Layout: Stack → RefreshIndicator → CustomScrollView voi SliverAppBar (gradient bg, leading: back icon `Assets.icons.icChevronLeft.svg()`, title: `t.kudos.allKudosNavbarTitle`) + SliverToBoxAdapter (SectionHeaderWidget: subtitle "Sun* Annual Awards 2025" + divider + title "ALL KUDOS") + SliverPadding chua SliverList.separated (KudosCard variant: feed) + loading indicator cuoi list + bottom spacing | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
-- [ ] T025 [US1] Implement infinite scroll: `ScrollController` listener trong AllKudosPageView — khi `scrollPosition.pixels >= scrollPosition.maxScrollExtent - 200` va `hasMore` va `!isLoadingMore` → goi `onLoadMore` | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
-- [ ] T026 [US1] Implement empty state: khi `kudosList.isEmpty` va `!isLoadingMore` → hien thi text `t.kudos.allKudosEmpty` (center, style phu hop) | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T021 Viet widget test cho `AllKudosPageView`: verify render danh sach KudosCard dung, back button goi callback, empty state khi list rong, loading more indicator khi `isLoadingMore == true`, header hien thi "ALL KUDOS" | `test/widget/kudos/all_kudos_page_view_test.dart`
+- [x] T022 Viet widget test cho infinite scroll trong `AllKudosPageView`: simulate scroll gan cuoi (200px threshold) → verify goi `onLoadMore` callback | `test/widget/kudos/all_kudos_page_view_test.dart`
+- [x] T023 Viet widget test cho pull-to-refresh trong `AllKudosPageView`: verify trigger `onRefresh` callback | `test/widget/kudos/all_kudos_page_view_test.dart`
+- [x] T024 [US1] [US4] Tao `AllKudosPageView` widget (`StatefulWidget`). Nhan params: `List<Kudos> kudosList`, `bool hasMore`, `bool isLoadingMore`, `VoidCallback onBackToFeed`, `VoidCallback onLoadMore`, `Future<void> Function() onRefresh`, `void Function(String) onHeartTap`, `void Function(String) onAvatarTap`, `String Function(DateTime) formatTimeAgo`. Layout: Stack → RefreshIndicator → CustomScrollView voi SliverAppBar + SliverToBoxAdapter (SectionHeaderWidget) + SliverPadding chua SliverList.separated (KudosCard variant: feed) + loading indicator cuoi list + bottom spacing | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T025 [US1] Implement infinite scroll: `ScrollController` listener trong AllKudosPageView — khi `scrollPosition.pixels >= scrollPosition.maxScrollExtent - 200` va `hasMore` va `!isLoadingMore` → goi `onLoadMore` | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T026 [US1] Implement empty state: khi `kudosList.isEmpty` va `!isLoadingMore` → hien thi text `t.kudos.allKudosEmpty` (center, style phu hop) | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
 
 ### Tich hop vao KudosScreen
 
-- [ ] T027 [US1] Thay placeholder AllKudosPageView (Container rong tu T018) bang widget that. Truyen data tu KudosState: `allKudosPageList`, `allKudosHasMore`, `allKudosIsLoadingMore`. Truyen callbacks: `onBackToFeed` → animate page 0, `onLoadMore` → `vm.loadMoreAllKudos()`, `onRefresh` → `vm.refreshAllKudos()`, `onHeartTap` → `vm.toggleHeart()`, `onAvatarTap` → navigate profile | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T027 [US1] Thay placeholder AllKudosPageView (Container rong tu T018) bang widget that. Truyen data tu KudosState: `allKudosPageList`, `allKudosHasMore`, `allKudosIsLoadingMore`. Truyen callbacks: `onBackToFeed` → animate page 0, `onLoadMore` → `vm.loadMoreAllKudos()`, `onRefresh` → `vm.refreshAllKudos()`, `onHeartTap` → `vm.toggleHeart()`, `onAvatarTap` → navigate profile | `lib/features/kudos/presentation/screens/kudos_screen.dart`
 
 **Checkpoint**: All Kudos page hien thi danh sach day du. Infinite scroll + pull-to-refresh hoat dong. Header "ALL KUDOS" dung. Empty state khi khong co data.
 
@@ -102,8 +102,8 @@
 
 **Kiem thu doc lap**: Bam heart tren All Kudos → count cap nhat ca 2 pages. Copy link → snackbar. Avatar → profile.
 
-- [ ] T028 Viet test xac nhan heart toggle dong bo giua page 0 va page 1: toggleHeart tren 1 kudos → verify `allKudos`, `allKudosPageList`, `highlightKudos` deu cap nhat | `test/unit/viewmodels/kudos_viewmodel_all_kudos_test.dart`
-- [ ] T029 [US3] Xac nhan KudosCard reuse trong AllKudosPageView: verify heart button, copy link, "Xem chi tiet" hoat dong dung. Heart → `vm.toggleHeart()`. Copy link → clipboard + snackbar. "Xem chi tiet" → placeholder navigation. Avatar tap → profile navigation | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T028 Viet test xac nhan heart toggle dong bo giua page 0 va page 1: toggleHeart tren 1 kudos → verify `allKudos`, `allKudosPageList`, `highlightKudos` deu cap nhat | `test/unit/viewmodels/kudos_viewmodel_all_kudos_test.dart`
+- [x] T029 [US3] Xac nhan KudosCard reuse trong AllKudosPageView: verify heart button, copy link, "Xem chi tiet" hoat dong dung. Heart → `vm.toggleHeart()`. Copy link → clipboard + snackbar. "Xem chi tiet" → placeholder navigation. Avatar tap → profile navigation | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
 
 **Checkpoint**: Tat ca tuong tac KudosCard hoat dong tren All Kudos page. Heart sync giua 2 pages.
 
@@ -113,12 +113,12 @@
 
 **Muc dich**: Error handling, accessibility, animation fine-tune, performance
 
-- [ ] T030 [P] Xu ly error state: load All Kudos that bai → hien thi error message `t.kudos.allKudosLoadError` + nut retry `t.kudos.allKudosRetry`. Load more that bai → hien thi "Thu lai" o cuoi danh sach, giu nguyen data da load | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
-- [ ] T031 [P] Them `Semantics` widgets cho back button, list items, loading indicator theo spec accessibility | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
-- [ ] T032 [P] Fine-tune PageView transition animation: 300ms ease-in-out. Verify scroll doc trong page 1 khong conflict voi PageView (NeverScrollableScrollPhysics) | `lib/features/kudos/presentation/screens/kudos_screen.dart`
-- [ ] T033 [P] Tach `_formatTimeAgo()` tu `_KudosScreenState` ra utility function trong `lib/core/utils/` de reuse cho AllKudosPageView. Hoac truyen xuong qua callback (chon phuong an phu hop nhat) | `lib/core/utils/time_utils.dart` hoac `lib/features/kudos/presentation/screens/kudos_screen.dart`
-- [ ] T034 Chay `flutter analyze` + `dart format` — dam bao 0 warnings, 0 lint errors | Toan bo project
-- [ ] T035 Chay toan bo test suite: `flutter test` — dam bao tat ca tests pass, coverage >= 80% cho ViewModel All Kudos methods | `test/`
+- [x] T030 [P] Xu ly error state: load All Kudos that bai → hien thi error message `t.kudos.allKudosLoadError` + nut retry `t.kudos.allKudosRetry`. Load more that bai → hien thi "Thu lai" o cuoi danh sach, giu nguyen data da load | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T031 [P] Them `Semantics` widgets cho back button, list items, loading indicator theo spec accessibility | `lib/features/kudos/presentation/widgets/all_kudos_page_view.dart`
+- [x] T032 [P] Fine-tune PageView transition animation: 300ms ease-in-out. Verify scroll doc trong page 1 khong conflict voi PageView (NeverScrollableScrollPhysics) | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T033 [P] Tach `_formatTimeAgo()` tu `_KudosScreenState` ra utility function trong `lib/core/utils/` de reuse cho AllKudosPageView. Hoac truyen xuong qua callback (chon phuong an phu hop nhat) | `lib/core/utils/time_utils.dart` hoac `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T034 Chay `flutter analyze` + `dart format` — dam bao 0 warnings, 0 lint errors | Toan bo project
+- [x] T035 Chay toan bo test suite: `flutter test` — dam bao tat ca tests pass, coverage >= 80% cho ViewModel All Kudos methods | `test/`
 
 **Checkpoint**: Feature All Kudos hoan chinh. Tat ca tests pass. Lint clean. Error handling day du.
 
