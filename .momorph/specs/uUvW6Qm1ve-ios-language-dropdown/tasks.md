@@ -28,9 +28,9 @@ Feature Language Dropdown đã được triển khai đầy đủ. Tasks dưới
 
 > Chỉ thực hiện nếu Figma design khác với implementation hiện tại.
 
-- [ ] T007 So sánh visual implementation hiện tại với design-style.md — ghi nhận khác biệt | `lib/shared/widgets/language_dropdown.dart`
-- [ ] T008 [US1] Điều chỉnh dropdown style nếu có khác biệt (background, border, radius, selected state) | `lib/shared/widgets/language_dropdown.dart`
-- [ ] T009 [US1] Chạy `flutter analyze` đạt 0 warnings | —
+- [x] T007 So sánh visual implementation hiện tại với design-style.md — ghi nhận khác biệt | `lib/shared/widgets/language_dropdown.dart`
+- [x] T008 [US1] Điều chỉnh dropdown style nếu có khác biệt (background, border, radius, selected state) | `lib/shared/widgets/language_dropdown.dart`
+- [x] T009 [US1] Chạy `flutter analyze` đạt 0 warnings | —
 
 **Checkpoint**: Visual khớp Figma. `flutter analyze` pass.
 

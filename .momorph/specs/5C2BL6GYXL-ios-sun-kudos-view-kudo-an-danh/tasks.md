@@ -22,7 +22,7 @@
 
 **Mục đích**: Chuẩn bị asset ẩn danh, cập nhật model, i18n, migration
 
-- [ ] T001 [P] Tạo anonymous avatar asset hợp lệ (PNG, ≥96x96px, nền tối, icon person outline) → `assets/images/anonymous_avatar.png`. File hiện tại chỉ 1x1 pixel placeholder → gây lỗi `Codec failed to produce an image`. Cần tạo ảnh thật hoặc download từ Figma | `assets/images/`
+- [x] T001 [P] Tạo anonymous avatar asset hợp lệ (PNG, ≥96x96px, nền tối, icon person outline) → `assets/images/anonymous_avatar.png`. File hiện tại chỉ 1x1 pixel placeholder → gây lỗi `Codec failed to produce an image`. Cần tạo ảnh thật hoặc download từ Figma | `assets/images/`
 - [x] T002 [P] Thêm field `senderAlias` (String?, nullable) vào `Kudos` model freezed | `lib/features/kudos/data/models/kudos.dart`
 - [x] T003 [P] Thêm i18n keys cho VN/EN: `kudos.anonymousSender` ("Người gửi ẩn danh" / "Anonymous sender"), `kudos.anonymousDepartment` ("Người gửi ẩn danh" / "Anonymous sender"), `kudos.kudosNotFound` ("Kudos không còn tồn tại" / "Kudos no longer exists"), `kudos.userNotFound` ("Người dùng không tồn tại" / "User does not exist") | `lib/i18n/strings_vi.i18n.json`, `lib/i18n/strings_en.i18n.json`
 - [x] T004 [P] Tạo migration thêm cột `sender_alias VARCHAR` (nullable) vào bảng `kudos`. Chạy migration bằng `psql` | `supabase/migrations/20260415000300_add_sender_alias.sql`
@@ -67,7 +67,7 @@
 
 ### Detail Screen
 
-- [ ] T014 Viết test cho `KudosDetailScreen`: render sender info, receiver info, content, hashtags, images, actions. Test với kudos thường + ẩn danh | `test/widget/kudos/kudos_detail_screen_test.dart`
+- [x] T014 Viết test cho `KudosDetailScreen`: render sender info, receiver info, content, hashtags, images, actions. Test với kudos thường + ẩn danh | `test/widget/kudos/kudos_detail_screen_test.dart`
 - [x] T015 [US1] Tạo `KudosDetailScreen` (ConsumerWidget) — Scaffold dark theme, layout:
   - AppBar: back button + title
   - Sender → Receiver flow (arrow between)
@@ -116,10 +116,10 @@
 - [x] T019 [P] Verify anonymous avatar border dày 1.869px (thay vì 0.865px cho thường) theo design-style.md | `lib/features/kudos/presentation/widgets/sender_info_widget.dart`
 - [x] T020 [P] Verify tap vào sender anonymous → KHÔNG navigate. Verify tap sender thường → navigate profile | `lib/features/kudos/presentation/widgets/sender_info_widget.dart`
 - [x] T021 [P] Verify edge case: `isAnonymous=true` nhưng `senderAlias=null` → hiển thị i18n fallback | `lib/features/kudos/presentation/widgets/sender_info_widget.dart`
-- [ ] T022 [P] Verify edge case: sender bị xóa tài khoản → hiển thị "Người dùng không tồn tại", KHÔNG nhầm với ẩn danh | `lib/features/kudos/presentation/widgets/sender_info_widget.dart`
+- [x] T022 [P] Verify edge case: sender bị xóa tài khoản → hiển thị "Người dùng không tồn tại", KHÔNG nhầm với ẩn danh | `lib/features/kudos/presentation/widgets/sender_info_widget.dart`
 - [x] T023 Chạy `flutter analyze` — 0 errors/warnings | Toàn bộ project
 - [x] T024 Chạy `flutter test` — tất cả tests pass | `test/`
-- [ ] T025 Verify trên simulator: mở kudos thường → đầy đủ info; mở kudos ẩn danh → sender ẩn + badge ẩn + tap disabled; heart/copy link hoạt động cả 2 | Device testing (⚠️ blocked bởi T001 — cần asset avatar hợp lệ)
+- [x] T025 Verify trên simulator: mở kudos thường → đầy đủ info; mở kudos ẩn danh → sender ẩn + badge ẩn + tap disabled; heart/copy link hoạt động cả 2 | Device testing (asset anonymous_avatar.png 96x96 hợp lệ)
 
 **Checkpoint**: Feature hoàn chỉnh. Anonymous variant hiển thị đúng.
 

@@ -56,7 +56,7 @@
 
 ### RecipientSearchItem Improvements
 
-- [ ] T007 Viết test cho `RecipientSearchItem`: hiển thị avatar thật khi URL valid, hiển thị initials fallback khi avatar rỗng/null. Text name `14px/600`, department `12px/400/#999` | `test/widget/kudos/recipient_search_item_test.dart`
+- [x] T007 Viết test cho `RecipientSearchItem`: hiển thị avatar thật khi URL valid, hiển thị initials fallback khi avatar rỗng/null. Text name `14px/600`, department `12px/400/#999` | `test/widget/kudos/recipient_search_item_test.dart`
 - [x] T008 [US1] Sửa `RecipientSearchItem` — Avatar fallback: khi `user.avatar` rỗng → `CircleAvatar(radius: 18, backgroundColor: Color(0x33FFEA9E), child: Text(initials, style: montserrat(14px/600, #FFEA9E)))`. Sửa text: name `fontWeight: w600`, department `12px/400/#999`. Thêm press highlight: `InkWell` với `splashColor: Color(0x14FFEA9E)` | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
 
 ### Shimmer Loading Widget
@@ -65,7 +65,7 @@
 
 ### Dropdown Sheet Improvements
 
-- [ ] T010 Viết test cho `RecipientDropdownWidget`: debounce 300ms, clear button hiển thị khi có text, tap clear → xóa text + ẩn results, error state hiển thị message + retry button, shimmer khi loading | `test/widget/kudos/recipient_dropdown_widget_test.dart`
+- [x] T010 [N/A — OBSOLETE] Viết test cho `RecipientDropdownWidget`: debounce 300ms, clear button hiển thị khi có text, tap clear → xóa text + ẩn results, error state hiển thị message + retry button, shimmer khi loading | `test/widget/kudos/recipient_dropdown_widget_test.dart`
 - [x] T011 [US1] Sửa debounce từ 400ms → 300ms trong `_RecipientDropdownSheet._onChanged()` | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
 - [x] T012 [US1] Thêm clear (X) button vào search input: `suffixIcon` hiển thị `IconButton(icon: Assets.icons.icClose.svg(width: 16, color: #999))` khi `_ctrl.text.isNotEmpty`. Tap → clear text + reset search results | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
 - [x] T013 [US1] Thêm minimum 2 ký tự check: khi `query.length < 2` → không gọi API, hiển thị hint `t.sendKudos.recipientMinChars` | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
@@ -83,8 +83,8 @@
 
 **Kiểm thử độc lập**: Search → results hiển thị avatar + tên w600 + department → phân biệt người cùng tên
 
-- [ ] T017 [US2] Verify layout `RecipientSearchItem`: Row(avatar 36x36, SizedBox(12), Column(name 14px/600 white, SizedBox(2), department 12px/400 #999)). Item height 56px, padding horizontal 12px | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
-- [ ] T018 [US2] Verify avatar fallback khi NetworkImage error: dùng `onBackgroundImageError` callback hoặc check URL trống trước khi render NetworkImage | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
+- [x] T017 [US2] Verify layout `RecipientSearchItem`: Row(avatar 36x36, SizedBox(12), Column(name 14px/600 white, SizedBox(2), department 12px/400 #999)). Item height 56px, padding horizontal 12px | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
+- [x] T018 [US2] Verify avatar fallback khi NetworkImage error: dùng `onBackgroundImageError` callback hoặc check URL trống trước khi render NetworkImage | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
 
 **Checkpoint**: Mỗi item hiển thị đầy đủ, dễ phân biệt người cùng tên khác đơn vị.
 
@@ -92,12 +92,12 @@
 
 ## Phase Final: Polish & Verify
 
-- [ ] T019 [P] Verify debounce chính xác 300ms — không trigger sớm hơn | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
-- [ ] T020 [P] Verify bấm overlay (vùng tối) → đóng sheet, giữ selection cũ | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
-- [ ] T021 [P] Verify mở dropdown khi đã có recipient → input hiển thị tên đã chọn | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
-- [ ] T022 Chạy `flutter analyze` — 0 errors/warnings | Toàn bộ project
-- [ ] T023 Chạy `flutter test` — tất cả tests pass | `test/`
-- [ ] T024 Verify trên simulator: mở dropdown → gõ tên → shimmer → results với avatar + dividers → chọn → đóng + hiện tên. Test: avatar null → initials. Test: API error → retry. Test: clear button | Device testing
+- [x] T019 [N/A — OBSOLETE] Verify debounce chính xác 300ms — không trigger sớm hơn | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
+- [x] T020 [N/A — OBSOLETE] Verify bấm overlay (vùng tối) → đóng sheet, giữ selection cũ | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
+- [x] T021 [N/A — OBSOLETE] Verify mở dropdown khi đã có recipient → input hiển thị tên đã chọn | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
+- [x] T022 Chạy `flutter analyze` — 0 errors/warnings | Toàn bộ project
+- [x] T023 Chạy `flutter test` — tất cả tests pass | `test/`
+- [x] T024 [N/A — OBSOLETE] Verify trên simulator: mở dropdown → gõ tên → shimmer → results với avatar + dividers → chọn → đóng + hiện tên. Test: avatar null → initials. Test: API error → retry. Test: clear button | Device testing
 
 **Checkpoint**: Dropdown hoàn chỉnh theo spec `5MU728Tjck`.
 

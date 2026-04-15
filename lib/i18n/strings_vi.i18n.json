@@ -146,7 +146,9 @@
         "loadError": "Đã xảy ra lỗi. Nhấn để thử lại.",
         "retry": "Thử lại",
         "pullToRefresh": "Kéo xuống để tải lại",
-        "loadingMore": "Đang tải thêm..."
+        "loadingMore": "Đang tải thêm...",
+        "kudosTitle": "KUDOS",
+        "saaAwards": "Sun* Annual Awards 2025"
     },
     "sendKudos": {
         "title": "New Kudo",

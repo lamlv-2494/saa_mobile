@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 364 (182 per locale)
+/// Strings: 368 (184 per locale)
 ///
-/// Built on 2026-04-15 at 07:49 UTC
+/// Built on 2026-04-15 at 10:16 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -370,6 +370,8 @@ class _StringsProfileEn {
 	String get retry => 'Retry';
 	String get pullToRefresh => 'Pull to refresh';
 	String get loadingMore => 'Loading more...';
+	String get kudosTitle => 'KUDOS';
+	String get saaAwards => 'Sun* Annual Awards 2025';
 }
 
 // Path: sendKudos
@@ -678,6 +680,8 @@ class _StringsProfileVi implements _StringsProfileEn {
 	@override String get retry => 'Thử lại';
 	@override String get pullToRefresh => 'Kéo xuống để tải lại';
 	@override String get loadingMore => 'Đang tải thêm...';
+	@override String get kudosTitle => 'KUDOS';
+	@override String get saaAwards => 'Sun* Annual Awards 2025';
 }
 
 // Path: sendKudos
@@ -877,6 +881,8 @@ extension on Translations {
 			case 'profile.retry': return 'Retry';
 			case 'profile.pullToRefresh': return 'Pull to refresh';
 			case 'profile.loadingMore': return 'Loading more...';
+			case 'profile.kudosTitle': return 'KUDOS';
+			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
 			case 'sendKudos.title': return 'New Kudo';
 			case 'sendKudos.headerSubtitle': return 'Send your appreciation and recognition to your teammate';
 			case 'sendKudos.recipientLabel': return 'Recipient *';
@@ -1067,6 +1073,8 @@ extension on _StringsVi {
 			case 'profile.retry': return 'Thử lại';
 			case 'profile.pullToRefresh': return 'Kéo xuống để tải lại';
 			case 'profile.loadingMore': return 'Đang tải thêm...';
+			case 'profile.kudosTitle': return 'KUDOS';
+			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
 			case 'sendKudos.title': return 'New Kudo';
 			case 'sendKudos.headerSubtitle': return 'Gửi lời cám ơn và ghi nhận đến đồng đội';
 			case 'sendKudos.recipientLabel': return 'Người nhận *';

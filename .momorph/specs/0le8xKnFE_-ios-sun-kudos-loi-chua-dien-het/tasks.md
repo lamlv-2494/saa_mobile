@@ -36,13 +36,13 @@
 
 **QUAN TRỌNG**: TDD bắt buộc — viết test TRƯỚC, test FAIL, rồi mới implement
 
-- [ ] T004 Viết test cho self-send validation: `recipientId == currentUserId` → set error `'recipient_self_send'`. Test `validate()` trả false khi self-send | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
+- [x] T004 Viết test cho self-send validation: `recipientId == currentUserId` → set error `'recipient_self_send'`. Test `validate()` trả false khi self-send | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
 - [x] T005 Viết test cho `shakeKey`: mỗi lần `validate()` fail → `shakeKey` tăng 1. Validate pass → `shakeKey` không đổi | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
 - [x] T006 Viết test cho auto-dismiss: gọi `updateTitle()` khi `showErrorBanner == true` → `showErrorBanner` chuyển `false` | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
-- [ ] T007 Implement self-send validation trong `validate()`: lấy `currentUserId` từ Supabase auth trong `build()`, so sánh với `recipientId` | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
+- [x] T007 Implement self-send validation trong `validate()`: lấy `currentUserId` từ Supabase auth trong `build()`, so sánh với `recipientId` | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
 - [x] T008 Implement `shakeKey` increment: trong `validate()` khi `errors.isNotEmpty` → tăng `shakeKey` | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
 - [x] T009 Implement auto-dismiss error banner: trong `updateTitle()`, `updateMessage()`, `selectRecipient()`, `toggleHashtag()` → gọi `dismissErrorBanner()` nếu `showErrorBanner == true` | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
-- [ ] T010 Chạy `flutter test test/unit/viewmodels/send_kudos_viewmodel_test.dart` — verify tất cả tests pass | `test/unit/`
+- [x] T010 Chạy `flutter test test/unit/viewmodels/send_kudos_viewmodel_test.dart` — verify tất cả tests pass | `test/unit/`
 
 **Checkpoint**: ViewModel validation hoàn chỉnh: self-send, shakeKey, auto-dismiss. Tests pass.
 
@@ -54,7 +54,7 @@
 
 **Kiểm thử độc lập**: Bấm "Gửi đi" khi form rỗng → banner lỗi hiện → bấm lại → banner shake
 
-- [ ] T011 Viết test cho `ErrorBannerWidget`: render text lỗi, hiển thị khi visible, ẩn khi not visible | `test/widget/kudos/error_banner_widget_test.dart`
+- [x] T011 Viết test cho `ErrorBannerWidget`: render text lỗi, hiển thị khi visible, ẩn khi not visible | `test/widget/kudos/error_banner_widget_test.dart`
 - [x] T012 [US1] Cải thiện `ErrorBannerWidget` — convert sang `StatefulWidget` với `AnimationController` cho shake animation: `Transform.translate(offset: Offset(shakeOffset, 0))`, shake sequence `0 → -5 → 5 → 0`, duration 300ms. Nhận param `shakeKey` (int) — khi thay đổi trigger shake | `lib/features/kudos/presentation/widgets/error_banner_widget.dart`
 - [x] T013 [US1] Cập nhật style error banner theo design: bg `rgba(212,39,29,0.15)`, border `1px #D4271D`, border-radius `8px`, padding `12px`, text `13px/500 white` | `lib/features/kudos/presentation/widgets/error_banner_widget.dart`
 - [x] T014 [US1] Wire `shakeKey` từ state vào `ErrorBannerWidget` trong `SendKudosScreen` | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
@@ -69,10 +69,10 @@
 
 **Kiểm thử độc lập**: Submit form rỗng → tất cả trường có border đỏ → sửa 1 trường → border trường đó quay lại bình thường
 
-- [ ] T015 [US2] Verify `_StyledTextField` đã xử lý `hasError` → border `#D4271D`. Verify animation border-color 150ms ease-in-out | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
-- [ ] T016 [US2] Verify `RecipientDropdownWidget` đã xử lý `hasError` → border đỏ | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
-- [ ] T017 [US2] Verify `HashtagChipGroupWidget` xử lý `hasError` → border nút "+" chuyển đỏ. Sửa nếu chưa có | `lib/features/kudos/presentation/widgets/hashtag_chip_group_widget.dart`
-- [ ] T018 [US2] Verify localized error text hiển thị dưới trường lỗi qua `_ErrorText` widget + extension `localizedError()`. Thêm case `'recipient_self_send'` vào extension | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
+- [x] T015 [US2] Verify `_StyledTextField` đã xử lý `hasError` → border `#D4271D`. Verify animation border-color 150ms ease-in-out | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
+- [x] T016 [N/A — OBSOLETE] Verify `RecipientDropdownWidget` đã xử lý `hasError` → border đỏ | `RecipientDropdownMenuWidget` trong `send_kudos_screen.dart` xử lý thay thế
+- [x] T017 [US2] Verify `HashtagChipGroupWidget` xử lý `hasError` → border nút "+" chuyển đỏ. Sửa nếu chưa có | `lib/features/kudos/presentation/widgets/hashtag_chip_group_widget.dart`
+- [x] T018 [US2] Verify localized error text hiển thị dưới trường lỗi qua `_ErrorText` widget + extension `localizedError()`. Thêm case `'recipient_self_send'` vào extension | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
 
 **Checkpoint**: Border đỏ trên trường thiếu, quay lại bình thường khi sửa. Self-send error text hiển thị.
 
@@ -93,9 +93,9 @@
 
 ## Phase Final: Polish & Verify
 
-- [ ] T021 [P] Chạy `flutter analyze` — đảm bảo 0 errors/warnings | Toàn bộ project
-- [ ] T022 [P] Chạy `flutter test test/unit/` — tất cả unit tests pass | `test/unit/`
-- [ ] T023 Verify trên simulator: form rỗng → "Gửi đi" → error banner + border đỏ → sửa 1 trường → banner ẩn + border quay lại → "Gửi đi" lại → shake animation | Device testing
+- [x] T021 [P] Chạy `flutter analyze` — đảm bảo 0 errors/warnings | Toàn bộ project
+- [x] T022 [P] Chạy `flutter test test/unit/` — tất cả unit tests pass | `test/unit/`
+- [x] T023 [N/A — Device] Verify trên simulator: form rỗng → "Gửi đi" → error banner + border đỏ → sửa 1 trường → banner ẩn + border quay lại → "Gửi đi" lại → shake animation | Device testing
 
 **Checkpoint**: Validation error state hoàn chỉnh theo spec `0le8xKnFE_`.
 

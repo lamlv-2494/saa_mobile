@@ -146,7 +146,9 @@
         "loadError": "Something went wrong. Tap to retry.",
         "retry": "Retry",
         "pullToRefresh": "Pull to refresh",
-        "loadingMore": "Loading more..."
+        "loadingMore": "Loading more...",
+        "kudosTitle": "KUDOS",
+        "saaAwards": "Sun* Annual Awards 2025"
     },
     "sendKudos": {
         "title": "New Kudo",
