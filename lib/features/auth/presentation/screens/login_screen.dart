@@ -91,7 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 8),
                   const LoginHeader(),
                   const Spacer(flex: 2),
-                  LoginBody(),
+                  const LoginBody(),
                   const Spacer(flex: 3),
                   Center(
                     child: GoogleLoginButton(
@@ -104,7 +104,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   const Spacer(),
-                  LoginFooter(),
+                  const LoginFooter(),
                 ],
               ),
             ),
