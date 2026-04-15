@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
-import 'package:saa_mobile/features/kudos/presentation/widgets/spotlight_chart_painter.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 import 'package:saa_mobile/shared/widgets/section_header_widget.dart';

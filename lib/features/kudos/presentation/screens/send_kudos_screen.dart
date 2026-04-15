@@ -519,7 +519,7 @@ class _StyledTextField extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: ValueListenableBuilder<TextEditingValue>(
                     valueListenable: controller,
-                    builder: (_, val, __) => Text(
+                    builder: (_, val, _) => Text(
                       t.sendKudos.charCount
                           .replaceAll('{current}', '${val.text.length}')
                           .replaceAll('{max}', '$maxLength'),
@@ -621,7 +621,7 @@ class _CancelButton extends StatelessWidget {
               Icons.close,
               size: 16,
               color: isDisabled
-                  ? Colors.white.withOpacity(0.5)
+                  ? Colors.white.withValues(alpha: 0.5)
                   : Colors.white,
             ),
             const SizedBox(width: 6),
@@ -631,7 +631,7 @@ class _CancelButton extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: isDisabled
-                    ? Colors.white.withOpacity(0.5)
+                    ? Colors.white.withValues(alpha: 0.5)
                     : Colors.white,
               ),
             ),
@@ -659,7 +659,9 @@ class _SendButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: isEnabled ? onTap : null,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         height: 48,
         decoration: BoxDecoration(
           color: isEnabled
@@ -714,6 +716,8 @@ extension on String {
     switch (this) {
       case 'recipient_required':
         return (t as dynamic).sendKudos.validationRecipient as String;
+      case 'recipient_self_send':
+        return (t as dynamic).sendKudos.validationSelfSend as String;
       case 'title_required':
         return (t as dynamic).sendKudos.validationTitle as String;
       case 'message_required':

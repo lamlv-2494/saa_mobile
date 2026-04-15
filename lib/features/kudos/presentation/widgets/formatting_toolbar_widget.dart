@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:saa_mobile/app/theme/app_colors.dart';
-import 'package:saa_mobile/gen/assets.gen.dart';
-
 /// Formatting toolbar with Bold, Italic, Strikethrough, Ordered List,
 /// Link, and Quote buttons.
 class FormattingToolbarWidget extends StatelessWidget {

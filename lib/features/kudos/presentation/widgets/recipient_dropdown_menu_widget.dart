@@ -78,7 +78,9 @@ class RecipientDropdownMenuWidget extends ConsumerWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide: BorderSide(color: borderColor),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.errorRed : AppColors.textAccent,
+          ),
         ),
         hintStyle: GoogleFonts.montserrat(
           fontSize: 14,

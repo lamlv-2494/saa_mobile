@@ -22,6 +22,7 @@ class AllKudosPageView extends StatefulWidget {
     required this.formatTimeAgo,
     this.hasLoadError = false,
     this.onRetry,
+    this.onViewDetail,
   });
 
   final List<Kudos> kudosList;
@@ -35,6 +36,7 @@ class AllKudosPageView extends StatefulWidget {
   final String Function(DateTime) formatTimeAgo;
   final bool hasLoadError;
   final VoidCallback? onRetry;
+  final void Function(String kudosId)? onViewDetail;
 
   @override
   State<AllKudosPageView> createState() => _AllKudosPageViewState();
@@ -256,6 +258,9 @@ class _AllKudosPageViewState extends State<AllKudosPageView> {
                           timeText: widget.formatTimeAgo(kudos.createdAt),
                           onHeartTap: () => widget.onHeartTap(kudos.id),
                           onAvatarTap: widget.onAvatarTap,
+                          onViewDetail: widget.onViewDetail != null
+                              ? () => widget.onViewDetail!(kudos.id)
+                              : null,
                         ),
                       );
                     },

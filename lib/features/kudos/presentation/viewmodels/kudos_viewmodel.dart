@@ -255,7 +255,9 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
     final currentState = state.valueOrNull;
     if (currentState == null ||
         !currentState.hasMoreAllKudosPage ||
-        currentState.isLoadingMoreAllKudos) return;
+        currentState.isLoadingMoreAllKudos) {
+      return;
+    }
 
     state = AsyncValue.data(
       currentState.copyWith(isLoadingMoreAllKudos: true),

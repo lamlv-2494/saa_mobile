@@ -31,7 +31,7 @@ class _RecipientShimmerWidgetState extends State<RecipientShimmerWidget>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, __) => Column(
+      builder: (_, _) => Column(
         children: List.generate(3, (i) {
           return Column(
             children: [

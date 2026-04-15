@@ -11,6 +11,7 @@ class SendKudosViewModel extends AsyncNotifier<SendKudosState> {
   late KudosRepository _repository;
   Timer? _draftSyncDebounce;
   String? _lastDraftSignature;
+  String? _currentUserId;
 
   @override
   FutureOr<SendKudosState> build() async {
@@ -19,16 +20,18 @@ class SendKudosViewModel extends AsyncNotifier<SendKudosState> {
       _draftSyncDebounce?.cancel();
     });
 
-    // Load hashtags + all users in parallel
+    // Load hashtags, all users, and current user ID in parallel
     List<Hashtag> hashtags = [];
     List<UserSummary> users = [];
     try {
       final results = await Future.wait([
         _repository.getHashtags(),
         _repository.fetchAllUsers(),
+        _repository.getCurrentUserId(),
       ]);
       hashtags = results[0] as List<Hashtag>;
       users = results[1] as List<UserSummary>;
+      _currentUserId = results[2] as String?;
     } catch (_) {}
 
     return SendKudosState(
@@ -183,6 +186,8 @@ class SendKudosViewModel extends AsyncNotifier<SendKudosState> {
     final errors = <String, String>{};
     if (s.recipientId == null || s.recipientId!.isEmpty) {
       errors['recipient'] = 'recipient_required';
+    } else if (_currentUserId != null && s.recipientId == _currentUserId) {
+      errors['recipient'] = 'recipient_self_send';
     }
     if (s.title.trim().isEmpty) errors['title'] = 'title_required';
     if (s.message.trim().isEmpty) errors['message'] = 'message_required';

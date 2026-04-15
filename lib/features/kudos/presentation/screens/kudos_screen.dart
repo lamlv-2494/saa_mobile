@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -76,7 +78,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
   Future<void> _navigateToSendKudos() async {
     final result = await context.push<bool>('/send-kudos');
     if (result == true && mounted) {
-      ref.read(kudosViewModelProvider.notifier).refresh();
+      unawaited(ref.read(kudosViewModelProvider.notifier).refresh());
     }
   }
 
@@ -290,6 +292,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                       availableDepartments: state.availableDepartments,
                       selectedHashtag: state.selectedHashtag,
                       selectedDepartment: state.selectedDepartment,
+                      onViewDetail: (id) => context.push('/kudos/$id'),
                       onHashtagSelected: (h) => vm.setHashtagFilter(h),
                       onDepartmentSelected: (d) => vm.setDepartmentFilter(d),
                       onHeartTap: (id) => vm.toggleHeart(id),
@@ -362,7 +365,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                         itemCount: state.allKudos.length > 10
                             ? 10
                             : state.allKudos.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        separatorBuilder: (_, _) => const SizedBox(height: 20),
                         itemBuilder: (context, index) {
                           final kudos = state.allKudos[index];
                           return KudosCard(
@@ -373,6 +376,8 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                             onAvatarTap: (userId) {
                               // Placeholder — navigate to profile
                             },
+                            onViewDetail: () =>
+                                context.push('/kudos/${kudos.id}'),
                           );
                         },
                       ),
@@ -434,6 +439,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                 // Placeholder — navigate to profile
               },
               formatTimeAgo: formatKudosTimeAgo,
+              onViewDetail: (id) => context.push('/kudos/$id'),
             ),
           ], // PageView children
         ),

@@ -202,6 +202,14 @@ class KudosRepository {
       throw Exception('Không thể xóa nháp kudos: $e');
     }
   }
+
+  Future<String?> getCurrentUserId() async {
+    try {
+      return await _datasource.tryGetCurrentUserStringId();
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 final kudosRepositoryProvider = Provider<KudosRepository>((ref) {

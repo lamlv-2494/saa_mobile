@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
-import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class HashtagChipGroupWidget extends StatelessWidget {

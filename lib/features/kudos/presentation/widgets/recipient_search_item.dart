@@ -79,7 +79,7 @@ class RecipientSearchItem extends StatelessWidget {
         radius: 18,
         backgroundImage: NetworkImage(user.avatar),
         backgroundColor: const Color(0x33FFEA9E),
-        onBackgroundImageError: (_, __) {},
+        onBackgroundImageError: (_, _) {},
       );
     }
     return CircleAvatar(

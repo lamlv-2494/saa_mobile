@@ -426,20 +426,7 @@ class KudosRemoteDatasource {
   // ─── 15. Upload Kudos Image ───
 
   Future<String> uploadKudosImage(String filePath) async {
-    final userId = await _getCurrentUserId();
-    final ext = filePath.split('.').last.toLowerCase();
-    final fileName = '$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
-
-    await _client.storage
-        .from('kudos-photos')
-        .upload(
-          fileName,
-          // The actual upload uses bytes; callers pass path from image_picker
-          // This method is mocked in tests; real impl uses File(filePath)
-          throw UnimplementedError('Use uploadKudosImageBytes instead'),
-        );
-    return _client.storage.from('kudos-photos').getPublicUrl(fileName);
-
+    throw UnimplementedError('Use uploadKudosImageBytes instead');
   }
 
   Future<String> uploadKudosImageBytes(List<int> bytes, String ext) async {
@@ -497,6 +484,12 @@ class KudosRemoteDatasource {
     final userId = await _tryGetCurrentUserId();
     if (userId == null) throw Exception('Chưa đăng nhập');
     return userId;
+  }
+
+  /// Trả null thay vì throw nếu user chưa login hoặc chưa có profile.
+  Future<String?> tryGetCurrentUserStringId() async {
+    final id = await _tryGetCurrentUserId();
+    return id?.toString();
   }
 
   /// Trả null thay vì throw nếu user chưa login hoặc chưa có profile.

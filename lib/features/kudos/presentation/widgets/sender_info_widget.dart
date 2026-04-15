@@ -24,7 +24,45 @@ class SenderInfoWidget extends StatelessWidget {
     if (kudos.isAnonymous) {
       return _buildAnonymous();
     }
+    // Sender bị xóa tài khoản: không phải ẩn danh nhưng name rỗng
+    if (kudos.sender.name.isEmpty) {
+      return _buildDeletedSender();
+    }
     return _buildNormal();
+  }
+
+  Widget _buildDeletedSender() {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 0.865),
+          ),
+          child: CircleAvatar(
+            radius: 12,
+            backgroundColor: AppColors.textSecondary.withAlpha(77),
+            child: const Text(
+              '?',
+              style: TextStyle(fontSize: 10, color: AppColors.bgDark),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          t.profile.userNotFound,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
+            height: 16 / 10,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildNormal() {
