@@ -28,6 +28,22 @@ GoRouter createRouter(Ref ref) {
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, _) => const MainScaffold()),
+      GoRoute(
+        path: '/send-kudos',
+        builder: (_, _) => const Placeholder(child: Text('Send Kudos')),
+      ),
+      GoRoute(
+        path: '/kudos/:kudosId',
+        builder: (_, state) => Placeholder(
+          child: Text('Kudo Detail: ${state.pathParameters['kudosId']}'),
+        ),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (_, state) => Placeholder(
+          child: Text('Profile: ${state.pathParameters['userId']}'),
+        ),
+      ),
     ],
   );
 }
