@@ -44,6 +44,7 @@ Kudos createKudos({
   bool canLike = true,
   String shareUrl = 'https://kudos.sun-asterisk.com/k/kudos-1',
   String? awardTitle,
+  String? senderAlias,
   List<String> imageUrls = const [],
 }) =>
     Kudos(
@@ -61,6 +62,7 @@ Kudos createKudos({
       canLike: canLike,
       shareUrl: shareUrl,
       awardTitle: awardTitle,
+      senderAlias: senderAlias,
       imageUrls: imageUrls,
     );
 

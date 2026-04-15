@@ -7,7 +7,7 @@
 - `PV7jBVZU1N` — Gửi lời chúc Kudos (main)
 - `7fFAb-K35a` — Trạng thái mặc định (default empty state)
 - `aKWA2klsnt` — Dropdown hashtag (multi-select, max 5)
-- `5MU728Tjck` — Dropdown người nhận (search + debounce)
+- `5MU728Tjck` — ~~Dropdown người nhận~~ (THAY THẾ bằng DropdownMenu — không cần search)
 - `0le8xKnFE_` — Trạng thái lỗi validation
 
 ---
@@ -28,7 +28,7 @@
 
 **Mục đích**: Thêm dependencies, assets, i18n, route, Supabase Storage bucket, theme colors
 
-- [ ] T001 [P] Thêm packages `flutter_quill`, `image_picker`, `url_launcher` vào pubspec.yaml | `pubspec.yaml`
+- [x] T001 [P] Thêm packages `image_picker`, `url_launcher` vào pubspec.yaml | `pubspec.yaml`
 - [x] T002 [P] Download SVG icons cho toolbar formatting và form buttons từ Figma (ic_bold, ic_italic, ic_strikethrough, ic_numbered_list, ic_link_insert, ic_quote, ic_close, ic_close_lg, ic_send, ic_camera, ic_plus, ic_close_circle, ic_chevron_down) vào `assets/icons/`. Dùng momorph tool `get_media_files` | `assets/icons/`
 - [x] T003 [P] Bổ sung colors mới vào `AppColors`: `errorRed` (#D4271D), `sendButtonDisabledBg` (rgba(255,234,158,0.40)), `sendButtonDisabledText` (rgba(0,16,26,0.50)), `errorBannerBg`, `toolbarBg` (rgba(46,57,64,0.5)), `toolbarActive` (#FFEA9E), `toolbarInactive` (rgba(255,255,255,0.6)), `chipBg` (rgba(255,234,158,0.15)), `chipBorder` (#998C5F), `cancelButtonBg` (#2E3940) | `lib/app/theme/app_colors.dart`
 - [x] T004 [P] Thêm i18n strings cho section `sendKudos` vào cả VN và EN (~50 strings). Bao gồm: labels (Người nhận, Danh hiệu, Hashtag, Image, nội dung), placeholders (Tìm kiếm, Danh tặng một danh hiệu cho..., textarea hint, @mention hint), buttons (Gửi đi, Hủy, + Hashtag (Tối đa 5), + Image (Tối đa 5)), errors (validation messages, network errors, upload errors, rate limit, timeout, self-send), dialog (Hủy tạo Kudos?, Nội dung bạn đã nhập sẽ bị mất., Tiếp tục soạn, Hủy bỏ), links (Tiêu chuẩn cộng đồng), header text, anonymous label | `lib/i18n/strings_vi.i18n.json`, `lib/i18n/strings_en.i18n.json`
@@ -48,24 +48,24 @@
 
 ### Model (freezed)
 
-- [ ] T008 [P] Viết test cho `SendKudosState` model (default values, copyWith, isDirty, isFormValid computed, validationErrors) | `test/unit/models/send_kudos_state_test.dart`
-- [ ] T009 [P] Tạo `SendKudosState` model (freezed): recipientId, recipientName, recipientAvatar, title, message, hashtags (List<Hashtag>), imageIds (List<String>), imagePreviews (List<String>), imageUploadingIndex (int?), isAnonymous (bool), isSubmitting (bool), isDirty (bool), availableHashtags (List<Hashtag>), searchResults (List<UserSummary>), isSearching (bool), validationErrors (Map<String, String>), showErrorBanner (bool) | `lib/features/kudos/data/models/send_kudos_state.dart`
-- [ ] T010 Chạy `dart run build_runner build` để generate `.freezed.dart` cho SendKudosState | `lib/features/kudos/data/models/`
+- [x] T008 [P] Viết test cho `SendKudosState` model (default values, copyWith, isDirty, isFormValid computed, validationErrors) | `test/unit/models/send_kudos_state_test.dart`
+- [x] T009 [P] Tạo `SendKudosState` model (freezed): recipientId, recipientName, recipientAvatar, title, message, hashtags (List<Hashtag>), imagePreviews (List<String>), isAnonymous (bool), isSubmitting (bool), isDirty (bool), availableHashtags (List<Hashtag>), searchResults (List<UserSummary>), isSearching (bool), validationErrors (Map<String, String>), showErrorBanner (bool) | `lib/features/kudos/data/models/send_kudos_state.dart`
+- [x] T010 Chạy `dart run build_runner build` để generate `.freezed.dart` cho SendKudosState | `lib/features/kudos/data/models/`
 
 ### Datasource (thêm methods vào KudosRemoteDatasource)
 
-- [ ] T011 Viết test cho 4 methods mới trong `KudosRemoteDatasource`: searchUsers(query), createKudos({recipientId, title, message, hashtagIds, imageUrls, isAnonymous}), uploadKudosImage(filePath), deleteKudosImage(imageUrl). Mock Supabase client | `test/unit/datasources/send_kudos_datasource_test.dart`
-- [ ] T012 Thêm 4 methods vào `KudosRemoteDatasource`: searchUsers (PostgREST ilike, select id/name/avatar_url/hero_tier_url/department, limit 20), createKudos (insert kudos + kudos_hashtags + kudos_photos), uploadKudosImage (Supabase Storage bucket kudos-photos), deleteKudosImage (remove from bucket) | `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`
+- [x] T011 Viết test cho 4 methods mới trong `KudosRemoteDatasource`: searchUsers(query), createKudos({recipientId, title, message, hashtagIds, imageUrls, isAnonymous}), uploadKudosImage(filePath), deleteKudosImage(imageUrl). Mock Supabase client | `test/unit/datasources/send_kudos_datasource_test.dart`
+- [x] T012 Thêm 4 methods vào `KudosRemoteDatasource`: searchUsers (PostgREST ilike, select id/name/avatar_url/hero_tier_url/department, limit 20), createKudos (insert kudos + kudos_hashtags + kudos_photos), uploadKudosImageBytes (Supabase Storage bucket kudos-photos), deleteKudosImage (remove from bucket) | `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`
 
 ### Repository (thêm methods vào KudosRepository)
 
-- [ ] T013 Viết test cho 4 methods mới trong `KudosRepository`: searchUsers, createKudos, uploadImage, deleteImage. Mock datasource, test error handling + mapping | `test/unit/repositories/send_kudos_repository_test.dart`
-- [ ] T014 Thêm 4 methods vào `KudosRepository`: searchUsers, createKudos, uploadImage, deleteImage — wrap datasource methods với try/catch, error mapping | `lib/features/kudos/data/repositories/kudos_repository.dart`
+- [x] T013 Viết test cho 4 methods mới trong `KudosRepository`: searchUsers, createKudos, uploadImage, deleteImage. Mock datasource, test error handling + mapping | `test/unit/repositories/send_kudos_repository_test.dart`
+- [x] T014 Thêm 4 methods vào `KudosRepository`: searchUsers, createKudos, uploadKudosImage, deleteKudosImage — wrap datasource methods với try/catch, error mapping | `lib/features/kudos/data/repositories/kudos_repository.dart`
 
 ### ViewModel
 
-- [ ] T015 Viết test cho `SendKudosViewModel` — test build() (pre-load hashtags), selectRecipient, clearRecipient, updateTitle, updateMessage, searchRecipients, toggleHashtag, addImage, removeImage, toggleAnonymous, validate (tất cả trường hợp), submit (success/error/timeout), clearFieldError, isFormValid computed, isDirty tracking, anti-duplicate submit | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
-- [ ] T016 Tạo `SendKudosViewModel extends AsyncNotifier<SendKudosState>` — implement build(), selectRecipient, clearRecipient, updateTitle, updateMessage, searchRecipients, toggleHashtag, addImage (validate format JPG/PNG/HEIC + size ≤5MB → upload → thêm vào list), removeImage (xóa từ storage + list), toggleAnonymous, validate (recipientId, title, message, hashtags, self-send check), submit (validate → isSubmitting → createKudos → pop/error), clearFieldError, isFormValid getter | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
+- [x] T015 Viết test cho `SendKudosViewModel` — test build() (pre-load hashtags), selectRecipient, clearRecipient, updateTitle, updateMessage, searchRecipients, toggleHashtag, toggleAnonymous, validate (tất cả trường hợp), submit (success/error/invalid), searchRecipients (debounce, empty query) | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
+- [x] T016 Tạo `SendKudosViewModel extends AsyncNotifier<SendKudosState>` — implement build(), selectRecipient, clearRecipient, updateTitle, updateMessage, searchRecipients, toggleHashtag, addImage, removeImage, toggleAnonymous, validate, submit, dismissErrorBanner, clearFieldError | `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
 - [ ] T017 Tạo test helpers: mock factories cho SendKudosState, fake data cho form testing | `test/helpers/send_kudos_test_helpers.dart`
 
 **Checkpoint**: Data layer hoàn chỉnh. `flutter test test/unit/` pass 100%. ViewModel xử lý tất cả business logic.
@@ -81,7 +81,7 @@
 ### Screen + Form chính
 
 - [ ] T018 Viết test cho `SendKudosScreen` (render header text, form body, bottom action bar, PopScope bắt swipe back) | `test/widget/kudos/send_kudos_screen_test.dart`
-- [ ] T019 [US1] Tạo `SendKudosScreen` (ConsumerWidget) — Scaffold(bg: #00101A) + PopScope (bắt swipe back → dialog xác nhận nếu isDirty) + SingleChildScrollView + Column: header text "Gửi lời cám ơn và ghi nhận đến đồng đội" (16px/500, white) + SendKudosFormWidget. Bottom bar: nút Hủy (flex:1) + nút Gửi đi (flex:2) | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
+- [x] T019 [US1] Tạo `SendKudosScreen` (ConsumerStatefulWidget) — Scaffold + PopScope + SingleChildScrollView + Column: fields (recipient, title, message + toolbar, hashtag, images, anonymous toggle). Bottom bar: nút Hủy (flex:1) + nút Gửi đi (flex:2) | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
 
 - [ ] T020 Viết test cho `SendKudosFormWidget` (render tất cả sections: recipient, title, content, hashtag, image, anonymous toggle; verify label text, placeholder text) | `test/widget/kudos/send_kudos_form_test.dart`
 - [ ] T021 [US1] Tạo `SendKudosFormWidget` (StatelessWidget) — Column (gap: 16px, padding: 0 20px): Section Người nhận (label + dropdown trigger), Section Danh hiệu (label + input max 100 + link "Tiêu chuẩn cộng đồng"), Section Nội dung (label + toolbar placeholder + textarea placeholder), Section Hashtag (label + chip group placeholder), Section Image (label + thumbnail grid placeholder), Checkbox ẩn danh | `lib/features/kudos/presentation/widgets/send_kudos_form_widget.dart`
@@ -94,33 +94,35 @@
 ### Submit flow + Navigation
 
 - [ ] T024 [US1] Tích hợp submit flow trong SendKudosScreen: bấm "Gửi đi" → ViewModel.submit() → loading spinner → success: context.pop(true) → KudosScreen kiểm tra result và gọi refresh(). Error: snackbar thông báo (500, 429, network, timeout 10s) + enable lại nút | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
-- [ ] T025 [US1] Tích hợp CTA navigation: KudosScreen CTA button → context.push('/send-kudos') → nhận result → nếu true gọi KudosViewModel.refresh() | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T025 [US1] Wire CTA navigation: KudosScreen CTA → `context.push('/send-kudos')` → if result == true call `KudosViewModel.refresh()` | `lib/features/kudos/presentation/screens/kudos_screen.dart`
 
 **Checkpoint**: Form hiển thị trạng thái mặc định. Submit flow hoạt động end-to-end. CTA navigate đúng.
 
 ---
 
-## Phase 4: US2 — Chọn người nhận Kudos (search dropdown)
+## Phase 4: US2 — Chọn người nhận Kudos (DropdownMenu)
 
-**Mục tiêu**: Dropdown tìm kiếm và chọn người nhận (spec `5MU728Tjck`)
+**Mục tiêu**: DropdownMenu hiển thị toàn bộ danh sách users (pre-loaded), chọn người nhận
 
-**Kiểm thử độc lập**: Bấm dropdown "Người nhận" → bottom sheet mở → gõ tên (debounce 300ms) → kết quả hiện → chọn → đóng + hiển thị tên
+**Thay đổi**: Đổi từ search dropdown (bottom sheet + debounce) sang `DropdownMenu` load tất cả users.
 
-### Search Item
+**Kiểm thử độc lập**: Bấm input "Người nhận" → dropdown menu mở → danh sách users hiện → chọn → đóng + hiển thị tên
 
-- [ ] T026 [P] Viết test cho `RecipientSearchItem` (hiển thị avatar + tên + đơn vị, fallback initials khi không có avatar) | `test/widget/kudos/recipient_search_item_test.dart`
-- [ ] T027 [P] [US2] Tạo `RecipientSearchItem` (StatelessWidget) — Row: CircleAvatar (36x36, fallback initials) + Column: tên đầy đủ (14px/500, white) + đơn vị/phòng ban (12px/400, #999). Tap callback onSelected(UserSummary) | `lib/features/kudos/presentation/widgets/recipient_search_item.dart`
+### Data Layer
 
-### Dropdown Bottom Sheet
+- [ ] T026 Viết test cho `loadAllUsers()` trong ViewModel: build() pre-load tất cả users vào `allUsers`. Test error case → allUsers rỗng | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
+- [ ] T027 [US2] Thêm method `fetchAllUsers()` vào datasource/repository: `users.select('id, name, avatar_url, department:departments(name)').isFilter('deleted_at', null)`. Thêm `allUsers` + `isLoadingUsers` vào `SendKudosState`. Trong `build()` gọi `fetchAllUsers()` song song với `getHashtags()` | `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`, `lib/features/kudos/data/repositories/kudos_repository.dart`, `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`
 
-- [ ] T028 Viết test cho `RecipientDropdownWidget` (auto-focus TextField, debounce 300ms, min 2 ký tự, hiển thị states: hint/loading/results/empty/error, chọn item → callback) | `test/widget/kudos/recipient_dropdown_test.dart`
-- [ ] T029 [US2] Tạo `RecipientDropdownWidget` — showModalBottomSheet: TextField auto-focus + icon clear (X) + Timer debounce 300ms (chỉ gọi ViewModel.searchRecipients khi ≥2 ký tự). States: initial hint ("Nhập ít nhất 2 ký tự"), loading (shimmer 3 items), results (ListView RecipientSearchItem), empty ("Không tìm thấy kết quả"), error + retry. Bấm item → ViewModel.selectRecipient → đóng bottom sheet | `lib/features/kudos/presentation/widgets/recipient_dropdown_widget.dart`
+### DropdownMenu Widget
 
-### Tích hợp vào form
+- [ ] T028 Viết test cho `RecipientDropdownMenuWidget`: render trigger button, mở dropdown hiển thị list users, chọn → callback, hiển thị tên khi đã chọn | `test/widget/kudos/recipient_dropdown_menu_test.dart`
+- [ ] T029 [US2] Tạo `RecipientDropdownMenuWidget` (ConsumerWidget) — `DropdownMenu<UserSummary>`: trigger là Container (h:44, bg: #FFEA9E/10%, border: #998C5F, r:4, icon chevron-down). Mỗi DropdownMenuEntry: leadingIcon avatar (36x36 circle, fallback initials) + label tên (14px/600 white) + trailingIcon department (12px/400 #999). Item đã chọn có bg `rgba(255,234,158,0.08)`. onSelected → `ViewModel.selectRecipient()`. menuStyle maxHeight: 300 | `lib/features/kudos/presentation/widgets/recipient_dropdown_menu_widget.dart`
 
-- [ ] T030 [US2] Tích hợp RecipientDropdownWidget vào SendKudosFormWidget — Bấm input "Người nhận" → mở RecipientDropdownWidget. Khi đã chọn: hiển thị tên người nhận (white text) thay placeholder. Bấm lại → mở dropdown với tên đã chọn, cho phép xóa và tìm lại | `lib/features/kudos/presentation/widgets/send_kudos_form_widget.dart`
+### Tích hợp vào screen
 
-**Checkpoint**: Search người nhận hoạt động với debounce. Chọn/xóa/tìm lại đúng. Empty state và error state hiển thị.
+- [ ] T030 [US2] Thay `RecipientPopupMenuWidget` bằng `RecipientDropdownMenuWidget` trong `SendKudosScreen`. Truyền `hasError` prop cho error border | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
+
+**Checkpoint**: DropdownMenu hiển thị toàn bộ users. Chọn đúng. Tên hiển thị sau khi chọn. Error border khi validate fail.
 
 ---
 
@@ -130,8 +132,10 @@
 
 ### US3 — Rich Text Editor
 
-- [ ] T031 Viết test cho `FormattingToolbarWidget` (render 6 nút: B/I/S/OL/Link/Quote, toggle active/inactive, callback onFormat) | `test/widget/kudos/formatting_toolbar_test.dart`
-- [ ] T032 [US3] Tạo `FormattingToolbarWidget` (StatelessWidget) — Row (h: 40px, bg: rgba(46,57,64,0.5), r: 8px, padding: 4px 8px, gap: 8px): 6 nút (32x32, icon 20px). Inactive: rgba(255,255,255,0.6), Active: #FFEA9E. Toggle active state. Link button → mở dialog nhập URL | `lib/features/kudos/presentation/widgets/formatting_toolbar_widget.dart`
+- [x] T032 [US3] Tạo `FormattingToolbarWidget` — Row: 6 nút (B/I/S/1./Link/❝), áp dụng markdown formatting vào TextEditingController | `lib/features/kudos/presentation/widgets/formatting_toolbar_widget.dart`
+- [x] T037 [P] [US4] Tạo `HashtagChipGroupWidget` — Wrap: chips đã chọn + nút thêm dashed + hint tối đa | `lib/features/kudos/presentation/widgets/hashtag_chip_group_widget.dart`
+- [x] T039 [US4] Tạo `HashtagDropdownWidget` — DropdownMenu: ListView hashtag, checkmark đã chọn, toggleHashtag | `lib/features/kudos/presentation/widgets/hashtag_dropdown_widget.dart`
+- [x] T042 [US5] Tạo `ImageAttachmentWidget` — Grid thumbnails 56x56 + nút thêm (camera icon) + xóa. image_picker integration | `lib/features/kudos/presentation/widgets/image_attachment_widget.dart`
 
 - [ ] T033 Viết test cho `RichTextEditorWidget` (render QuillEditor, max 1000 ký tự, placeholder, hint @mention, sync với ViewModel) | `test/widget/kudos/rich_text_editor_test.dart`
 - [ ] T034 [US3] Tạo `RichTextEditorWidget` — Wrapper cho flutter_quill QuillEditor: min-height 120px, bg: rgba(255,234,158,0.10), border: 1px #998C5F (focus: #FFEA9E, error: #D4271D), r: 4px. Placeholder: "Hãy gửi gắm lời cám ơn và ghi nhận đến đồng đội tại đây nhé!". Hint bên dưới: "Bạn có thể '@ + tên' để nhắc tới đồng nghiệp khác" (12px/400, #999). Max 1000 ký tự với counter. Sync nội dung với ViewModel.updateMessage | `lib/features/kudos/presentation/widgets/rich_text_editor_widget.dart`
@@ -144,7 +148,7 @@
 - [ ] T037 [P] [US4] Tạo `HashtagChipGroupWidget` (StatelessWidget) — Wrap (gap: 8px): mỗi chip (h: 28px, bg: rgba(255,234,158,0.15), border: 1px #998C5F, r: 16px, padding: 4px 12px, text: 12px/500 #FFEA9E + nút x 12x12 #999). Nút "+ Hashtag (Tối đa 5)" (h: 28px, border: dashed #998C5F, r: 16px, text: #999). Ẩn nút khi đã 5 tags | `lib/features/kudos/presentation/widgets/hashtag_chip_group_widget.dart`
 
 - [ ] T038 Viết test cho `HashtagDropdownWidget` (render danh sách hashtag, check mark cho đã chọn, disable khi đã 5, toggle chọn/bỏ) | `test/widget/kudos/hashtag_dropdown_test.dart`
-- [ ] T039 [US4] Tạo `HashtagDropdownWidget` — showModalBottomSheet: ListView tất cả hashtag từ availableHashtags. Mỗi item: tên hashtag + icon check nếu đã chọn. Đã chọn 5 → các item chưa chọn disabled (opacity: 0.4). Bấm item → ViewModel.toggleHashtag. Bấm ra ngoài → đóng | `lib/features/kudos/presentation/widgets/hashtag_dropdown_widget.dart`
+- [ ] T039 [US4] Tạo `HashtagDropdownWidget` — DropdownMenu<Hashtag>: danh sách tất cả hashtag từ availableHashtags. Mỗi DropdownMenuEntry: tên hashtag + trailingIcon check nếu đã chọn. Đã chọn 5 → các entry chưa chọn disabled (opacity: 0.4). Bấm entry → ViewModel.toggleHashtag. Bấm ra ngoài → đóng menu | `lib/features/kudos/presentation/widgets/hashtag_dropdown_widget.dart`
 
 - [ ] T040 [US4] Tích hợp HashtagChipGroupWidget + HashtagDropdownWidget vào SendKudosFormWidget — Bấm nút "+" → mở HashtagDropdownWidget. Chips hiển thị hashtag đã chọn, bấm "x" → ViewModel.toggleHashtag(remove) | `lib/features/kudos/presentation/widgets/send_kudos_form_widget.dart`
 
@@ -159,16 +163,26 @@
 
 ---
 
-## Phase 6: US6 — Toggle gửi ẩn danh
+## Phase 6: US6 — Toggle gửi ẩn danh + Nickname Input
 
-**Mục tiêu**: Checkbox toggle ẩn danh
+**Mục tiêu**: Checkbox toggle ẩn danh + input nickname ẩn danh (animated)
 
-**Kiểm thử độc lập**: Toggle checkbox → state cập nhật → submit với isAnonymous = true/false
+**Thay đổi**: Khi bật ẩn danh → hiện thêm input nickname (max 50 ký tự, tùy chọn). Lưu vào `sender_alias` trên Supabase.
 
-- [ ] T044 Viết test cho anonymous toggle trong SendKudosFormWidget (mặc định tắt, bấm → bật, bấm lại → tắt, verify ViewModel.toggleAnonymous callback) | `test/widget/kudos/anonymous_toggle_test.dart`
-- [ ] T045 [US6] Implement anonymous toggle trong SendKudosFormWidget — Checkbox (20x20, unchecked: transparent border #998C5F, checked: #FFEA9E, checkmark: #00101A) + label "Gửi lời cám ơn và ghi nhận ẩn danh" (14px/400, white, gap: 8px). Mặc định tắt. Bấm → ViewModel.toggleAnonymous() | `lib/features/kudos/presentation/widgets/send_kudos_form_widget.dart`
+**Kiểm thử độc lập**: Toggle checkbox → input nickname hiện (animated) → nhập nickname → submit với isAnonymous=true + senderAlias
 
-**Checkpoint**: Toggle ẩn danh hoạt động. State đúng khi submit.
+### Data Layer
+
+- [ ] T044a Thêm field `senderAlias` (String?, default null) vào `SendKudosState`. Thêm method `updateSenderAlias(String)` vào ViewModel. Cập nhật `createKudos()` trong datasource/repository: gửi `sender_alias` khi submit. Rebuild freezed | `lib/features/kudos/data/models/send_kudos_state.dart`, `lib/features/kudos/presentation/viewmodels/send_kudos_viewmodel.dart`, `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`
+- [ ] T044b Viết test cho `updateSenderAlias()`, verify `toggleAnonymous()` reset senderAlias = null khi tắt, verify `submit()` gửi senderAlias | `test/unit/viewmodels/send_kudos_viewmodel_test.dart`
+- [ ] T044c Thêm i18n keys: `sendKudos.anonymousNicknamePlaceholder` ("Nhập nickname ẩn danh (tùy chọn)"), `sendKudos.anonymousNicknameHint` ("Để trống sẽ hiển thị 'Người gửi ẩn danh'") cho VN/EN. Chạy `dart run slang` | `lib/i18n/strings_vi.i18n.json`, `lib/i18n/strings_en.i18n.json`
+
+### UI
+
+- [ ] T044d Viết test cho anonymous toggle + nickname: checkbox OFF → chỉ checkbox + label. Checkbox ON → thêm nickname input hiện (animated). Nhập nickname → state cập nhật. Toggle OFF → nickname input ẩn + clear | `test/widget/kudos/anonymous_toggle_test.dart`
+- [ ] T045 [US6] Sửa `_AnonymousToggle` widget trong SendKudosScreen: Thêm `AnimatedCrossFade` bên dưới checkbox row → khi `isAnonymous=true` hiển thị `_StyledTextField` (h:44, placeholder: "Nhập nickname ẩn danh (tùy chọn)", maxLength: 50). Dưới input: hint text "Để trống sẽ hiển thị 'Người gửi ẩn danh'" (12px/400, #999). TextEditingController local + listener → `ViewModel.updateSenderAlias()`. `toggleAnonymous()` clear senderAlias + reset controller | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
+
+**Checkpoint**: Toggle ẩn danh + nickname input hoạt động. Animated slide-down/up. Submit gửi senderAlias đúng.
 
 ---
 
@@ -178,8 +192,8 @@
 
 ### Cancel/Discard
 
-- [ ] T046 Viết test cho `CancelConfirmationDialog` (render title, content, 2 nút, callbacks) | `test/widget/kudos/cancel_confirmation_dialog_test.dart`
-- [ ] T047 [US7] Tạo `CancelConfirmationDialog` — AlertDialog: title "Hủy tạo Kudos?", content "Nội dung bạn đã nhập sẽ bị mất.", nút "Tiếp tục soạn" (secondary) + "Hủy bỏ" (primary). Tất cả text qua i18n | `lib/features/kudos/presentation/widgets/cancel_confirmation_dialog.dart`
+- [x] T047 [US7] Tạo `CancelConfirmationDialog` — AlertDialog: title, content, nút Tiếp tục soạn + nút Hủy bỏ. Tất cả text qua i18n | `lib/features/kudos/presentation/widgets/cancel_confirmation_dialog.dart`
+- [x] T050 [US7] Tạo `ErrorBannerWidget` — AnimatedSwitcher: banner lỗi với icon + text + nút dismiss. Nền errorBannerBg, border errorRed | `lib/features/kudos/presentation/widgets/error_banner_widget.dart`
 
 - [ ] T048 [US7] Tích hợp cancel logic vào SendKudosScreen — Nút "Hủy" (flex:1, h:48, bg: #2E3940, r:8, icon ic_close + text "Hủy" 14px/500 white): form trống → pop ngay, form dirty → showDialog CancelConfirmationDialog. PopScope: swipe back cùng logic. Disabled khi isSubmitting | `lib/features/kudos/presentation/screens/send_kudos_screen.dart`
 
@@ -226,7 +240,7 @@ Phase 2 (Foundation/Data Layer) ────────────────
     v                                                   │   │
 Phase 3 (US1: Core Form + Submit) ──── MVP            │   │
     │                                                   │   │
-    ├──> Phase 4 (US2: Recipient Search) ─── P1        │   │
+    ├──> Phase 4 (US2: Recipient DropdownMenu) ─── P1     │   │
     │                                                   │   │
     ├──> Phase 5 (US3+US4+US5: RichText + Hashtag +    │   │
     │            Image) ─── P1/P2                       │   │
@@ -245,7 +259,7 @@ Phase 3 (US1: Core Form + Submit) ──── MVP            │   │
 - **Phase 1**: T001–T006 song song (files khác nhau). T007 cuối cùng (cần T001, T002, T004)
 - **Phase 2**: T008–T009 song song. T011–T014 tuần tự (datasource → repo). T015–T016 sau repo
 - **Phase 3**: T018–T023 có thể song song phần nào (widgets độc lập). T024–T025 cuối (tích hợp)
-- **Phase 4**: T026–T027 song song. T028–T029 sau. T030 cuối (tích hợp)
+- **Phase 4**: T026 trước T027 (data layer trước UI). T028–T029 sau. T030 cuối (tích hợp)
 - **Phase 5**: US3 (T031–T035), US4 (T036–T040), US5 (T041–T043) song song giữa nhóm
 - **Phase 6**: Có thể song song với Phase 4, 5
 - **Phase 7**: Sau Phase 3 (cần form cơ bản). T046–T048 và T049–T051 song song
@@ -295,3 +309,8 @@ Phase 3 (US1: Core Form + Submit) ──── MVP            │   │
 - @mention feature (T056) phức tạp cao — có thể defer sang sprint sau nếu cần
 - Tất cả text PHẢI qua i18n (slang), không hardcode string
 - Assets PHẢI qua flutter_gen (Assets.xxx), không hardcode path
+- **THAY ĐỔI**: Tất cả dropdown dùng `DropdownMenu` (KHÔNG dùng bottom sheet hay PopupMenuButton)
+- **THAY ĐỔI**: Recipient dùng `DropdownMenu<UserSummary>` (load tất cả users), KHÔNG dùng search dropdown
+- **THAY ĐỔI**: Hashtag dùng `DropdownMenu<Hashtag>` (multi-select), KHÔNG dùng showModalBottomSheet
+- **THAY ĐỔI**: Anonymous toggle thêm input nickname (max 50 chars), lưu `sender_alias` trên Supabase
+- **OBSOLETE**: `RecipientDropdownWidget` (bottom sheet search) + `RecipientShimmerWidget` + `RecipientPopupMenuWidget` (PopupMenuButton) không còn cần cho flow chính. File vẫn giữ lại nếu cần tái sử dụng

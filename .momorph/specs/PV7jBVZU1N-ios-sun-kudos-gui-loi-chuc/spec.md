@@ -46,18 +46,21 @@ Là một Sunner, tôi muốn gửi lời cảm ơn/ghi nhận đến đồng ng
 
 ### User Story 2 - Chọn người nhận Kudos (Ưu tiên: P1)
 
-Là một Sunner, tôi muốn tìm kiếm và chọn đồng nghiệp làm người nhận kudos.
+Là một Sunner, tôi muốn chọn đồng nghiệp làm người nhận kudos từ danh sách có sẵn.
 
 **Lý do ưu tiên**: Bắt buộc — không thể gửi kudos mà không có người nhận.
 
 **Kiểm thử độc lập**: Có thể test bằng cách bấm dropdown người nhận và verify danh sách hiển thị.
 
+**Thay đổi so với bản trước**: Sử dụng `DropdownMenu` hiển thị toàn bộ danh sách users thay vì search dropdown. Không cần tìm kiếm — load tất cả users khi mở form.
+
 **Kịch bản chấp nhận**:
 
-1. **Cho biết** trường "Người nhận" đang rỗng, **Khi** bấm vào input "Tìm kiếm", **Thì** mở dropdown danh sách người nhận (screenId: `5MU728Tjck`) với khả năng tìm kiếm theo tên hoặc đơn vị. Tìm kiếm PHẢI có debounce 300ms.
-2. **Cho biết** dropdown đang mở, **Khi** chọn một người từ danh sách, **Thì** đóng dropdown và hiển thị tên người nhận đã chọn trong trường.
-3. **Cho biết** đã chọn người nhận, **Khi** bấm lại input "Người nhận", **Thì** mở dropdown với tên đã chọn hiển thị, cho phép xóa và tìm lại.
+1. **Cho biết** trường "Người nhận" đang rỗng, **Khi** bấm vào input, **Thì** mở DropdownMenu hiển thị toàn bộ danh sách users (pre-loaded khi mở form). Mỗi item gồm: avatar + tên + phòng ban.
+2. **Cho biết** dropdown menu đang mở, **Khi** chọn một người từ danh sách, **Thì** đóng menu và hiển thị tên người nhận đã chọn trong trường.
+3. **Cho biết** đã chọn người nhận, **Khi** bấm lại input, **Thì** mở dropdown menu, người đã chọn trước đó có highlight (background khác).
 4. **Cho biết** người dùng chọn chính mình làm người nhận, **Khi** submit form, **Thì** hiển thị lỗi "Bạn không thể gửi kudo cho chính mình."
+5. **Cho biết** danh sách users không load được (API lỗi), **Khi** bấm vào input, **Thì** hiển thị dropdown trống với text "Không thể tải danh sách" + nút retry.
 
 ---
 
@@ -115,18 +118,23 @@ Là một Sunner, tôi muốn đính kèm hình ảnh vào kudos để minh họ
 
 ---
 
-### User Story 6 - Gửi ẩn danh (Ưu tiên: P2)
+### User Story 6 - Gửi ẩn danh với nickname (Ưu tiên: P2)
 
-Là một Sunner, tôi muốn gửi kudos ẩn danh để ghi nhận đồng nghiệp mà không tiết lộ danh tính.
+Là một Sunner, tôi muốn gửi kudos ẩn danh với nickname tùy chọn để ghi nhận đồng nghiệp mà không tiết lộ danh tính thật.
 
 **Lý do ưu tiên**: Tính năng bổ sung, không ảnh hưởng core flow.
 
-**Kiểm thử độc lập**: Có thể test bằng cách toggle checkbox ẩn danh.
+**Kiểm thử độc lập**: Có thể test bằng cách toggle checkbox ẩn danh và nhập nickname.
+
+**Thay đổi so với bản trước**: Khi bật ẩn danh, hiển thị thêm input nhập nickname ẩn danh (tùy chọn). Nickname được lưu vào cột `sender_alias` trên Supabase.
 
 **Kịch bản chấp nhận**:
 
-1. **Cho biết** checkbox "Gửi lời cám ơn và ghi nhận ẩn danh" hiển thị (mặc định: tắt), **Khi** bấm checkbox, **Thì** chuyển sang trạng thái bật (checked) — kudos sẽ được gửi ẩn danh.
-2. **Cho biết** checkbox đang bật, **Khi** bấm lại, **Thì** chuyển về trạng thái tắt — tên người gửi sẽ hiển thị.
+1. **Cho biết** checkbox "Gửi lời cám ơn và ghi nhận ẩn danh" hiển thị (mặc định: tắt), **Khi** bấm checkbox, **Thì** chuyển sang trạng thái bật (checked) VÀ hiển thị input "Nickname ẩn danh" bên dưới checkbox (animated slide-down).
+2. **Cho biết** checkbox đang bật và input nickname hiển thị, **Khi** nhập nickname (ví dụ: "Anh Hùng Xạ Điêu"), **Thì** nickname được lưu vào state và sẽ gửi kèm khi submit (cột `sender_alias` trên Supabase).
+3. **Cho biết** checkbox đang bật nhưng KHÔNG nhập nickname, **Khi** submit form, **Thì** vẫn gửi thành công với `sender_alias = null` — hiển thị "Người gửi ẩn danh" mặc định.
+4. **Cho biết** checkbox đang bật, **Khi** bấm lại, **Thì** chuyển về trạng thái tắt, input nickname ẩn đi (animated slide-up), và clear giá trị nickname.
+5. **Cho biết** nickname ẩn danh quá dài, **Khi** nhập, **Thì** giới hạn tối đa 50 ký tự.
 
 ---
 
@@ -174,12 +182,12 @@ Là một Sunner, tôi muốn hủy form tạo kudos và quay lại màn hình t
 |-----------|-------|-----------|
 | A. Header Text | Text "Gửi lời cám ơn và ghi nhận đến đồng đội" — mô tả mục đích form | Chỉ hiển thị |
 | B.1. Label "Người nhận *" | Label bắt buộc cho trường người nhận | Chỉ hiển thị |
-| B.2. Recipient Dropdown | Input dropdown "Tìm kiếm" với icon chevron down | Bấm → Mở dropdown danh sách người nhận (screenId: `5MU728Tjck`) |
+| B.2. Recipient DropdownMenu | DropdownMenu hiển thị toàn bộ danh sách users (pre-loaded) với avatar + tên + phòng ban. Icon chevron down | Bấm → Mở dropdown menu, chọn người nhận |
 | B.3. Label "Danh hiệu *" | Label bắt buộc cho trường danh hiệu | Chỉ hiển thị |
 | B.4. Danh hiệu Input | Text input "Danh tặng một danh hiệu cho..." (max 100 ký tự) | Bấm → Focus input, hiển thị keyboard |
 | B.5. Link "Tiêu chuẩn cộng đồng" | Text link dẫn tới trang tiêu chuẩn cộng đồng/giải thưởng | Bấm → Mở trang tiêu chuẩn cộng đồng |
 | B.7. Label section nội dung | Label cho phần nhập nội dung | Chỉ hiển thị |
-| B.8. Input ẩn danh | Input liên quan đến chế độ ẩn danh | Bấm → Toggle |
+| B.8. Input ẩn danh | Checkbox ẩn danh + Input nickname (hiện khi checkbox ON) | Bấm checkbox → Toggle; khi ON → hiện input nickname (max 50 ký tự) |
 | C. Formatting Toolbar | Thanh công cụ định dạng: Bold, Italic, Strikethrough, Numbered List, Link, Quote | Bấm từng nút → Toggle formatting |
 | C.1. Bold | Nút "B" — bật/tắt bold | Bấm → Toggle bold |
 | C.2. Italic | Nút "I" — bật/tắt italic | Bấm → Toggle italic |
@@ -244,14 +252,14 @@ Là một Sunner, tôi muốn hủy form tạo kudos và quay lại màn hình t
 - **FR-003**: Nội dung PHẢI hỗ trợ @mention đồng nghiệp bằng cách gõ "@ + tên".
 - **FR-004**: Hashtag PHẢI cho phép thêm 1-5 tags, hiển thị dạng chip với nút xóa.
 - **FR-005**: Hình ảnh đính kèm PHẢI cho phép tối đa 5 ảnh (mỗi ảnh ≤ 5MB, format: JPG/PNG/HEIC), hiển thị thumbnail preview.
-- **FR-006**: Checkbox ẩn danh PHẢI toggle giữa gửi công khai và ẩn danh (mặc định: tắt).
+- **FR-006**: Checkbox ẩn danh PHẢI toggle giữa gửi công khai và ẩn danh (mặc định: tắt). Khi bật → hiển thị thêm input nickname ẩn danh (max 50 ký tự, tùy chọn). Nickname lưu vào cột `sender_alias` trên bảng `kudos` (Supabase).
 - **FR-007**: Nút "Gửi đi" PHẢI validate tất cả trường bắt buộc trước khi submit.
 - **FR-008**: Nút "Hủy" PHẢI hiển thị dialog xác nhận nếu form có nội dung chưa lưu. Form trống thì đóng ngay.
 - **FR-009**: Hệ thống PHẢI hiển thị thông báo lỗi rõ ràng khi validation fail (screenId: `0le8xKnFE_`).
 - **FR-010**: Hệ thống PHẢI hỗ trợ đa ngôn ngữ (VN/EN) cho tất cả text, label, placeholder, và thông báo lỗi.
 - **FR-011**: Hệ thống PHẢI chống duplicate submit — nút "Gửi đi" bị disable và hiển thị loading spinner khi đang submit.
 - **FR-012**: KHÔNG cho phép chọn chính mình làm người nhận — hiển thị lỗi khi validate.
-- **FR-013**: Tìm kiếm người nhận PHẢI có debounce 300ms để tránh gọi API quá nhiều.
+- **FR-013**: Danh sách người nhận PHẢI được pre-load khi mở form (load tất cả users). Hiển thị bằng `DropdownMenu`, KHÔNG cần search.
 - **FR-014**: Nút Back hệ thống (swipe back) PHẢI có cùng hành vi với nút "Hủy".
 
 ### Yêu cầu kỹ thuật
@@ -287,11 +295,12 @@ SendKudosState:
   - imagePreviews: List<String>        # Danh sách URL preview ảnh
   - imageUploadingIndex: int?          # Index ảnh đang upload (null = không upload)
   - isAnonymous: bool                  # Gửi ẩn danh (default: false)
+  - senderAlias: String?               # Nickname ẩn danh (max 50 ký tự, nullable)
   - isSubmitting: bool                 # Đang submit (chống duplicate)
   - isDirty: bool                      # Form đã thay đổi (dùng cho dialog xác nhận hủy)
   - availableHashtags: List<Hashtag>   # Danh sách hashtag có sẵn (pre-loaded)
-  - searchResults: List<UserSummary>   # Kết quả tìm kiếm người nhận
-  - isSearching: bool                  # Đang tìm kiếm người nhận
+  - allUsers: List<UserSummary>        # Toàn bộ danh sách users (pre-loaded cho DropdownMenu)
+  - isLoadingUsers: bool               # Đang load danh sách users
   - validationErrors: Map<String, String>  # Lỗi validation theo field
   - showErrorBanner: bool              # Hiển thị error banner tổng quát
 ```
@@ -306,7 +315,7 @@ SendKudosState:
 
 | Thành phần | Loading | Error | Empty |
 |-----------|---------|-------|-------|
-| Recipient Dropdown | Shimmer placeholder | "Không thể tải danh sách" | "Không tìm thấy kết quả" |
+| Recipient DropdownMenu | Loading trong build() | "Không thể tải danh sách" + retry | Danh sách rỗng (edge case) |
 | Hashtag Dropdown | Shimmer placeholder | "Không thể tải hashtag" | "Không tìm thấy hashtag" |
 | Submit | Loading spinner trên nút "Gửi đi" | Snackbar lỗi | N/A |
 | Image Upload | Loading indicator trên thumbnail | Snackbar lỗi upload | N/A |
@@ -318,7 +327,7 @@ SendKudosState:
 | Endpoint | Method | Mục đích | Trạng thái |
 |----------|--------|----------|------------|
 | `/api/v1/kudos` | POST | Gửi kudos mới | Dự đoán |
-| `/api/v1/users/search` | GET | Tìm kiếm người nhận (query: name, department) | Dự đoán |
+| `/api/v1/users` | GET | Load toàn bộ danh sách users cho DropdownMenu (pre-load khi mở form) | Dự đoán |
 | `/api/v1/hashtags` | GET | Lấy danh sách hashtag có sẵn | Dự đoán |
 | `/api/v1/storage/upload` | POST | Upload ảnh đính kèm | Dự đoán |
 

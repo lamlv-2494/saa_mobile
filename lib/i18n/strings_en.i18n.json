@@ -149,11 +149,13 @@
         "loadingMore": "Loading more..."
     },
     "sendKudos": {
-        "title": "Send Kudos",
+        "title": "New Kudo",
+        "headerSubtitle": "Send your appreciation and recognition to your teammate",
         "recipientLabel": "Recipient *",
         "recipientPlaceholder": "Search",
         "titleLabel": "Title *",
         "titlePlaceholder": "Give a title for...",
+        "titleHint": "E.g.: The one who inspires me.\nThe title will be displayed as the heading of your Kudos.",
         "hashtagLabel": "Hashtag *",
         "hashtagPlaceholder": "Select hashtag",
         "messageLabel": "Message *",
@@ -189,6 +191,14 @@
         "imageSizeError": "Image must not exceed {max}MB.",
         "imageUploadError": "Failed to upload image. Please try again.",
         "communityStandards": "Community standards",
-        "charCount": "{current}/{max}"
+        "mentionHint": "You can type '@ + name' to mention a colleague",
+        "charCount": "{current}/{max}",
+        "searchError": "An error occurred. Please try again.",
+        "searchNetworkError": "Cannot search. Check your network connection.",
+        "retryButton": "Retry",
+        "validationBanner": "You need to fill in Recipient, Message and Hashtag to send Kudos!",
+        "anonymousNicknamePlaceholder": "Enter anonymous nickname (optional)",
+        "anonymousNicknameHint": "Leave empty to display 'Anonymous sender'",
+        "usersLoadError": "Could not load user list"
     }
 }

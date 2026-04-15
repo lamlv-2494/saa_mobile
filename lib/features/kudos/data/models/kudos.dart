@@ -22,6 +22,7 @@ class Kudos with _$Kudos {
     @Default(true) bool canLike,
     @Default('') String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     @Default([]) List<String> imageUrls,
   }) = _Kudos;
 

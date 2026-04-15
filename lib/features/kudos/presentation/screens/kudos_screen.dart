@@ -17,6 +17,8 @@ import 'package:saa_mobile/features/kudos/presentation/widgets/top_gift_recipien
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:saa_mobile/shared/widgets/language_dropdown.dart';
 import 'package:saa_mobile/shared/widgets/outline_button.dart';
 
@@ -71,14 +73,11 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
   }
 
 
-  void _navigateToSendKudos() {
-    // Placeholder — sẽ thay bằng go_router push khi màn hình gửi kudos được build
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(t.kudos.ctaComingSoon),
-        duration: Duration(seconds: 1),
-      ),
-    );
+  Future<void> _navigateToSendKudos() async {
+    final result = await context.push<bool>('/send-kudos');
+    if (result == true && mounted) {
+      ref.read(kudosViewModelProvider.notifier).refresh();
+    }
   }
 
   Widget _buildCtaButton() {
@@ -98,7 +97,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               BlendMode.srcIn,
             ),
           ),
-          onPressed: _navigateToSendKudos,
+          onPressed: () => _navigateToSendKudos(),
         ),
       ),
     );

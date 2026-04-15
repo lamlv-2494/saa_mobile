@@ -14,7 +14,7 @@
 
 ## Tóm tắt
 
-Triển khai màn hình **Gửi lời chúc Kudos** — form tạo kudos mới với các thành phần: chọn người nhận (search dropdown), danh hiệu, nội dung rich text (toolbar formatting), hashtag (multi-select max 5), hình ảnh đính kèm (max 5, ≤5MB), toggle ẩn danh, và validation error state. Đây là route mới được push từ CTA button trên Kudos feed (`fO0Kt19sZZ`). Sau khi gửi thành công → pop back và refresh feed.
+Triển khai màn hình **Gửi lời chúc Kudos** — form tạo kudos mới với các thành phần: chọn người nhận (DropdownMenu), danh hiệu, nội dung rich text (toolbar formatting), hashtag (DropdownMenu multi-select, max 5), hình ảnh đính kèm (max 5, ≤5MB), toggle ẩn danh, và validation error state. Đây là route mới được push từ CTA button trên Kudos feed (`fO0Kt19sZZ`). Sau khi gửi thành công → pop back và refresh feed.
 
 ---
 
@@ -55,8 +55,9 @@ Triển khai màn hình **Gửi lời chúc Kudos** — form tạo kudos mới v
 - **Route**: Thêm `/send-kudos` vào `router.dart` — `context.push('/send-kudos')` từ CTA button
 - **Form architecture**: `SingleChildScrollView` + `Column` — form không dùng `CustomScrollView` vì không cần sliver
 - **Rich text**: `flutter_quill` cho toolbar formatting (Bold/Italic/Strikethrough/Numbered List/Link/Quote). Lưu nội dung dạng Delta JSON, convert sang plain text + formatting khi submit
-- **Dropdowns**: Dùng `showModalBottomSheet` — cả recipient search và hashtag dropdown đều là overlay, không phải route mới
-- **Recipient search**: `TextField` + `Timer` debounce 300ms + minimum 2 ký tự → gọi API search
+- **Recipient selector**: Dùng `DropdownMenu<UserSummary>` hiển thị toàn bộ danh sách users (pre-loaded khi mở form). KHÔNG cần search — load tất cả users trong `build()`. Mỗi item: avatar + tên + phòng ban. Menu hiển thị ngay dưới trigger (inline overlay), không phải bottom sheet hay route mới
+- **Hashtag dropdown**: Dùng `DropdownMenu<Hashtag>` — inline overlay hiển thị dưới trigger button, không phải bottom sheet hay route mới. Hỗ trợ multi-select qua custom logic (toggle items)
+- **Anonymous nickname**: Khi checkbox ẩn danh ON → hiện thêm input nickname (max 50 ký tự, tùy chọn). Lưu vào `sender_alias` trên bảng `kudos`. AnimatedCrossFade cho slide-down/up
 - **Image picker**: Dùng `image_picker` package (cần thêm) — chọn từ gallery, validate format (JPG/PNG/HEIC) + size (≤5MB), upload lên Supabase Storage
 - **Validation**: Logic nằm hoàn toàn trong `SendKudosViewModel` — UI chỉ đọc `validationErrors` từ state
 - **Anti-duplicate submit**: `isSubmitting` flag trong state → disable nút + hiển thị loading spinner
@@ -68,7 +69,7 @@ Triển khai màn hình **Gửi lời chúc Kudos** — form tạo kudos mới v
 - **Tái sử dụng**: `KudosRemoteDatasource` + `KudosRepository` đã có
 - **API mới cần thêm vào datasource/repository**:
   - `POST kudos` — tạo kudos mới (insert vào bảng `kudos` + `kudos_hashtags` + `kudos_photos`)
-  - `GET users/search` — tìm kiếm user theo tên/đơn vị (PostgREST: `users.select().ilike('name', '%query%')`)
+  - `GET users` — load toàn bộ danh sách users cho DropdownMenu (PostgREST: `users.select('id, name, avatar_url, department:departments(name)').isFilter('deleted_at', null)`)
   - `POST supabase.storage.upload` — upload ảnh lên bucket `kudos-photos`
 - **API tái sử dụng**:
   - `GET hashtags` — đã có `fetchHashtags()` trong datasource
@@ -126,9 +127,9 @@ lib/
 │           │   └── send_kudos_screen.dart             # MỚI: Form screen (ConsumerWidget)
 │           └── widgets/
 │               ├── send_kudos_form_widget.dart         # MỚI: Body form chính
-│               ├── recipient_dropdown_widget.dart      # MỚI: Bottom sheet search người nhận
+│               ├── recipient_dropdown_widget.dart      # MỚI: DropdownMenu chọn người nhận
 │               ├── recipient_search_item.dart          # MỚI: Item kết quả (avatar + tên + đơn vị)
-│               ├── hashtag_dropdown_widget.dart         # MỚI: Bottom sheet multi-select hashtag
+│               ├── hashtag_dropdown_widget.dart         # MỚI: DropdownMenu multi-select hashtag
 │               ├── hashtag_chip_group_widget.dart       # MỚI: Hiển thị chips đã chọn + nút "+"
 │               ├── image_attachment_widget.dart         # MỚI: Grid thumbnail + nút thêm ảnh
 │               ├── rich_text_editor_widget.dart         # MỚI: Quill editor + toolbar
@@ -303,23 +304,24 @@ test/
    - Section Image: label + grid thumbnails
    - Checkbox ẩn danh
 
-3. **`RecipientDropdownWidget`** — Bottom sheet overlay:
-   - `TextField` auto-focus + icon clear (X)
-   - `Timer` debounce 300ms — chỉ gọi ViewModel.searchRecipients khi ≥ 2 ký tự
-   - Danh sách kết quả: `RecipientSearchItem` (avatar + tên + đơn vị)
-   - States: initial hint ("Nhập ít nhất 2 ký tự"), loading (shimmer 3 items), empty ("Không tìm thấy kết quả"), error + retry
-   - Bấm item → gọi ViewModel.selectRecipient → đóng bottom sheet
+3. **`RecipientDropdownWidget`** — `DropdownMenu<UserSummary>` inline overlay:
+   - Trigger: Container (h:44, border: #998C5F, bg: #FFEA9E/10%) hiển thị tên người nhận đã chọn hoặc placeholder
+   - Menu entries: `DropdownMenuEntry<UserSummary>` với leadingIcon (avatar) + label (tên) + trailingIcon (phòng ban text)
+   - Danh sách pre-loaded từ `allUsers` trong state — không cần search/debounce
+   - Selected item highlight: background `rgba(255,234,158,0.08)`
+   - Empty state: 1 entry disabled "Không thể tải danh sách" + retry
+   - Bấm item → gọi ViewModel.selectRecipient → menu tự đóng
 
 4. **`RecipientSearchItem`** — `StatelessWidget`:
    - `CircleAvatar` (36x36) + fallback initials
    - Tên đầy đủ (bold) + đơn vị/phòng ban (lighter)
 
-5. **`HashtagDropdownWidget`** — Bottom sheet overlay:
-   - Danh sách tất cả hashtag từ `availableHashtags`
-   - Mỗi item: tên hashtag + icon check nếu đã chọn
+5. **`HashtagDropdownWidget`** — `DropdownMenu<Hashtag>` inline overlay (multi-select):
+   - Trigger: Nút "+ Hashtag (Tối đa 5)" trong `HashtagChipGroupWidget`
+   - Menu entries: `DropdownMenuEntry<Hashtag>` — tên hashtag + trailingIcon check nếu đã chọn
    - Đã chọn 5 → các item chưa chọn disabled (opacity: 0.4)
-   - Bấm item → toggle ViewModel.toggleHashtag
-   - Bấm ra ngoài → đóng bottom sheet
+   - Bấm item → toggle ViewModel.toggleHashtag (custom multi-select, không auto-close)
+   - Bấm ra ngoài → đóng menu
 
 6. **`HashtagChipGroupWidget`** — `StatelessWidget`:
    - Hiển thị `Wrap` các chip đã chọn (tên + nút "x" xóa)

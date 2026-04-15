@@ -77,6 +77,7 @@ class KudosContentCard extends StatelessWidget {
         ],
         const SizedBox(height: 8),
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: AppColors.awardMessageContent,

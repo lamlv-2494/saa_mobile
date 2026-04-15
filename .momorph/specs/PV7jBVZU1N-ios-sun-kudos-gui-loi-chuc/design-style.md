@@ -196,7 +196,7 @@
 
 ---
 
-### B.2. Recipient Dropdown (Search Input)
+### B.2. Recipient DropdownMenu
 
 | Thuộc tính | Giá trị | Flutter |
 |-----------|---------|--------|
@@ -207,15 +207,25 @@
 | background | `rgba(255,234,158,0.10)` | `Color(0x1AFFEA9E)` |
 | border | 1px solid `#998C5F` | `Border.all(color: Color(0xFF998C5F))` |
 | border-radius | 4px | `BorderRadius.circular(4)` |
-| placeholder | "Tìm kiếm" | i18n: `t.kudos.send.searchPlaceholder` |
+| placeholder | "Chọn người nhận" | i18n: `t.sendKudos.recipientPlaceholder` |
 | placeholder-color | `#999999` | `Color(0xFF999999)` |
-| icon | chevron-down (right) | `Assets.icons.icChevronDown.svg()` |
+| icon | chevron-down (right) | `Icons.keyboard_arrow_down` |
+
+**DropdownMenu Entry:**
+| Thuộc tính | Giá trị | Flutter |
+|-----------|---------|--------|
+| height | 56px | `height: 56` |
+| padding | 0px 12px | `EdgeInsets.symmetric(horizontal: 12)` |
+| avatar | 36x36, circle | `CircleAvatar(radius: 18)` |
+| name | 14px/600 white | `fontWeight: FontWeight.w600` |
+| department | 12px/400 #999 | `Color(0xFF999999)` |
+| selected-bg | `rgba(255,234,158,0.08)` | `Color(0x14FFEA9E)` |
+| divider | 1px #2E3940, indent 12px | `Divider` |
 
 **Trạng thái:**
 | Trạng thái | Thay đổi |
 |-----------|---------|
-| Default | border: 1px solid #998C5F |
-| Focus | border: 1px solid #FFEA9E |
+| Default | border: 1px solid #998C5F, placeholder text |
 | Error | border: 1px solid #D4271D |
 | Filled | Hiển thị tên người nhận thay placeholder, text-color: #FFFFFF |
 
@@ -351,7 +361,7 @@
 
 ---
 
-### G. Anonymous Toggle (Checkbox)
+### G. Anonymous Toggle (Checkbox + Nickname Input)
 
 | Thuộc tính | Giá trị | Flutter |
 |-----------|---------|--------|
@@ -361,9 +371,30 @@
 | checkbox-color (unchecked) | transparent, border: `#998C5F` | Default |
 | checkbox-color (checked) | `#FFEA9E` | `activeColor: Color(0xFFFFEA9E)` |
 | checkmark-color | `#00101A` | `checkColor: Color(0xFF00101A)` |
-| label | "Gửi lời cám ơn và ghi nhận ẩn danh" | i18n: `t.kudos.send.anonymousLabel` |
+| label | "Gửi lời cám ơn và ghi nhận ẩn danh" | i18n: `t.sendKudos.anonymousLabel` |
 | label-font | 14px/400, white | `fontSize: 14, fontWeight: FontWeight.w400` |
 | gap | 8px | Spacing giữa checkbox và label |
+
+#### G.1. Nickname Input (hiển thị khi checkbox ON)
+
+| Thuộc tính | Giá trị | Flutter |
+|-----------|---------|--------|
+| visibility | Chỉ hiển thị khi `isAnonymous == true` | `AnimatedCrossFade` hoặc `AnimatedSize` |
+| animation | slide-down 200ms ease-out (hiện), slide-up 150ms ease-in (ẩn) | `AnimatedCrossFade` |
+| margin-top | 8px | `SizedBox(height: 8)` |
+| width | 100% (335px) | `double.infinity` |
+| height | 44px | `height: 44` |
+| padding | 0px 12px | `EdgeInsets.symmetric(horizontal: 12)` |
+| background | `rgba(255,234,158,0.10)` | `Color(0x1AFFEA9E)` |
+| border | 1px solid `#998C5F` | `Border.all(color: Color(0xFF998C5F))` |
+| border-radius | 4px | `BorderRadius.circular(4)` |
+| placeholder | "Nhập nickname ẩn danh (tùy chọn)" | i18n: `t.sendKudos.anonymousNicknamePlaceholder` |
+| placeholder-color | `#999999` | `Color(0xFF999999)` |
+| text-color | `#FFFFFF` | `Colors.white` |
+| font | 14px/400, Montserrat | `GoogleFonts.montserrat(fontSize: 14)` |
+| max-length | 50 | `maxLength: 50` |
+| hint | "Để trống sẽ hiển thị 'Người gửi ẩn danh'" | i18n: `t.sendKudos.anonymousNicknameHint` |
+| hint-font | 12px/400, #999 | `fontSize: 12, color: Color(0xFF999999)` |
 
 ---
 

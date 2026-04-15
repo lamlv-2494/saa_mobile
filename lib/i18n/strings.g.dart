@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 344 (172 per locale)
+/// Strings: 364 (182 per locale)
 ///
-/// Built on 2026-04-15 at 03:20 UTC
+/// Built on 2026-04-15 at 07:49 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -379,11 +379,13 @@ class _StringsSendKudosEn {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	String get title => 'Send Kudos';
+	String get title => 'New Kudo';
+	String get headerSubtitle => 'Send your appreciation and recognition to your teammate';
 	String get recipientLabel => 'Recipient *';
 	String get recipientPlaceholder => 'Search';
 	String get titleLabel => 'Title *';
 	String get titlePlaceholder => 'Give a title for...';
+	String get titleHint => 'E.g.: The one who inspires me.\nThe title will be displayed as the heading of your Kudos.';
 	String get hashtagLabel => 'Hashtag *';
 	String get hashtagPlaceholder => 'Select hashtag';
 	String get messageLabel => 'Message *';
@@ -419,7 +421,15 @@ class _StringsSendKudosEn {
 	String get imageSizeError => 'Image must not exceed {max}MB.';
 	String get imageUploadError => 'Failed to upload image. Please try again.';
 	String get communityStandards => 'Community standards';
+	String get mentionHint => 'You can type \'@ + name\' to mention a colleague';
 	String get charCount => '{current}/{max}';
+	String get searchError => 'An error occurred. Please try again.';
+	String get searchNetworkError => 'Cannot search. Check your network connection.';
+	String get retryButton => 'Retry';
+	String get validationBanner => 'You need to fill in Recipient, Message and Hashtag to send Kudos!';
+	String get anonymousNicknamePlaceholder => 'Enter anonymous nickname (optional)';
+	String get anonymousNicknameHint => 'Leave empty to display \'Anonymous sender\'';
+	String get usersLoadError => 'Could not load user list';
 }
 
 // Path: <root>
@@ -677,11 +687,13 @@ class _StringsSendKudosVi implements _StringsSendKudosEn {
 	@override final _StringsVi _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Gửi lời chúc Kudos';
+	@override String get title => 'New Kudo';
+	@override String get headerSubtitle => 'Gửi lời cám ơn và ghi nhận đến đồng đội';
 	@override String get recipientLabel => 'Người nhận *';
 	@override String get recipientPlaceholder => 'Tìm kiếm';
 	@override String get titleLabel => 'Danh hiệu *';
 	@override String get titlePlaceholder => 'Danh tặng một danh hiệu cho...';
+	@override String get titleHint => 'Ví dụ: Người truyền động lực cho tôi.\nDanh hiệu sẽ hiển thị trên làm tiêu đề Kudos của bạn.';
 	@override String get hashtagLabel => 'Hashtag *';
 	@override String get hashtagPlaceholder => 'Chọn hashtag';
 	@override String get messageLabel => 'Lời nhắn *';
@@ -717,7 +729,15 @@ class _StringsSendKudosVi implements _StringsSendKudosEn {
 	@override String get imageSizeError => 'Ảnh không được quá {max}MB.';
 	@override String get imageUploadError => 'Tải ảnh lên thất bại. Vui lòng thử lại.';
 	@override String get communityStandards => 'Tiêu chuẩn cộng đồng';
+	@override String get mentionHint => 'Bạn có thể \'@ + tên\' để nhắc tới đồng nghiệp khác';
 	@override String get charCount => '{current}/{max}';
+	@override String get searchError => 'Đã xảy ra lỗi. Vui lòng thử lại.';
+	@override String get searchNetworkError => 'Không thể tìm kiếm. Kiểm tra kết nối mạng.';
+	@override String get retryButton => 'Thử lại';
+	@override String get validationBanner => 'Bạn cần điền đủ Người nhận, Lời nhắn gửi và Hashtag để gửi Kudos!';
+	@override String get anonymousNicknamePlaceholder => 'Nhập nickname ẩn danh (tùy chọn)';
+	@override String get anonymousNicknameHint => 'Để trống sẽ hiển thị \'Người gửi ẩn danh\'';
+	@override String get usersLoadError => 'Không thể tải danh sách người dùng';
 }
 
 /// Flat map(s) containing all translations.
@@ -857,11 +877,13 @@ extension on Translations {
 			case 'profile.retry': return 'Retry';
 			case 'profile.pullToRefresh': return 'Pull to refresh';
 			case 'profile.loadingMore': return 'Loading more...';
-			case 'sendKudos.title': return 'Send Kudos';
+			case 'sendKudos.title': return 'New Kudo';
+			case 'sendKudos.headerSubtitle': return 'Send your appreciation and recognition to your teammate';
 			case 'sendKudos.recipientLabel': return 'Recipient *';
 			case 'sendKudos.recipientPlaceholder': return 'Search';
 			case 'sendKudos.titleLabel': return 'Title *';
 			case 'sendKudos.titlePlaceholder': return 'Give a title for...';
+			case 'sendKudos.titleHint': return 'E.g.: The one who inspires me.\nThe title will be displayed as the heading of your Kudos.';
 			case 'sendKudos.hashtagLabel': return 'Hashtag *';
 			case 'sendKudos.hashtagPlaceholder': return 'Select hashtag';
 			case 'sendKudos.messageLabel': return 'Message *';
@@ -897,7 +919,15 @@ extension on Translations {
 			case 'sendKudos.imageSizeError': return 'Image must not exceed {max}MB.';
 			case 'sendKudos.imageUploadError': return 'Failed to upload image. Please try again.';
 			case 'sendKudos.communityStandards': return 'Community standards';
+			case 'sendKudos.mentionHint': return 'You can type \'@ + name\' to mention a colleague';
 			case 'sendKudos.charCount': return '{current}/{max}';
+			case 'sendKudos.searchError': return 'An error occurred. Please try again.';
+			case 'sendKudos.searchNetworkError': return 'Cannot search. Check your network connection.';
+			case 'sendKudos.retryButton': return 'Retry';
+			case 'sendKudos.validationBanner': return 'You need to fill in Recipient, Message and Hashtag to send Kudos!';
+			case 'sendKudos.anonymousNicknamePlaceholder': return 'Enter anonymous nickname (optional)';
+			case 'sendKudos.anonymousNicknameHint': return 'Leave empty to display \'Anonymous sender\'';
+			case 'sendKudos.usersLoadError': return 'Could not load user list';
 			default: return null;
 		}
 	}
@@ -1037,11 +1067,13 @@ extension on _StringsVi {
 			case 'profile.retry': return 'Thử lại';
 			case 'profile.pullToRefresh': return 'Kéo xuống để tải lại';
 			case 'profile.loadingMore': return 'Đang tải thêm...';
-			case 'sendKudos.title': return 'Gửi lời chúc Kudos';
+			case 'sendKudos.title': return 'New Kudo';
+			case 'sendKudos.headerSubtitle': return 'Gửi lời cám ơn và ghi nhận đến đồng đội';
 			case 'sendKudos.recipientLabel': return 'Người nhận *';
 			case 'sendKudos.recipientPlaceholder': return 'Tìm kiếm';
 			case 'sendKudos.titleLabel': return 'Danh hiệu *';
 			case 'sendKudos.titlePlaceholder': return 'Danh tặng một danh hiệu cho...';
+			case 'sendKudos.titleHint': return 'Ví dụ: Người truyền động lực cho tôi.\nDanh hiệu sẽ hiển thị trên làm tiêu đề Kudos của bạn.';
 			case 'sendKudos.hashtagLabel': return 'Hashtag *';
 			case 'sendKudos.hashtagPlaceholder': return 'Chọn hashtag';
 			case 'sendKudos.messageLabel': return 'Lời nhắn *';
@@ -1077,7 +1109,15 @@ extension on _StringsVi {
 			case 'sendKudos.imageSizeError': return 'Ảnh không được quá {max}MB.';
 			case 'sendKudos.imageUploadError': return 'Tải ảnh lên thất bại. Vui lòng thử lại.';
 			case 'sendKudos.communityStandards': return 'Tiêu chuẩn cộng đồng';
+			case 'sendKudos.mentionHint': return 'Bạn có thể \'@ + tên\' để nhắc tới đồng nghiệp khác';
 			case 'sendKudos.charCount': return '{current}/{max}';
+			case 'sendKudos.searchError': return 'Đã xảy ra lỗi. Vui lòng thử lại.';
+			case 'sendKudos.searchNetworkError': return 'Không thể tìm kiếm. Kiểm tra kết nối mạng.';
+			case 'sendKudos.retryButton': return 'Thử lại';
+			case 'sendKudos.validationBanner': return 'Bạn cần điền đủ Người nhận, Lời nhắn gửi và Hashtag để gửi Kudos!';
+			case 'sendKudos.anonymousNicknamePlaceholder': return 'Nhập nickname ẩn danh (tùy chọn)';
+			case 'sendKudos.anonymousNicknameHint': return 'Để trống sẽ hiển thị \'Người gửi ẩn danh\'';
+			case 'sendKudos.usersLoadError': return 'Không thể tải danh sách người dùng';
 			default: return null;
 		}
 	}

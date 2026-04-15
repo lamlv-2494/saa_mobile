@@ -168,6 +168,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/.gitkeep
   String get aGitkeep => 'assets/images/.gitkeep';
 
+  /// File path: assets/images/anonymous_avatar.png
+  AssetGenImage get anonymousAvatar =>
+      const AssetGenImage('assets/images/anonymous_avatar.png');
+
   /// File path: assets/images/key_visual_bg.png
   AssetGenImage get keyVisualBg =>
       const AssetGenImage('assets/images/key_visual_bg.png');
@@ -215,6 +219,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
     aGitkeep,
+    anonymousAvatar,
     keyVisualBg,
     keyvisualBg,
     kudosBanner,

@@ -34,6 +34,7 @@ mixin _$Kudos {
   bool get canLike => throw _privateConstructorUsedError;
   String get shareUrl => throw _privateConstructorUsedError;
   String? get awardTitle => throw _privateConstructorUsedError;
+  String? get senderAlias => throw _privateConstructorUsedError;
   List<String> get imageUrls => throw _privateConstructorUsedError;
 
   /// Serializes this Kudos to a JSON map.
@@ -64,6 +65,7 @@ abstract class $KudosCopyWith<$Res> {
     bool canLike,
     String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     List<String> imageUrls,
   });
 
@@ -99,6 +101,7 @@ class _$KudosCopyWithImpl<$Res, $Val extends Kudos>
     Object? canLike = null,
     Object? shareUrl = null,
     Object? awardTitle = freezed,
+    Object? senderAlias = freezed,
     Object? imageUrls = null,
   }) {
     return _then(
@@ -155,6 +158,10 @@ class _$KudosCopyWithImpl<$Res, $Val extends Kudos>
                 ? _value.awardTitle
                 : awardTitle // ignore: cast_nullable_to_non_nullable
                       as String?,
+            senderAlias: freezed == senderAlias
+                ? _value.senderAlias
+                : senderAlias // ignore: cast_nullable_to_non_nullable
+                      as String?,
             imageUrls: null == imageUrls
                 ? _value.imageUrls
                 : imageUrls // ignore: cast_nullable_to_non_nullable
@@ -207,6 +214,7 @@ abstract class _$$KudosImplCopyWith<$Res> implements $KudosCopyWith<$Res> {
     bool canLike,
     String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     List<String> imageUrls,
   });
 
@@ -243,6 +251,7 @@ class __$$KudosImplCopyWithImpl<$Res>
     Object? canLike = null,
     Object? shareUrl = null,
     Object? awardTitle = freezed,
+    Object? senderAlias = freezed,
     Object? imageUrls = null,
   }) {
     return _then(
@@ -299,6 +308,10 @@ class __$$KudosImplCopyWithImpl<$Res>
             ? _value.awardTitle
             : awardTitle // ignore: cast_nullable_to_non_nullable
                   as String?,
+        senderAlias: freezed == senderAlias
+            ? _value.senderAlias
+            : senderAlias // ignore: cast_nullable_to_non_nullable
+                  as String?,
         imageUrls: null == imageUrls
             ? _value._imageUrls
             : imageUrls // ignore: cast_nullable_to_non_nullable
@@ -325,6 +338,7 @@ class _$KudosImpl implements _Kudos {
     this.canLike = true,
     this.shareUrl = '',
     this.awardTitle,
+    this.senderAlias,
     final List<String> imageUrls = const [],
   }) : _hashtags = hashtags,
        _imageUrls = imageUrls;
@@ -371,6 +385,8 @@ class _$KudosImpl implements _Kudos {
   final String shareUrl;
   @override
   final String? awardTitle;
+  @override
+  final String? senderAlias;
   final List<String> _imageUrls;
   @override
   @JsonKey()
@@ -382,7 +398,7 @@ class _$KudosImpl implements _Kudos {
 
   @override
   String toString() {
-    return 'Kudos(id: $id, sender: $sender, receiver: $receiver, content: $content, hashtags: $hashtags, heartCount: $heartCount, createdAt: $createdAt, isHighlight: $isHighlight, isAnonymous: $isAnonymous, isLikedByMe: $isLikedByMe, canLike: $canLike, shareUrl: $shareUrl, awardTitle: $awardTitle, imageUrls: $imageUrls)';
+    return 'Kudos(id: $id, sender: $sender, receiver: $receiver, content: $content, hashtags: $hashtags, heartCount: $heartCount, createdAt: $createdAt, isHighlight: $isHighlight, isAnonymous: $isAnonymous, isLikedByMe: $isLikedByMe, canLike: $canLike, shareUrl: $shareUrl, awardTitle: $awardTitle, senderAlias: $senderAlias, imageUrls: $imageUrls)';
   }
 
   @override
@@ -411,6 +427,8 @@ class _$KudosImpl implements _Kudos {
                 other.shareUrl == shareUrl) &&
             (identical(other.awardTitle, awardTitle) ||
                 other.awardTitle == awardTitle) &&
+            (identical(other.senderAlias, senderAlias) ||
+                other.senderAlias == senderAlias) &&
             const DeepCollectionEquality().equals(
               other._imageUrls,
               _imageUrls,
@@ -434,6 +452,7 @@ class _$KudosImpl implements _Kudos {
     canLike,
     shareUrl,
     awardTitle,
+    senderAlias,
     const DeepCollectionEquality().hash(_imageUrls),
   );
 
@@ -466,6 +485,7 @@ abstract class _Kudos implements Kudos {
     final bool canLike,
     final String shareUrl,
     final String? awardTitle,
+    final String? senderAlias,
     final List<String> imageUrls,
   }) = _$KudosImpl;
 
@@ -497,6 +517,8 @@ abstract class _Kudos implements Kudos {
   String get shareUrl;
   @override
   String? get awardTitle;
+  @override
+  String? get senderAlias;
   @override
   List<String> get imageUrls;
 

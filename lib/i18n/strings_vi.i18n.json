@@ -149,11 +149,13 @@
         "loadingMore": "Đang tải thêm..."
     },
     "sendKudos": {
-        "title": "Gửi lời chúc Kudos",
+        "title": "New Kudo",
+        "headerSubtitle": "Gửi lời cám ơn và ghi nhận đến đồng đội",
         "recipientLabel": "Người nhận *",
         "recipientPlaceholder": "Tìm kiếm",
         "titleLabel": "Danh hiệu *",
         "titlePlaceholder": "Danh tặng một danh hiệu cho...",
+        "titleHint": "Ví dụ: Người truyền động lực cho tôi.\nDanh hiệu sẽ hiển thị trên làm tiêu đề Kudos của bạn.",
         "hashtagLabel": "Hashtag *",
         "hashtagPlaceholder": "Chọn hashtag",
         "messageLabel": "Lời nhắn *",
@@ -189,6 +191,14 @@
         "imageSizeError": "Ảnh không được quá {max}MB.",
         "imageUploadError": "Tải ảnh lên thất bại. Vui lòng thử lại.",
         "communityStandards": "Tiêu chuẩn cộng đồng",
-        "charCount": "{current}/{max}"
+        "mentionHint": "Bạn có thể '@ + tên' để nhắc tới đồng nghiệp khác",
+        "charCount": "{current}/{max}",
+        "searchError": "Đã xảy ra lỗi. Vui lòng thử lại.",
+        "searchNetworkError": "Không thể tìm kiếm. Kiểm tra kết nối mạng.",
+        "retryButton": "Thử lại",
+        "validationBanner": "Bạn cần điền đủ Người nhận, Lời nhắn gửi và Hashtag để gửi Kudos!",
+        "anonymousNicknamePlaceholder": "Nhập nickname ẩn danh (tùy chọn)",
+        "anonymousNicknameHint": "Để trống sẽ hiển thị 'Người gửi ẩn danh'",
+        "usersLoadError": "Không thể tải danh sách người dùng"
     }
 }
