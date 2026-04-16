@@ -44,7 +44,9 @@ Kudos createKudos({
   bool canLike = true,
   String shareUrl = 'https://kudos.sun-asterisk.com/k/kudos-1',
   String? awardTitle,
+  String? senderAlias,
   List<String> imageUrls = const [],
+  bool isSpam = false,
 }) =>
     Kudos(
       id: id,
@@ -61,7 +63,9 @@ Kudos createKudos({
       canLike: canLike,
       shareUrl: shareUrl,
       awardTitle: awardTitle,
+      senderAlias: senderAlias,
       imageUrls: imageUrls,
+      isSpam: isSpam,
     );
 
 PersonalStats createPersonalStats({
@@ -134,6 +138,11 @@ List<GiftRecipientRanking> createTop10List() => List.generate(
       ),
     );
 
+List<Kudos> createAllKudosPageList({int count = 25}) => List.generate(
+      count,
+      (i) => createKudos(id: 'all-page-$i', heartCount: 30 - i % 20),
+    );
+
 KudosState createKudosState({
   List<Kudos>? highlightKudos,
   List<Kudos>? allKudos,
@@ -146,6 +155,9 @@ KudosState createKudosState({
   bool hasMoreKudos = true,
   List<Hashtag>? availableHashtags,
   List<Department>? availableDepartments,
+  List<Kudos>? allKudosPageList,
+  bool hasMoreAllKudosPage = true,
+  bool isLoadingMoreAllKudos = false,
 }) =>
     KudosState(
       highlightKudos: highlightKudos ?? createHighlightKudosList(),
@@ -161,4 +173,7 @@ KudosState createKudosState({
           [createHashtag(id: 1, name: '#teamwork'), createHashtag(id: 2, name: '#dedicated')],
       availableDepartments: availableDepartments ??
           [createDepartment(id: 1, name: 'CECV1'), createDepartment(id: 2, name: 'Division A')],
+      allKudosPageList: allKudosPageList ?? [],
+      hasMoreAllKudosPage: hasMoreAllKudosPage,
+      isLoadingMoreAllKudos: isLoadingMoreAllKudos,
     );

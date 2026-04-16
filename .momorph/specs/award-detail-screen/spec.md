@@ -89,11 +89,13 @@ Là một Sunner quốc tế, tôi muốn xem thông tin giải thưởng bằng
 
 ### Edge Cases
 
-- Khi API trả về danh sách giải thưởng rỗng → hiển thị trạng thái empty phù hợp.
-- Khi mạng chậm → hiển thị skeleton/loading khi đang fetch dữ liệu giải thưởng.
+- Khi API trả về danh sách giải thưởng rỗng → hiển thị trạng thái empty: icon placeholder + text "Chưa có dữ liệu giải thưởng" (i18n) + nút retry.
+- Khi mạng chậm → hiển thị skeleton/shimmer cho toàn bộ content area (badge image, text blocks, stat rows) khi đang fetch dữ liệu giải thưởng.
+- Khi API trả về lỗi (timeout, 500, no internet) → hiển thị trạng thái error: icon lỗi + message mô tả lỗi (i18n) + nút "Thử lại" (PrimaryButton).
 - Khi giải Signature có cả 2 mức giá trị (cá nhân + tập thể) → layout cần hiển thị 2 dòng prize riêng biệt.
 - Khi chuyển giải qua dropdown → scroll position PHẢI reset về đầu phần Award Detail (để người dùng thấy badge image của giải mới).
 - Khi nhấn dropdown lần nữa sau khi đã chọn → giải hiện tại được highlight trong danh sách.
+- Khi badge_image_url là null hoặc URL lỗi → hiển thị placeholder image mặc định (PNG).
 
 ---
 
@@ -150,6 +152,7 @@ Là một Sunner quốc tế, tôi muốn xem thông tin giải thưởng bằng
 - **FR-008**: Nội dung mô tả, tên giải, số lượng, giá trị PHẢI được fetch từ Supabase (không hardcode).
 - **FR-009**: Khi mở từ bottom nav (không có context) → mặc định hiển thị Top Talent. Khi mở từ Home qua award card → hiển thị giải tương ứng với card đã nhấn.
 - **FR-010**: Dropdown PHẢI mở dưới dạng PopupMenu nằm ngay bên dưới widget dropdown button.
+- **FR-011**: Layout Prize Stat PHẢI render động theo số lượng AwardPrize records — không hardcode 1 hay 2 block. Giải "Signature 2025 - Creator" hiện có 2 block, các giải khác có 1 block.
 
 ### Phân loại Text: i18n (slang) vs Supabase
 
@@ -169,6 +172,10 @@ Là một Sunner quốc tế, tôi muốn xem thông tin giải thưởng bằng
 | Số lượng + đơn vị (10 Cá nhân, 02 Tập thể) | Supabase `quantity`, `unit_vi`/`unit_en` | Dynamic content |
 | Giá trị tiền (7.000.000 VNĐ) | Supabase `value_amount` | Dynamic content, format số |
 | Ghi chú giải (cho mỗi giải thưởng) | Supabase `note_vi`/`note_en` | Dynamic content |
+| "Chưa có dữ liệu giải thưởng" | slang i18n | Empty state |
+| "Không thể tải dữ liệu" | slang i18n | Error state |
+| "Thử lại" | slang i18n | Retry button |
+| "Chọn loại giải thưởng" | slang i18n | Dropdown semantic label |
 
 ### Yêu cầu kỹ thuật
 

@@ -22,7 +22,9 @@ class Kudos with _$Kudos {
     @Default(true) bool canLike,
     @Default('') String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     @Default([]) List<String> imageUrls,
+    @Default(false) bool isSpam,
   }) = _Kudos;
 
   factory Kudos.fromJson(Map<String, dynamic> json) => _$KudosFromJson(json);

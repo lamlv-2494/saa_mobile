@@ -24,9 +24,11 @@ _$KudosImpl _$$KudosImplFromJson(Map<String, dynamic> json) => _$KudosImpl(
   canLike: json['canLike'] as bool? ?? true,
   shareUrl: json['shareUrl'] as String? ?? '',
   awardTitle: json['awardTitle'] as String?,
+  senderAlias: json['senderAlias'] as String?,
   imageUrls:
       (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
+  isSpam: json['isSpam'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$$KudosImplToJson(_$KudosImpl instance) =>
@@ -44,5 +46,7 @@ Map<String, dynamic> _$$KudosImplToJson(_$KudosImpl instance) =>
       'canLike': instance.canLike,
       'shareUrl': instance.shareUrl,
       'awardTitle': instance.awardTitle,
+      'senderAlias': instance.senderAlias,
       'imageUrls': instance.imageUrls,
+      'isSpam': instance.isSpam,
     };

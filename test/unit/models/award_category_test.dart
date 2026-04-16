@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:saa_mobile/features/award/data/models/award_prize.dart';
 import 'package:saa_mobile/features/home/data/models/award_category.dart';
 
 void main() {

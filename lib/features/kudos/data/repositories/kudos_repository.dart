@@ -6,6 +6,7 @@ import 'package:saa_mobile/features/kudos/data/models/gift_recipient_ranking.dar
 import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
+import 'package:saa_mobile/features/kudos/data/models/send_kudos_state.dart';
 import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
 import 'package:saa_mobile/features/kudos/data/models/user_summary.dart';
 
@@ -124,6 +125,89 @@ class KudosRepository {
       return await _datasource.fetchDepartments();
     } catch (e) {
       throw Exception('Không thể tải phòng ban: $e');
+    }
+  }
+
+  Future<List<UserSummary>> searchUsers(String query) async {
+    try {
+      return await _datasource.searchUsers(query);
+    } catch (e) {
+      throw Exception('Không thể tìm kiếm người dùng: $e');
+    }
+  }
+
+  Future<List<UserSummary>> fetchAllUsers() async {
+    try {
+      return await _datasource.fetchAllUsers();
+    } catch (e) {
+      throw Exception('Không thể tải danh sách người dùng: $e');
+    }
+  }
+
+  Future<String> createKudos({
+    required int recipientId,
+    required String title,
+    required String message,
+    required List<int> hashtagIds,
+    List<String> imageUrls = const [],
+    bool isAnonymous = false,
+    String? senderAlias,
+  }) async {
+    try {
+      return await _datasource.createKudos(
+        recipientId: recipientId,
+        title: title,
+        message: message,
+        hashtagIds: hashtagIds,
+        imageUrls: imageUrls,
+        isAnonymous: isAnonymous,
+        senderAlias: senderAlias,
+      );
+    } catch (e) {
+      throw Exception('Không thể gửi kudos: $e');
+    }
+  }
+
+  Future<String> uploadKudosImage({
+    required List<int> bytes,
+    required String ext,
+  }) async {
+    try {
+      return await _datasource.uploadKudosImageBytes(bytes, ext);
+    } catch (e) {
+      throw Exception('Không thể tải ảnh lên: $e');
+    }
+  }
+
+  Future<void> deleteKudosImage(String imageUrl) async {
+    try {
+      await _datasource.deleteKudosImage(imageUrl);
+    } catch (e) {
+      throw Exception('Không thể xóa ảnh: $e');
+    }
+  }
+
+  Future<void> upsertSendKudosDraft(SendKudosState draft) async {
+    try {
+      await _datasource.upsertSendKudosDraft(draft);
+    } catch (e) {
+      throw Exception('Không thể lưu nháp kudos: $e');
+    }
+  }
+
+  Future<void> deleteSendKudosDraft() async {
+    try {
+      await _datasource.deleteSendKudosDraft();
+    } catch (e) {
+      throw Exception('Không thể xóa nháp kudos: $e');
+    }
+  }
+
+  Future<String?> getCurrentUserId() async {
+    try {
+      return await _datasource.tryGetCurrentUserStringId();
+    } catch (_) {
+      return null;
     }
   }
 }

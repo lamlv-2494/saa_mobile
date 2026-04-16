@@ -28,3 +28,5 @@ Mọi file .md đều phải được viết bằng tiếng Việt
 Các text không get từ supabase sẽ không được hard cứng string mà phải khai báo trong i18n
 
 Khi update supabase đừng xoá bất kỳ data nào đang có trong DB, chỉ update thêm thôi
+
+Khi seed data chỉ update thêm chứ không chạy supabase db reset, chỉ chạy psql -h localhost -p 54322 -U postgres -d postgres -f supabase/seed.sql LL

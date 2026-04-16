@@ -34,7 +34,9 @@ mixin _$Kudos {
   bool get canLike => throw _privateConstructorUsedError;
   String get shareUrl => throw _privateConstructorUsedError;
   String? get awardTitle => throw _privateConstructorUsedError;
+  String? get senderAlias => throw _privateConstructorUsedError;
   List<String> get imageUrls => throw _privateConstructorUsedError;
+  bool get isSpam => throw _privateConstructorUsedError;
 
   /// Serializes this Kudos to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,7 +66,9 @@ abstract class $KudosCopyWith<$Res> {
     bool canLike,
     String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     List<String> imageUrls,
+    bool isSpam,
   });
 
   $UserSummaryCopyWith<$Res> get sender;
@@ -99,7 +103,9 @@ class _$KudosCopyWithImpl<$Res, $Val extends Kudos>
     Object? canLike = null,
     Object? shareUrl = null,
     Object? awardTitle = freezed,
+    Object? senderAlias = freezed,
     Object? imageUrls = null,
+    Object? isSpam = null,
   }) {
     return _then(
       _value.copyWith(
@@ -155,10 +161,18 @@ class _$KudosCopyWithImpl<$Res, $Val extends Kudos>
                 ? _value.awardTitle
                 : awardTitle // ignore: cast_nullable_to_non_nullable
                       as String?,
+            senderAlias: freezed == senderAlias
+                ? _value.senderAlias
+                : senderAlias // ignore: cast_nullable_to_non_nullable
+                      as String?,
             imageUrls: null == imageUrls
                 ? _value.imageUrls
                 : imageUrls // ignore: cast_nullable_to_non_nullable
                       as List<String>,
+            isSpam: null == isSpam
+                ? _value.isSpam
+                : isSpam // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -207,7 +221,9 @@ abstract class _$$KudosImplCopyWith<$Res> implements $KudosCopyWith<$Res> {
     bool canLike,
     String shareUrl,
     String? awardTitle,
+    String? senderAlias,
     List<String> imageUrls,
+    bool isSpam,
   });
 
   @override
@@ -243,7 +259,9 @@ class __$$KudosImplCopyWithImpl<$Res>
     Object? canLike = null,
     Object? shareUrl = null,
     Object? awardTitle = freezed,
+    Object? senderAlias = freezed,
     Object? imageUrls = null,
+    Object? isSpam = null,
   }) {
     return _then(
       _$KudosImpl(
@@ -299,10 +317,18 @@ class __$$KudosImplCopyWithImpl<$Res>
             ? _value.awardTitle
             : awardTitle // ignore: cast_nullable_to_non_nullable
                   as String?,
+        senderAlias: freezed == senderAlias
+            ? _value.senderAlias
+            : senderAlias // ignore: cast_nullable_to_non_nullable
+                  as String?,
         imageUrls: null == imageUrls
             ? _value._imageUrls
             : imageUrls // ignore: cast_nullable_to_non_nullable
                   as List<String>,
+        isSpam: null == isSpam
+            ? _value.isSpam
+            : isSpam // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -325,7 +351,9 @@ class _$KudosImpl implements _Kudos {
     this.canLike = true,
     this.shareUrl = '',
     this.awardTitle,
+    this.senderAlias,
     final List<String> imageUrls = const [],
+    this.isSpam = false,
   }) : _hashtags = hashtags,
        _imageUrls = imageUrls;
 
@@ -371,6 +399,8 @@ class _$KudosImpl implements _Kudos {
   final String shareUrl;
   @override
   final String? awardTitle;
+  @override
+  final String? senderAlias;
   final List<String> _imageUrls;
   @override
   @JsonKey()
@@ -381,8 +411,12 @@ class _$KudosImpl implements _Kudos {
   }
 
   @override
+  @JsonKey()
+  final bool isSpam;
+
+  @override
   String toString() {
-    return 'Kudos(id: $id, sender: $sender, receiver: $receiver, content: $content, hashtags: $hashtags, heartCount: $heartCount, createdAt: $createdAt, isHighlight: $isHighlight, isAnonymous: $isAnonymous, isLikedByMe: $isLikedByMe, canLike: $canLike, shareUrl: $shareUrl, awardTitle: $awardTitle, imageUrls: $imageUrls)';
+    return 'Kudos(id: $id, sender: $sender, receiver: $receiver, content: $content, hashtags: $hashtags, heartCount: $heartCount, createdAt: $createdAt, isHighlight: $isHighlight, isAnonymous: $isAnonymous, isLikedByMe: $isLikedByMe, canLike: $canLike, shareUrl: $shareUrl, awardTitle: $awardTitle, senderAlias: $senderAlias, imageUrls: $imageUrls, isSpam: $isSpam)';
   }
 
   @override
@@ -411,10 +445,13 @@ class _$KudosImpl implements _Kudos {
                 other.shareUrl == shareUrl) &&
             (identical(other.awardTitle, awardTitle) ||
                 other.awardTitle == awardTitle) &&
+            (identical(other.senderAlias, senderAlias) ||
+                other.senderAlias == senderAlias) &&
             const DeepCollectionEquality().equals(
               other._imageUrls,
               _imageUrls,
-            ));
+            ) &&
+            (identical(other.isSpam, isSpam) || other.isSpam == isSpam));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -434,7 +471,9 @@ class _$KudosImpl implements _Kudos {
     canLike,
     shareUrl,
     awardTitle,
+    senderAlias,
     const DeepCollectionEquality().hash(_imageUrls),
+    isSpam,
   );
 
   /// Create a copy of Kudos
@@ -466,7 +505,9 @@ abstract class _Kudos implements Kudos {
     final bool canLike,
     final String shareUrl,
     final String? awardTitle,
+    final String? senderAlias,
     final List<String> imageUrls,
+    final bool isSpam,
   }) = _$KudosImpl;
 
   factory _Kudos.fromJson(Map<String, dynamic> json) = _$KudosImpl.fromJson;
@@ -498,7 +539,11 @@ abstract class _Kudos implements Kudos {
   @override
   String? get awardTitle;
   @override
+  String? get senderAlias;
+  @override
   List<String> get imageUrls;
+  @override
+  bool get isSpam;
 
   /// Create a copy of Kudos
   /// with the given fields replaced by the non-null parameter values.

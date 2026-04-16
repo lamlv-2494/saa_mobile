@@ -10,7 +10,7 @@ import 'package:saa_mobile/features/kudos/presentation/widgets/highlight_carouse
 import 'package:saa_mobile/i18n/strings.g.dart';
 import 'package:saa_mobile/shared/widgets/section_header_widget.dart';
 
-class HighlightSectionWidget extends StatelessWidget {
+class HighlightSectionWidget extends StatefulWidget {
   const HighlightSectionWidget({
     super.key,
     required this.kudosList,
@@ -38,53 +38,14 @@ class HighlightSectionWidget extends StatelessWidget {
   final void Function(String kudosId)? onViewDetail;
   final void Function(String userId)? onAvatarTap;
 
-  void _showHashtagBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.bgDark,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => _FilterOptionsList<Hashtag>(
-        title: t.kudos.selectHashtag,
-        items: availableHashtags,
-        selectedItem: selectedHashtag,
-        getName: (h) => h.name,
-        onSelected: (h) {
-          Navigator.pop(context);
-          onHashtagSelected?.call(h);
-        },
-        onClear: () {
-          Navigator.pop(context);
-          onHashtagSelected?.call(null);
-        },
-      ),
-    );
-  }
+  @override
+  State<HighlightSectionWidget> createState() =>
+      _HighlightSectionWidgetState();
+}
 
-  void _showDepartmentBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.bgDark,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => _FilterOptionsList<Department>(
-        title: t.kudos.selectDepartment,
-        items: availableDepartments,
-        selectedItem: selectedDepartment,
-        getName: (d) => d.name,
-        onSelected: (d) {
-          Navigator.pop(context);
-          onDepartmentSelected?.call(d);
-        },
-        onClear: () {
-          Navigator.pop(context);
-          onDepartmentSelected?.call(null);
-        },
-      ),
-    );
-  }
+class _HighlightSectionWidgetState extends State<HighlightSectionWidget> {
+  final MenuController _hashtagMenuController = MenuController();
+  final MenuController _departmentMenuController = MenuController();
 
   @override
   Widget build(BuildContext context) {
@@ -100,125 +61,177 @@ class HighlightSectionWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              FilterDropdownButton(
-                label: t.kudos.filterHashtag,
-                selectedValue: selectedHashtag?.name,
-                width: 129,
-                onTap: () => _showHashtagBottomSheet(context),
+              // ── Hashtag DropdownMenu ──
+              MenuAnchor(
+                controller: _hashtagMenuController,
+                style: _menuStyle,
+                menuChildren: _buildHashtagMenuItems(),
+                child: FilterDropdownButton(
+                  label: t.kudos.filterHashtag,
+                  selectedValue: widget.selectedHashtag?.name,
+                  width: 129,
+                  onTap: () => _hashtagMenuController.isOpen
+                      ? _hashtagMenuController.close()
+                      : _hashtagMenuController.open(),
+                ),
               ),
               const SizedBox(width: 8),
-              FilterDropdownButton(
-                label: t.kudos.filterDepartment,
-                selectedValue: selectedDepartment?.name,
-                onTap: () => _showDepartmentBottomSheet(context),
+              // ── Department DropdownMenu ──
+              MenuAnchor(
+                controller: _departmentMenuController,
+                style: _menuStyle,
+                menuChildren: _buildDepartmentMenuItems(),
+                child: FilterDropdownButton(
+                  label: t.kudos.filterDepartment,
+                  selectedValue: widget.selectedDepartment?.name,
+                  onTap: () => _departmentMenuController.isOpen
+                      ? _departmentMenuController.close()
+                      : _departmentMenuController.open(),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 24),
           HighlightCarouselWidget(
-            kudosList: kudosList,
-            onHeartTap: onHeartTap,
-            onCopyLink: onCopyLink,
-            onViewDetail: onViewDetail,
-            onAvatarTap: onAvatarTap,
+            kudosList: widget.kudosList,
+            onHeartTap: widget.onHeartTap,
+            onCopyLink: widget.onCopyLink,
+            onViewDetail: widget.onViewDetail,
+            onAvatarTap: widget.onAvatarTap,
           ),
         ],
       ),
     );
   }
-}
 
-class _FilterOptionsList<T> extends StatelessWidget {
-  const _FilterOptionsList({
-    super.key,
-    required this.title,
-    required this.items,
-    required this.getName,
-    required this.onSelected,
-    required this.onClear,
-    this.selectedItem,
-  });
-
-  final String title;
-  final List<T> items;
-  final T? selectedItem;
-  final String Function(T) getName;
-  final void Function(T) onSelected;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.6,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textWhite,
-                  ),
-                ),
-                if (selectedItem != null)
-                  GestureDetector(
-                    onTap: onClear,
-                    child: Text(
-                      t.kudos.clearFilter,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        color: AppColors.textAccent,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final isSelected = item == selectedItem;
-                  return ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      getName(item),
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w400,
-                        color: isSelected
-                            ? AppColors.textAccent
-                            : AppColors.textWhite,
-                      ),
-                    ),
-                    trailing: isSelected
-                        ? const Icon(
-                            Icons.check,
-                            color: AppColors.textAccent,
-                            size: 20,
-                          )
-                        : null,
-                    onTap: () => onSelected(item),
-                  );
-                },
-              ),
-            ),
-          ],
+  MenuStyle get _menuStyle => MenuStyle(
+        backgroundColor: const WidgetStatePropertyAll(AppColors.bgDark),
+        surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Color(0xFF998C5F)),
+          ),
         ),
-      ),
-    );
+        maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 300)),
+        padding: const WidgetStatePropertyAll(
+          EdgeInsets.symmetric(vertical: 8),
+        ),
+      );
+
+  List<Widget> _buildHashtagMenuItems() {
+    final items = <Widget>[];
+
+    // Clear filter option when a filter is active
+    if (widget.selectedHashtag != null) {
+      items.add(
+        MenuItemButton(
+          onPressed: () {
+            widget.onHashtagSelected?.call(null);
+            _hashtagMenuController.close();
+          },
+          style: _clearItemStyle,
+          child: Text(
+            t.kudos.clearFilter,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              color: AppColors.textAccent,
+            ),
+          ),
+        ),
+      );
+    }
+
+    for (final tag in widget.availableHashtags) {
+      final isSelected = tag == widget.selectedHashtag;
+      items.add(
+        MenuItemButton(
+          onPressed: () {
+            widget.onHashtagSelected?.call(tag);
+            _hashtagMenuController.close();
+          },
+          style: _itemStyle(isSelected),
+          trailingIcon: isSelected
+              ? const Icon(Icons.check, color: AppColors.textAccent, size: 20)
+              : null,
+          child: Text(
+            tag.name,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+              color: isSelected ? AppColors.textAccent : AppColors.textWhite,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return items;
   }
+
+  List<Widget> _buildDepartmentMenuItems() {
+    final items = <Widget>[];
+
+    // Clear filter option when a filter is active
+    if (widget.selectedDepartment != null) {
+      items.add(
+        MenuItemButton(
+          onPressed: () {
+            widget.onDepartmentSelected?.call(null);
+            _departmentMenuController.close();
+          },
+          style: _clearItemStyle,
+          child: Text(
+            t.kudos.clearFilter,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              color: AppColors.textAccent,
+            ),
+          ),
+        ),
+      );
+    }
+
+    for (final dept in widget.availableDepartments) {
+      final isSelected = dept == widget.selectedDepartment;
+      items.add(
+        MenuItemButton(
+          onPressed: () {
+            widget.onDepartmentSelected?.call(dept);
+            _departmentMenuController.close();
+          },
+          style: _itemStyle(isSelected),
+          trailingIcon: isSelected
+              ? const Icon(Icons.check, color: AppColors.textAccent, size: 20)
+              : null,
+          child: Text(
+            dept.name,
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+              color: isSelected ? AppColors.textAccent : AppColors.textWhite,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return items;
+  }
+
+  ButtonStyle _itemStyle(bool isSelected) => ButtonStyle(
+        padding: const WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        foregroundColor: WidgetStatePropertyAll(
+          isSelected ? AppColors.textAccent : AppColors.textWhite,
+        ),
+      );
+
+  ButtonStyle get _clearItemStyle => const ButtonStyle(
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        foregroundColor: WidgetStatePropertyAll(AppColors.textAccent),
+      );
 }

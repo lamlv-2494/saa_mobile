@@ -1,20 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
+import 'package:saa_mobile/core/utils/time_utils.dart';
 import 'package:saa_mobile/features/kudos/presentation/viewmodels/kudos_viewmodel.dart';
+import 'package:saa_mobile/features/kudos/presentation/widgets/all_kudos_page_view.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/all_kudos_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/highlight_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_card.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_hero_banner_widget.dart';
-import 'package:saa_mobile/features/kudos/presentation/widgets/personal_stats_card.dart';
+import 'package:saa_mobile/shared/widgets/personal_stats_card.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/spotlight_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/top_gift_recipients_card.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:saa_mobile/shared/widgets/language_dropdown.dart';
 import 'package:saa_mobile/shared/widgets/outline_button.dart';
 
@@ -27,6 +33,7 @@ class KudosScreen extends ConsumerStatefulWidget {
 
 class _KudosScreenState extends ConsumerState<KudosScreen> {
   final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -38,7 +45,26 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  void _navigateToAllKudos() {
+    final vm = ref.read(kudosViewModelProvider.notifier);
+    vm.loadAllKudosPage();
+    _pageController.animateToPage(
+      1,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _navigateBackToFeed() {
+    _pageController.animateToPage(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _onScroll() {
@@ -48,28 +74,12 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
     }
   }
 
-  String _formatTimeAgo(DateTime createdAt) {
-    final diff = DateTime.now().difference(createdAt);
-    if (diff.inDays > 0) {
-      return t.kudos.daysAgo.replaceAll('{count}', '${diff.inDays}');
-    }
-    if (diff.inHours > 0) {
-      return t.kudos.hoursAgo.replaceAll('{count}', '${diff.inHours}');
-    }
-    if (diff.inMinutes > 0) {
-      return t.kudos.minutesAgo.replaceAll('{count}', '${diff.inMinutes}');
-    }
-    return t.kudos.justNow;
-  }
 
-  void _navigateToSendKudos() {
-    // Placeholder — sẽ thay bằng go_router push khi màn hình gửi kudos được build
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(t.kudos.ctaComingSoon),
-        duration: Duration(seconds: 1),
-      ),
-    );
+  Future<void> _navigateToSendKudos() async {
+    final result = await context.push<bool>('/send-kudos');
+    if (result == true && mounted) {
+      unawaited(ref.read(kudosViewModelProvider.notifier).refresh());
+    }
   }
 
   Widget _buildCtaButton() {
@@ -89,7 +99,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               BlendMode.srcIn,
             ),
           ),
-          onPressed: _navigateToSendKudos,
+          onPressed: () => _navigateToSendKudos(),
         ),
       ),
     );
@@ -129,7 +139,13 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
             ),
           );
         },
-        data: (state) => Stack(
+        data: (state) => PageView(
+          key: const Key('kudosScreenPageView'),
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            // ─── Page 0: Kudos Feed ───
+            Stack(
           children: [
             // ─── Background Image Layer ───
             // Trải dài từ top (behind AppBar) xuống ~500px.
@@ -276,6 +292,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                       availableDepartments: state.availableDepartments,
                       selectedHashtag: state.selectedHashtag,
                       selectedDepartment: state.selectedDepartment,
+                      onViewDetail: (id) => context.push('/kudos/$id'),
                       onHashtagSelected: (h) => vm.setHashtagFilter(h),
                       onDepartmentSelected: (d) => vm.setDepartmentFilter(d),
                       onHeartTap: (id) => vm.toggleHeart(id),
@@ -348,17 +365,19 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                         itemCount: state.allKudos.length > 10
                             ? 10
                             : state.allKudos.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        separatorBuilder: (_, _) => const SizedBox(height: 20),
                         itemBuilder: (context, index) {
                           final kudos = state.allKudos[index];
                           return KudosCard(
                             variant: KudosCardVariant.feed,
                             kudos: kudos,
-                            timeText: _formatTimeAgo(kudos.createdAt),
+                            timeText: formatKudosTimeAgo(kudos.createdAt),
                             onHeartTap: () => vm.toggleHeart(kudos.id),
                             onAvatarTap: (userId) {
                               // Placeholder — navigate to profile
                             },
+                            onViewDetail: () =>
+                                context.push('/kudos/${kudos.id}'),
                           );
                         },
                       ),
@@ -370,9 +389,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                   SliverToBoxAdapter(
                     child: Center(
                       child: GestureDetector(
-                        onTap: () {
-                          // TODO: Navigate to full kudos feed screen
-                        },
+                        onTap: _navigateToAllKudos,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
@@ -408,6 +425,23 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               ),
             ),
           ], // Stack children
+        ),
+            // ─── Page 1: All Kudos ───
+            AllKudosPageView(
+              kudosList: state.allKudosPageList,
+              hasMore: state.hasMoreAllKudosPage,
+              isLoadingMore: state.isLoadingMoreAllKudos,
+              onBackToFeed: _navigateBackToFeed,
+              onLoadMore: () => vm.loadMoreAllKudos(),
+              onRefresh: () => vm.refreshAllKudos(),
+              onHeartTap: (id) => vm.toggleHeart(id),
+              onAvatarTap: (userId) {
+                // Placeholder — navigate to profile
+              },
+              formatTimeAgo: formatKudosTimeAgo,
+              onViewDetail: (id) => context.push('/kudos/$id'),
+            ),
+          ], // PageView children
         ),
       ),
     );

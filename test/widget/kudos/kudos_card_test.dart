@@ -143,14 +143,14 @@ void main() {
   group('KudosCard - hero tier image', () {
     testWidgets('render hero tier image khi user có heroTierUrl',
         (tester) async {
-      final sender = UserSummary(
+      const sender = UserSummary(
         id: 'sender-1',
         name: 'Người gửi',
         avatar: '',
         department: 'CECV1',
         heroTierUrl: 'https://example.com/rising_hero.png',
       );
-      final receiver = UserSummary(
+      const receiver = UserSummary(
         id: 'receiver-1',
         name: 'Người nhận',
         avatar: '',

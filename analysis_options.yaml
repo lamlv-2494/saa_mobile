@@ -1,6 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  exclude:
+    - lib/i18n/strings.g.dart
+    - lib/gen/**
   errors:
     missing_return: error
     missing_required_param: error

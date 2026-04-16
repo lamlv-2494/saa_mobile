@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 174 (87 per locale)
+/// Strings: 370 (185 per locale)
 ///
-/// Built on 2026-04-14 at 06:29 UTC
+/// Built on 2026-04-15 at 11:12 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -156,6 +156,8 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final _StringsAwardEn award = _StringsAwardEn._(_root);
 	late final _StringsKudosEn kudos = _StringsKudosEn._(_root);
 	late final _StringsAccessibilityEn accessibility = _StringsAccessibilityEn._(_root);
+	late final _StringsProfileEn profile = _StringsProfileEn._(_root);
+	late final _StringsSendKudosEn sendKudos = _StringsSendKudosEn._(_root);
 }
 
 // Path: login
@@ -298,6 +300,30 @@ class _StringsKudosEn {
 	String get copyLinkAccessibility => 'Copy link';
 	String get viewDetailAccessibility => 'View kudos detail';
 	String get viewAllKudos => 'View all Kudos';
+	String get allKudosNavbarTitle => 'All Kudos';
+	String get allKudosPullToRefresh => 'Pull to refresh';
+	String get allKudosLoadingMore => 'Loading more...';
+	String get allKudosEmpty => 'No kudos yet';
+	String get allKudosLoadError => 'Failed to load kudos. Please try again.';
+	String get allKudosRetry => 'Retry';
+	String get filterAll => 'All';
+	String get filterNoHashtags => 'No hashtags available';
+	String get filterNoDepartments => 'No departments available';
+	String get filterLoadError => 'Could not load filters';
+	String get filterTagSelected => 'Selected';
+	String get filterHashtagAccessibility => 'Filter by hashtag';
+	String get filterDepartmentAccessibility => 'Filter by department';
+	String get detailTitle => 'Kudos Detail';
+	String get anonymousSender => 'Anonymous sender';
+	String get kudosNotFound => 'This kudos no longer exists or has been removed.';
+	String get noContent => '(No content)';
+	String get goBack => 'Go back';
+	String get networkError => 'Network error. Please try again.';
+	String get heartError => 'Action failed. Please try again.';
+	String get avatarAccessibility => 'Avatar of {name}';
+	String get anonymousAvatarAccessibility => 'Anonymous sender avatar';
+	String get attachedImageAccessibility => 'Attached image {index}';
+	String get deletedUser => 'User no longer exists';
 }
 
 // Path: accessibility
@@ -315,6 +341,98 @@ class _StringsAccessibilityEn {
 	String get fabViewKudos => 'View Kudos';
 	String get kudosDetailButton => 'Open Sun* Kudos detail page';
 	String get awardBadge => 'Award badge';
+}
+
+// Path: profile
+class _StringsProfileEn {
+	_StringsProfileEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'Profile';
+	String get myIconCollection => 'Icon collection';
+	String get kudosReceived => 'Kudos received';
+	String get kudosSent => 'Kudos sent';
+	String get heartsReceived => 'Hearts received';
+	String get secretBoxesOpened => 'Secret boxes opened';
+	String get secretBoxesUnopened => 'Secret boxes unopened';
+	String get openSecretBox => 'Open secret box';
+	String get kudosHistory => 'Kudos History';
+	String get filterReceived => 'Received';
+	String get filterSent => 'Sent';
+	String get noBadges => 'No badges earned yet.';
+	String get noKudosHistory => 'No Kudos yet.';
+	String get sendThanks => 'Send thanks';
+	String get badgeCollection => 'Badge collection';
+	String get userNotFound => 'User not found.';
+	String get loadError => 'Something went wrong. Tap to retry.';
+	String get retry => 'Retry';
+	String get pullToRefresh => 'Pull to refresh';
+	String get loadingMore => 'Loading more...';
+	String get kudosTitle => 'KUDOS';
+	String get saaAwards => 'Sun* Annual Awards 2025';
+	String get spam => 'Spam';
+}
+
+// Path: sendKudos
+class _StringsSendKudosEn {
+	_StringsSendKudosEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get title => 'New Kudo';
+	String get headerSubtitle => 'Send your appreciation and recognition to your teammate';
+	String get recipientLabel => 'Recipient *';
+	String get recipientPlaceholder => 'Search';
+	String get titleLabel => 'Title *';
+	String get titlePlaceholder => 'Give a title for...';
+	String get titleHint => 'E.g.: The one who inspires me.\nThe title will be displayed as the heading of your Kudos.';
+	String get hashtagLabel => 'Hashtag *';
+	String get hashtagPlaceholder => 'Select hashtag';
+	String get messageLabel => 'Message *';
+	String get messagePlaceholder => 'Send your appreciation and recognition to your teammate here!';
+	String get anonymousLabel => 'Send anonymously';
+	String get anonymousHint => 'The recipient won\'t know who you are';
+	String get sendButton => 'Send';
+	String get cancelButton => 'Cancel';
+	String get sending => 'Sending...';
+	String get sendSuccess => 'Kudos sent successfully! 🎉';
+	String get sendError => 'Failed to send Kudos. Please try again.';
+	String get cancelTitle => 'Cancel sending Kudos?';
+	String get cancelMessage => 'Your content will be lost. Are you sure you want to cancel?';
+	String get cancelConfirm => 'Cancel';
+	String get cancelDismiss => 'Continue';
+	String get validationRequired => 'Please fill in all required fields.';
+	String get validationRecipient => 'Please select a recipient.';
+	String get validationTitle => 'Please enter a title.';
+	String get validationMessage => 'Please enter a message.';
+	String get validationHashtag => 'Please select at least 1 hashtag.';
+	String get validationSelfSend => 'You cannot send Kudos to yourself.';
+	String get validationMessageTooLong => 'Message must not exceed {max} characters.';
+	String get validationTitleTooLong => 'Title must not exceed {max} characters.';
+	String get hashtagMaxReached => 'Maximum {max} hashtags';
+	String get hashtagEmpty => 'No hashtags available';
+	String get hashtagLoadError => 'Could not load hashtags';
+	String get recipientEmpty => 'No results found';
+	String get recipientLoadError => 'Could not load list';
+	String get recipientMinChars => 'Enter at least 2 characters to search';
+	String get imageAttach => 'Attach image';
+	String get imageMaxReached => 'Maximum {max} images';
+	String get imageFormatError => 'Unsupported image format. Only JPG, PNG, HEIC accepted.';
+	String get imageSizeError => 'Image must not exceed {max}MB.';
+	String get imageUploadError => 'Failed to upload image. Please try again.';
+	String get communityStandards => 'Community standards';
+	String get mentionHint => 'You can type \'@ + name\' to mention a colleague';
+	String get charCount => '{current}/{max}';
+	String get searchError => 'An error occurred. Please try again.';
+	String get searchNetworkError => 'Cannot search. Check your network connection.';
+	String get retryButton => 'Retry';
+	String get validationBanner => 'You need to fill in Recipient, Message and Hashtag to send Kudos!';
+	String get anonymousNicknamePlaceholder => 'Enter anonymous nickname (optional)';
+	String get anonymousNicknameHint => 'Leave empty to display \'Anonymous sender\'';
+	String get usersLoadError => 'Could not load user list';
 }
 
 // Path: <root>
@@ -349,6 +467,8 @@ class _StringsVi implements Translations {
 	@override late final _StringsAwardVi award = _StringsAwardVi._(_root);
 	@override late final _StringsKudosVi kudos = _StringsKudosVi._(_root);
 	@override late final _StringsAccessibilityVi accessibility = _StringsAccessibilityVi._(_root);
+	@override late final _StringsProfileVi profile = _StringsProfileVi._(_root);
+	@override late final _StringsSendKudosVi sendKudos = _StringsSendKudosVi._(_root);
 }
 
 // Path: login
@@ -491,6 +611,30 @@ class _StringsKudosVi implements _StringsKudosEn {
 	@override String get copyLinkAccessibility => 'Sao chép liên kết';
 	@override String get viewDetailAccessibility => 'Xem chi tiết kudos';
 	@override String get viewAllKudos => 'View all Kudos';
+	@override String get allKudosNavbarTitle => 'All Kudos';
+	@override String get allKudosPullToRefresh => 'Kéo xuống để tải lại';
+	@override String get allKudosLoadingMore => 'Đang tải thêm...';
+	@override String get allKudosEmpty => 'Chưa có kudos nào';
+	@override String get allKudosLoadError => 'Không thể tải danh sách kudos. Vui lòng thử lại.';
+	@override String get allKudosRetry => 'Thử lại';
+	@override String get filterAll => 'Tất cả';
+	@override String get filterNoHashtags => 'Chưa có hashtag nào';
+	@override String get filterNoDepartments => 'Chưa có phòng ban nào';
+	@override String get filterLoadError => 'Không thể tải bộ lọc';
+	@override String get filterTagSelected => 'Đã chọn';
+	@override String get filterHashtagAccessibility => 'Lọc theo hashtag';
+	@override String get filterDepartmentAccessibility => 'Lọc theo phòng ban';
+	@override String get detailTitle => 'Chi tiết Kudos';
+	@override String get anonymousSender => 'Người gửi ẩn danh';
+	@override String get kudosNotFound => 'Kudos không tồn tại hoặc đã bị xoá.';
+	@override String get noContent => '(Không có nội dung)';
+	@override String get goBack => 'Quay lại';
+	@override String get networkError => 'Mất kết nối mạng. Vui lòng thử lại.';
+	@override String get heartError => 'Không thể thực hiện. Vui lòng thử lại.';
+	@override String get avatarAccessibility => 'Ảnh đại diện của {name}';
+	@override String get anonymousAvatarAccessibility => 'Ảnh đại diện người gửi ẩn danh';
+	@override String get attachedImageAccessibility => 'Ảnh đính kèm {index}';
+	@override String get deletedUser => 'Người dùng không tồn tại';
 }
 
 // Path: accessibility
@@ -508,6 +652,98 @@ class _StringsAccessibilityVi implements _StringsAccessibilityEn {
 	@override String get fabViewKudos => 'Xem Kudos';
 	@override String get kudosDetailButton => 'Mở trang chi tiết Sun* Kudos';
 	@override String get awardBadge => 'Huy hiệu giải';
+}
+
+// Path: profile
+class _StringsProfileVi implements _StringsProfileEn {
+	_StringsProfileVi._(this._root);
+
+	@override final _StringsVi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Hồ sơ';
+	@override String get myIconCollection => 'Bộ sưu tập icon';
+	@override String get kudosReceived => 'Kudos nhận được';
+	@override String get kudosSent => 'Kudos đã gửi';
+	@override String get heartsReceived => 'Hearts nhận được';
+	@override String get secretBoxesOpened => 'Hộp bí mật đã mở';
+	@override String get secretBoxesUnopened => 'Hộp bí mật chưa mở';
+	@override String get openSecretBox => 'Mở hộp bí mật';
+	@override String get kudosHistory => 'Lịch sử Kudos';
+	@override String get filterReceived => 'Đã nhận';
+	@override String get filterSent => 'Đã gửi';
+	@override String get noBadges => 'Chưa có huy hiệu nào.';
+	@override String get noKudosHistory => 'Chưa có Kudos nào.';
+	@override String get sendThanks => 'Gửi lời cảm ơn';
+	@override String get badgeCollection => 'Bộ sưu tập huy hiệu';
+	@override String get userNotFound => 'Không tìm thấy người dùng.';
+	@override String get loadError => 'Đã xảy ra lỗi. Nhấn để thử lại.';
+	@override String get retry => 'Thử lại';
+	@override String get pullToRefresh => 'Kéo xuống để tải lại';
+	@override String get loadingMore => 'Đang tải thêm...';
+	@override String get kudosTitle => 'KUDOS';
+	@override String get saaAwards => 'Sun* Annual Awards 2025';
+	@override String get spam => 'Spam';
+}
+
+// Path: sendKudos
+class _StringsSendKudosVi implements _StringsSendKudosEn {
+	_StringsSendKudosVi._(this._root);
+
+	@override final _StringsVi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'New Kudo';
+	@override String get headerSubtitle => 'Gửi lời cám ơn và ghi nhận đến đồng đội';
+	@override String get recipientLabel => 'Người nhận *';
+	@override String get recipientPlaceholder => 'Tìm kiếm';
+	@override String get titleLabel => 'Danh hiệu *';
+	@override String get titlePlaceholder => 'Danh tặng một danh hiệu cho...';
+	@override String get titleHint => 'Ví dụ: Người truyền động lực cho tôi.\nDanh hiệu sẽ hiển thị trên làm tiêu đề Kudos của bạn.';
+	@override String get hashtagLabel => 'Hashtag *';
+	@override String get hashtagPlaceholder => 'Chọn hashtag';
+	@override String get messageLabel => 'Lời nhắn *';
+	@override String get messagePlaceholder => 'Hãy gửi gắm lời cám ơn và ghi nhận đến đồng đội tại đây nhé!';
+	@override String get anonymousLabel => 'Gửi ẩn danh';
+	@override String get anonymousHint => 'Người nhận sẽ không biết bạn là ai';
+	@override String get sendButton => 'Gửi đi';
+	@override String get cancelButton => 'Huỷ';
+	@override String get sending => 'Đang gửi...';
+	@override String get sendSuccess => 'Gửi Kudos thành công! 🎉';
+	@override String get sendError => 'Gửi Kudos thất bại. Vui lòng thử lại.';
+	@override String get cancelTitle => 'Huỷ gửi Kudos?';
+	@override String get cancelMessage => 'Nội dung bạn đã nhập sẽ bị mất. Bạn có chắc muốn huỷ?';
+	@override String get cancelConfirm => 'Huỷ';
+	@override String get cancelDismiss => 'Tiếp tục';
+	@override String get validationRequired => 'Vui lòng điền đầy đủ thông tin bắt buộc.';
+	@override String get validationRecipient => 'Vui lòng chọn người nhận.';
+	@override String get validationTitle => 'Vui lòng nhập danh hiệu.';
+	@override String get validationMessage => 'Vui lòng nhập lời nhắn.';
+	@override String get validationHashtag => 'Vui lòng chọn ít nhất 1 hashtag.';
+	@override String get validationSelfSend => 'Bạn không thể gửi Kudos cho chính mình.';
+	@override String get validationMessageTooLong => 'Lời nhắn không được quá {max} ký tự.';
+	@override String get validationTitleTooLong => 'Danh hiệu không được quá {max} ký tự.';
+	@override String get hashtagMaxReached => 'Tối đa {max} hashtag';
+	@override String get hashtagEmpty => 'Chưa có hashtag nào';
+	@override String get hashtagLoadError => 'Không thể tải hashtag';
+	@override String get recipientEmpty => 'Không tìm thấy kết quả';
+	@override String get recipientLoadError => 'Không thể tải danh sách';
+	@override String get recipientMinChars => 'Nhập ít nhất 2 ký tự để tìm kiếm';
+	@override String get imageAttach => 'Đính kèm ảnh';
+	@override String get imageMaxReached => 'Tối đa {max} ảnh';
+	@override String get imageFormatError => 'Định dạng ảnh không hỗ trợ. Chỉ chấp nhận JPG, PNG, HEIC.';
+	@override String get imageSizeError => 'Ảnh không được quá {max}MB.';
+	@override String get imageUploadError => 'Tải ảnh lên thất bại. Vui lòng thử lại.';
+	@override String get communityStandards => 'Tiêu chuẩn cộng đồng';
+	@override String get mentionHint => 'Bạn có thể \'@ + tên\' để nhắc tới đồng nghiệp khác';
+	@override String get charCount => '{current}/{max}';
+	@override String get searchError => 'Đã xảy ra lỗi. Vui lòng thử lại.';
+	@override String get searchNetworkError => 'Không thể tìm kiếm. Kiểm tra kết nối mạng.';
+	@override String get retryButton => 'Thử lại';
+	@override String get validationBanner => 'Bạn cần điền đủ Người nhận, Lời nhắn gửi và Hashtag để gửi Kudos!';
+	@override String get anonymousNicknamePlaceholder => 'Nhập nickname ẩn danh (tùy chọn)';
+	@override String get anonymousNicknameHint => 'Để trống sẽ hiển thị \'Người gửi ẩn danh\'';
+	@override String get usersLoadError => 'Không thể tải danh sách người dùng';
 }
 
 /// Flat map(s) containing all translations.
@@ -595,6 +831,30 @@ extension on Translations {
 			case 'kudos.copyLinkAccessibility': return 'Copy link';
 			case 'kudos.viewDetailAccessibility': return 'View kudos detail';
 			case 'kudos.viewAllKudos': return 'View all Kudos';
+			case 'kudos.allKudosNavbarTitle': return 'All Kudos';
+			case 'kudos.allKudosPullToRefresh': return 'Pull to refresh';
+			case 'kudos.allKudosLoadingMore': return 'Loading more...';
+			case 'kudos.allKudosEmpty': return 'No kudos yet';
+			case 'kudos.allKudosLoadError': return 'Failed to load kudos. Please try again.';
+			case 'kudos.allKudosRetry': return 'Retry';
+			case 'kudos.filterAll': return 'All';
+			case 'kudos.filterNoHashtags': return 'No hashtags available';
+			case 'kudos.filterNoDepartments': return 'No departments available';
+			case 'kudos.filterLoadError': return 'Could not load filters';
+			case 'kudos.filterTagSelected': return 'Selected';
+			case 'kudos.filterHashtagAccessibility': return 'Filter by hashtag';
+			case 'kudos.filterDepartmentAccessibility': return 'Filter by department';
+			case 'kudos.detailTitle': return 'Kudos Detail';
+			case 'kudos.anonymousSender': return 'Anonymous sender';
+			case 'kudos.kudosNotFound': return 'This kudos no longer exists or has been removed.';
+			case 'kudos.noContent': return '(No content)';
+			case 'kudos.goBack': return 'Go back';
+			case 'kudos.networkError': return 'Network error. Please try again.';
+			case 'kudos.heartError': return 'Action failed. Please try again.';
+			case 'kudos.avatarAccessibility': return 'Avatar of {name}';
+			case 'kudos.anonymousAvatarAccessibility': return 'Anonymous sender avatar';
+			case 'kudos.attachedImageAccessibility': return 'Attached image {index}';
+			case 'kudos.deletedUser': return 'User no longer exists';
 			case 'accessibility.loginButton': return 'Sign in with Google';
 			case 'accessibility.languageSelector': return 'Select language, currently: English';
 			case 'accessibility.searchButton': return 'Search';
@@ -603,6 +863,80 @@ extension on Translations {
 			case 'accessibility.fabViewKudos': return 'View Kudos';
 			case 'accessibility.kudosDetailButton': return 'Open Sun* Kudos detail page';
 			case 'accessibility.awardBadge': return 'Award badge';
+			case 'profile.title': return 'Profile';
+			case 'profile.myIconCollection': return 'Icon collection';
+			case 'profile.kudosReceived': return 'Kudos received';
+			case 'profile.kudosSent': return 'Kudos sent';
+			case 'profile.heartsReceived': return 'Hearts received';
+			case 'profile.secretBoxesOpened': return 'Secret boxes opened';
+			case 'profile.secretBoxesUnopened': return 'Secret boxes unopened';
+			case 'profile.openSecretBox': return 'Open secret box';
+			case 'profile.kudosHistory': return 'Kudos History';
+			case 'profile.filterReceived': return 'Received';
+			case 'profile.filterSent': return 'Sent';
+			case 'profile.noBadges': return 'No badges earned yet.';
+			case 'profile.noKudosHistory': return 'No Kudos yet.';
+			case 'profile.sendThanks': return 'Send thanks';
+			case 'profile.badgeCollection': return 'Badge collection';
+			case 'profile.userNotFound': return 'User not found.';
+			case 'profile.loadError': return 'Something went wrong. Tap to retry.';
+			case 'profile.retry': return 'Retry';
+			case 'profile.pullToRefresh': return 'Pull to refresh';
+			case 'profile.loadingMore': return 'Loading more...';
+			case 'profile.kudosTitle': return 'KUDOS';
+			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
+			case 'profile.spam': return 'Spam';
+			case 'sendKudos.title': return 'New Kudo';
+			case 'sendKudos.headerSubtitle': return 'Send your appreciation and recognition to your teammate';
+			case 'sendKudos.recipientLabel': return 'Recipient *';
+			case 'sendKudos.recipientPlaceholder': return 'Search';
+			case 'sendKudos.titleLabel': return 'Title *';
+			case 'sendKudos.titlePlaceholder': return 'Give a title for...';
+			case 'sendKudos.titleHint': return 'E.g.: The one who inspires me.\nThe title will be displayed as the heading of your Kudos.';
+			case 'sendKudos.hashtagLabel': return 'Hashtag *';
+			case 'sendKudos.hashtagPlaceholder': return 'Select hashtag';
+			case 'sendKudos.messageLabel': return 'Message *';
+			case 'sendKudos.messagePlaceholder': return 'Send your appreciation and recognition to your teammate here!';
+			case 'sendKudos.anonymousLabel': return 'Send anonymously';
+			case 'sendKudos.anonymousHint': return 'The recipient won\'t know who you are';
+			case 'sendKudos.sendButton': return 'Send';
+			case 'sendKudos.cancelButton': return 'Cancel';
+			case 'sendKudos.sending': return 'Sending...';
+			case 'sendKudos.sendSuccess': return 'Kudos sent successfully! 🎉';
+			case 'sendKudos.sendError': return 'Failed to send Kudos. Please try again.';
+			case 'sendKudos.cancelTitle': return 'Cancel sending Kudos?';
+			case 'sendKudos.cancelMessage': return 'Your content will be lost. Are you sure you want to cancel?';
+			case 'sendKudos.cancelConfirm': return 'Cancel';
+			case 'sendKudos.cancelDismiss': return 'Continue';
+			case 'sendKudos.validationRequired': return 'Please fill in all required fields.';
+			case 'sendKudos.validationRecipient': return 'Please select a recipient.';
+			case 'sendKudos.validationTitle': return 'Please enter a title.';
+			case 'sendKudos.validationMessage': return 'Please enter a message.';
+			case 'sendKudos.validationHashtag': return 'Please select at least 1 hashtag.';
+			case 'sendKudos.validationSelfSend': return 'You cannot send Kudos to yourself.';
+			case 'sendKudos.validationMessageTooLong': return 'Message must not exceed {max} characters.';
+			case 'sendKudos.validationTitleTooLong': return 'Title must not exceed {max} characters.';
+			case 'sendKudos.hashtagMaxReached': return 'Maximum {max} hashtags';
+			case 'sendKudos.hashtagEmpty': return 'No hashtags available';
+			case 'sendKudos.hashtagLoadError': return 'Could not load hashtags';
+			case 'sendKudos.recipientEmpty': return 'No results found';
+			case 'sendKudos.recipientLoadError': return 'Could not load list';
+			case 'sendKudos.recipientMinChars': return 'Enter at least 2 characters to search';
+			case 'sendKudos.imageAttach': return 'Attach image';
+			case 'sendKudos.imageMaxReached': return 'Maximum {max} images';
+			case 'sendKudos.imageFormatError': return 'Unsupported image format. Only JPG, PNG, HEIC accepted.';
+			case 'sendKudos.imageSizeError': return 'Image must not exceed {max}MB.';
+			case 'sendKudos.imageUploadError': return 'Failed to upload image. Please try again.';
+			case 'sendKudos.communityStandards': return 'Community standards';
+			case 'sendKudos.mentionHint': return 'You can type \'@ + name\' to mention a colleague';
+			case 'sendKudos.charCount': return '{current}/{max}';
+			case 'sendKudos.searchError': return 'An error occurred. Please try again.';
+			case 'sendKudos.searchNetworkError': return 'Cannot search. Check your network connection.';
+			case 'sendKudos.retryButton': return 'Retry';
+			case 'sendKudos.validationBanner': return 'You need to fill in Recipient, Message and Hashtag to send Kudos!';
+			case 'sendKudos.anonymousNicknamePlaceholder': return 'Enter anonymous nickname (optional)';
+			case 'sendKudos.anonymousNicknameHint': return 'Leave empty to display \'Anonymous sender\'';
+			case 'sendKudos.usersLoadError': return 'Could not load user list';
 			default: return null;
 		}
 	}
@@ -690,6 +1024,30 @@ extension on _StringsVi {
 			case 'kudos.copyLinkAccessibility': return 'Sao chép liên kết';
 			case 'kudos.viewDetailAccessibility': return 'Xem chi tiết kudos';
 			case 'kudos.viewAllKudos': return 'View all Kudos';
+			case 'kudos.allKudosNavbarTitle': return 'All Kudos';
+			case 'kudos.allKudosPullToRefresh': return 'Kéo xuống để tải lại';
+			case 'kudos.allKudosLoadingMore': return 'Đang tải thêm...';
+			case 'kudos.allKudosEmpty': return 'Chưa có kudos nào';
+			case 'kudos.allKudosLoadError': return 'Không thể tải danh sách kudos. Vui lòng thử lại.';
+			case 'kudos.allKudosRetry': return 'Thử lại';
+			case 'kudos.filterAll': return 'Tất cả';
+			case 'kudos.filterNoHashtags': return 'Chưa có hashtag nào';
+			case 'kudos.filterNoDepartments': return 'Chưa có phòng ban nào';
+			case 'kudos.filterLoadError': return 'Không thể tải bộ lọc';
+			case 'kudos.filterTagSelected': return 'Đã chọn';
+			case 'kudos.filterHashtagAccessibility': return 'Lọc theo hashtag';
+			case 'kudos.filterDepartmentAccessibility': return 'Lọc theo phòng ban';
+			case 'kudos.detailTitle': return 'Chi tiết Kudos';
+			case 'kudos.anonymousSender': return 'Người gửi ẩn danh';
+			case 'kudos.kudosNotFound': return 'Kudos không tồn tại hoặc đã bị xoá.';
+			case 'kudos.noContent': return '(Không có nội dung)';
+			case 'kudos.goBack': return 'Quay lại';
+			case 'kudos.networkError': return 'Mất kết nối mạng. Vui lòng thử lại.';
+			case 'kudos.heartError': return 'Không thể thực hiện. Vui lòng thử lại.';
+			case 'kudos.avatarAccessibility': return 'Ảnh đại diện của {name}';
+			case 'kudos.anonymousAvatarAccessibility': return 'Ảnh đại diện người gửi ẩn danh';
+			case 'kudos.attachedImageAccessibility': return 'Ảnh đính kèm {index}';
+			case 'kudos.deletedUser': return 'Người dùng không tồn tại';
 			case 'accessibility.loginButton': return 'Đăng nhập bằng Google';
 			case 'accessibility.languageSelector': return 'Chọn ngôn ngữ, hiện tại: Tiếng Việt';
 			case 'accessibility.searchButton': return 'Tìm kiếm';
@@ -698,6 +1056,80 @@ extension on _StringsVi {
 			case 'accessibility.fabViewKudos': return 'Xem Kudos';
 			case 'accessibility.kudosDetailButton': return 'Mở trang chi tiết Sun* Kudos';
 			case 'accessibility.awardBadge': return 'Huy hiệu giải';
+			case 'profile.title': return 'Hồ sơ';
+			case 'profile.myIconCollection': return 'Bộ sưu tập icon';
+			case 'profile.kudosReceived': return 'Kudos nhận được';
+			case 'profile.kudosSent': return 'Kudos đã gửi';
+			case 'profile.heartsReceived': return 'Hearts nhận được';
+			case 'profile.secretBoxesOpened': return 'Hộp bí mật đã mở';
+			case 'profile.secretBoxesUnopened': return 'Hộp bí mật chưa mở';
+			case 'profile.openSecretBox': return 'Mở hộp bí mật';
+			case 'profile.kudosHistory': return 'Lịch sử Kudos';
+			case 'profile.filterReceived': return 'Đã nhận';
+			case 'profile.filterSent': return 'Đã gửi';
+			case 'profile.noBadges': return 'Chưa có huy hiệu nào.';
+			case 'profile.noKudosHistory': return 'Chưa có Kudos nào.';
+			case 'profile.sendThanks': return 'Gửi lời cảm ơn';
+			case 'profile.badgeCollection': return 'Bộ sưu tập huy hiệu';
+			case 'profile.userNotFound': return 'Không tìm thấy người dùng.';
+			case 'profile.loadError': return 'Đã xảy ra lỗi. Nhấn để thử lại.';
+			case 'profile.retry': return 'Thử lại';
+			case 'profile.pullToRefresh': return 'Kéo xuống để tải lại';
+			case 'profile.loadingMore': return 'Đang tải thêm...';
+			case 'profile.kudosTitle': return 'KUDOS';
+			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
+			case 'profile.spam': return 'Spam';
+			case 'sendKudos.title': return 'New Kudo';
+			case 'sendKudos.headerSubtitle': return 'Gửi lời cám ơn và ghi nhận đến đồng đội';
+			case 'sendKudos.recipientLabel': return 'Người nhận *';
+			case 'sendKudos.recipientPlaceholder': return 'Tìm kiếm';
+			case 'sendKudos.titleLabel': return 'Danh hiệu *';
+			case 'sendKudos.titlePlaceholder': return 'Danh tặng một danh hiệu cho...';
+			case 'sendKudos.titleHint': return 'Ví dụ: Người truyền động lực cho tôi.\nDanh hiệu sẽ hiển thị trên làm tiêu đề Kudos của bạn.';
+			case 'sendKudos.hashtagLabel': return 'Hashtag *';
+			case 'sendKudos.hashtagPlaceholder': return 'Chọn hashtag';
+			case 'sendKudos.messageLabel': return 'Lời nhắn *';
+			case 'sendKudos.messagePlaceholder': return 'Hãy gửi gắm lời cám ơn và ghi nhận đến đồng đội tại đây nhé!';
+			case 'sendKudos.anonymousLabel': return 'Gửi ẩn danh';
+			case 'sendKudos.anonymousHint': return 'Người nhận sẽ không biết bạn là ai';
+			case 'sendKudos.sendButton': return 'Gửi đi';
+			case 'sendKudos.cancelButton': return 'Huỷ';
+			case 'sendKudos.sending': return 'Đang gửi...';
+			case 'sendKudos.sendSuccess': return 'Gửi Kudos thành công! 🎉';
+			case 'sendKudos.sendError': return 'Gửi Kudos thất bại. Vui lòng thử lại.';
+			case 'sendKudos.cancelTitle': return 'Huỷ gửi Kudos?';
+			case 'sendKudos.cancelMessage': return 'Nội dung bạn đã nhập sẽ bị mất. Bạn có chắc muốn huỷ?';
+			case 'sendKudos.cancelConfirm': return 'Huỷ';
+			case 'sendKudos.cancelDismiss': return 'Tiếp tục';
+			case 'sendKudos.validationRequired': return 'Vui lòng điền đầy đủ thông tin bắt buộc.';
+			case 'sendKudos.validationRecipient': return 'Vui lòng chọn người nhận.';
+			case 'sendKudos.validationTitle': return 'Vui lòng nhập danh hiệu.';
+			case 'sendKudos.validationMessage': return 'Vui lòng nhập lời nhắn.';
+			case 'sendKudos.validationHashtag': return 'Vui lòng chọn ít nhất 1 hashtag.';
+			case 'sendKudos.validationSelfSend': return 'Bạn không thể gửi Kudos cho chính mình.';
+			case 'sendKudos.validationMessageTooLong': return 'Lời nhắn không được quá {max} ký tự.';
+			case 'sendKudos.validationTitleTooLong': return 'Danh hiệu không được quá {max} ký tự.';
+			case 'sendKudos.hashtagMaxReached': return 'Tối đa {max} hashtag';
+			case 'sendKudos.hashtagEmpty': return 'Chưa có hashtag nào';
+			case 'sendKudos.hashtagLoadError': return 'Không thể tải hashtag';
+			case 'sendKudos.recipientEmpty': return 'Không tìm thấy kết quả';
+			case 'sendKudos.recipientLoadError': return 'Không thể tải danh sách';
+			case 'sendKudos.recipientMinChars': return 'Nhập ít nhất 2 ký tự để tìm kiếm';
+			case 'sendKudos.imageAttach': return 'Đính kèm ảnh';
+			case 'sendKudos.imageMaxReached': return 'Tối đa {max} ảnh';
+			case 'sendKudos.imageFormatError': return 'Định dạng ảnh không hỗ trợ. Chỉ chấp nhận JPG, PNG, HEIC.';
+			case 'sendKudos.imageSizeError': return 'Ảnh không được quá {max}MB.';
+			case 'sendKudos.imageUploadError': return 'Tải ảnh lên thất bại. Vui lòng thử lại.';
+			case 'sendKudos.communityStandards': return 'Tiêu chuẩn cộng đồng';
+			case 'sendKudos.mentionHint': return 'Bạn có thể \'@ + tên\' để nhắc tới đồng nghiệp khác';
+			case 'sendKudos.charCount': return '{current}/{max}';
+			case 'sendKudos.searchError': return 'Đã xảy ra lỗi. Vui lòng thử lại.';
+			case 'sendKudos.searchNetworkError': return 'Không thể tìm kiếm. Kiểm tra kết nối mạng.';
+			case 'sendKudos.retryButton': return 'Thử lại';
+			case 'sendKudos.validationBanner': return 'Bạn cần điền đủ Người nhận, Lời nhắn gửi và Hashtag để gửi Kudos!';
+			case 'sendKudos.anonymousNicknamePlaceholder': return 'Nhập nickname ẩn danh (tùy chọn)';
+			case 'sendKudos.anonymousNicknameHint': return 'Để trống sẽ hiển thị \'Người gửi ẩn danh\'';
+			case 'sendKudos.usersLoadError': return 'Không thể tải danh sách người dùng';
 			default: return null;
 		}
 	}

@@ -46,12 +46,14 @@ class _AppContentState extends ConsumerState<_AppContent> {
       LocaleSettings.setLocale(_toAppLocale(next.languageCode));
     });
 
-    return MaterialApp.router(
-      title: 'SAA Mobile',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      locale: locale,
-      routerConfig: router,
+    return TranslationProvider(
+      child: MaterialApp.router(
+        title: 'SAA Mobile',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        locale: locale,
+        routerConfig: router,
+      ),
     );
   }
 

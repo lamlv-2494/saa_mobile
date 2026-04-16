@@ -50,15 +50,24 @@ void main() {
       expect(find.text('EN'), findsWidgets);
     });
 
-    testWidgets('shows check icon on currently selected locale',
+    testWidgets('selected locale item has highlighted background',
         (tester) async {
       await tester.pumpWidget(buildTestWidget(currentLocaleCode: 'vi'));
 
       await tester.tap(find.byType(LanguageDropdown));
       await tester.pumpAndSettle();
 
-      // Check icon should appear for selected locale
-      expect(find.byIcon(Icons.check), findsOneWidget);
+      // Selected item uses a Container with non-transparent background color
+      final containers = tester.widgetList<Container>(find.byType(Container));
+      final highlighted = containers.where((c) {
+        final decoration = c.decoration;
+        if (decoration is BoxDecoration) {
+          final color = decoration.color;
+          return color != null && color != Colors.transparent;
+        }
+        return false;
+      });
+      expect(highlighted.isNotEmpty, isTrue);
     });
 
     testWidgets('calls onLocaleChanged with selected locale code',

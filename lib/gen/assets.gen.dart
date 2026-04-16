@@ -42,6 +42,20 @@ class $AssetsIconsGen {
   SvgGenImage get icAwardFlag =>
       const SvgGenImage('assets/icons/ic_award_flag.svg');
 
+  /// File path: assets/icons/ic_camera.svg
+  SvgGenImage get icCamera => const SvgGenImage('assets/icons/ic_camera.svg');
+
+  /// File path: assets/icons/ic_chevron_left.svg
+  SvgGenImage get icChevronLeft =>
+      const SvgGenImage('assets/icons/ic_chevron_left.svg');
+
+  /// File path: assets/icons/ic_close.svg
+  SvgGenImage get icClose => const SvgGenImage('assets/icons/ic_close.svg');
+
+  /// File path: assets/icons/ic_close_circle.svg
+  SvgGenImage get icCloseCircle =>
+      const SvgGenImage('assets/icons/ic_close_circle.svg');
+
   /// File path: assets/icons/ic_copy_link.svg
   SvgGenImage get icCopyLink =>
       const SvgGenImage('assets/icons/ic_copy_link.svg');
@@ -106,6 +120,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_search.svg
   SvgGenImage get icSearch => const SvgGenImage('assets/icons/ic_search.svg');
 
+  /// File path: assets/icons/ic_send.svg
+  SvgGenImage get icSend => const SvgGenImage('assets/icons/ic_send.svg');
+
   /// File path: assets/icons/ic_sent.svg
   SvgGenImage get icSent => const SvgGenImage('assets/icons/ic_sent.svg');
 
@@ -117,6 +134,10 @@ class $AssetsIconsGen {
     icArrowRight,
     icAward,
     icAwardFlag,
+    icCamera,
+    icChevronLeft,
+    icClose,
+    icCloseCircle,
     icCopyLink,
     icDiamond,
     icDot,
@@ -136,6 +157,7 @@ class $AssetsIconsGen {
     icPrev,
     icProfile,
     icSearch,
+    icSend,
     icSent,
   ];
 }
@@ -145,6 +167,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/.gitkeep
   String get aGitkeep => 'assets/images/.gitkeep';
+
+  /// File path: assets/images/anonymous_avatar.png
+  AssetGenImage get anonymousAvatar =>
+      const AssetGenImage('assets/images/anonymous_avatar.png');
 
   /// File path: assets/images/key_visual_bg.png
   AssetGenImage get keyVisualBg =>
@@ -193,6 +219,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
     aGitkeep,
+    anonymousAvatar,
     keyVisualBg,
     keyvisualBg,
     kudosBanner,

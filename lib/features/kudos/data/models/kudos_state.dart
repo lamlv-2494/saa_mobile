@@ -23,5 +23,9 @@ class KudosState with _$KudosState {
     @Default(true) bool hasMoreKudos,
     @Default([]) List<Hashtag> availableHashtags,
     @Default([]) List<Department> availableDepartments,
+    // All Kudos page (page index 1 trong PageView)
+    @Default([]) List<Kudos> allKudosPageList,
+    @Default(true) bool hasMoreAllKudosPage,
+    @Default(false) bool isLoadingMoreAllKudos,
   }) = _KudosState;
 }

@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:saa_mobile/app/main_scaffold.dart';
 import 'package:saa_mobile/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:saa_mobile/features/auth/presentation/screens/login_screen.dart';
+import 'package:saa_mobile/features/kudos/presentation/screens/kudos_detail_screen.dart';
+import 'package:saa_mobile/features/kudos/presentation/screens/send_kudos_screen.dart';
+import 'package:saa_mobile/features/profile/presentation/screens/other_profile_screen.dart';
 
 GoRouter createRouter(Ref ref) {
   final authState = ref.watch(authViewModelProvider);
@@ -28,6 +31,22 @@ GoRouter createRouter(Ref ref) {
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, _) => const MainScaffold()),
+      GoRoute(
+        path: '/send-kudos',
+        builder: (_, _) => const SendKudosScreen(),
+      ),
+      GoRoute(
+        path: '/kudos/:kudosId',
+        builder: (_, state) => KudosDetailScreen(
+          kudosId: state.pathParameters['kudosId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (_, state) => OtherProfileScreen(
+          userId: state.pathParameters['userId']!,
+        ),
+      ),
     ],
   );
 }

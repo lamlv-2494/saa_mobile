@@ -124,18 +124,24 @@ class _SenderReceiverRow extends StatelessWidget {
   }
 
   Widget _buildCompact() {
+    final isAnon = kudos.isAnonymous;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: _UserAvatar(
-            avatar: kudos.sender.avatar,
-            name: kudos.sender.name,
-            department: kudos.sender.department,
-            heroTierUrl: kudos.sender.heroTierUrl,
-            radius: 14,
-            onTap: () => onAvatarTap?.call(kudos.sender.id),
-          ),
+          child: isAnon
+              ? _AnonymousAvatar(
+                  name: kudos.senderAlias ?? t.kudos.anonymousSender,
+                  radius: 14,
+                )
+              : _UserAvatar(
+                  avatar: kudos.sender.avatar,
+                  name: kudos.sender.name,
+                  department: kudos.sender.department,
+                  heroTierUrl: kudos.sender.heroTierUrl,
+                  radius: 14,
+                  onTap: () => onAvatarTap?.call(kudos.sender.id),
+                ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
@@ -156,24 +162,35 @@ class _SenderReceiverRow extends StatelessWidget {
   }
 
   Widget _buildFull() {
+    final isAnon = kudos.isAnonymous;
+    final senderDisplayName = isAnon
+        ? (kudos.senderAlias ?? t.kudos.anonymousSender)
+        : kudos.sender.name;
+
     return Row(
       children: [
         Column(
           children: [
-            GestureDetector(
-              onTap: () => onAvatarTap?.call(kudos.sender.id),
-              child: _UserAvatar(
-                avatar: kudos.sender.avatar,
-                name: kudos.sender.name,
-                department: kudos.sender.department,
-                heroTierUrl: kudos.sender.heroTierUrl,
+            if (isAnon)
+              _AnonymousAvatar(
+                name: senderDisplayName,
                 radius: 16,
+              )
+            else
+              GestureDetector(
+                onTap: () => onAvatarTap?.call(kudos.sender.id),
+                child: _UserAvatar(
+                  avatar: kudos.sender.avatar,
+                  name: kudos.sender.name,
+                  department: kudos.sender.department,
+                  heroTierUrl: kudos.sender.heroTierUrl,
+                  radius: 16,
+                ),
               ),
-            ),
             const SizedBox(height: 8),
             Flexible(
               child: Text(
-                kudos.isAnonymous ? t.kudos.anonymous : kudos.sender.name,
+                senderDisplayName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.montserrat(
@@ -298,11 +315,63 @@ class _UserAvatar extends StatelessWidget {
                   // width: 60,
                   height: 15,
                   fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
                 ),
               ),
             ],
           ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Avatar ẩn danh — dùng asset riêng, border dày hơn, không badge, không tap.
+class _AnonymousAvatar extends StatelessWidget {
+  const _AnonymousAvatar({
+    required this.name,
+    required this.radius,
+  });
+
+  final String name;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 1.869),
+          ),
+          child: ClipOval(
+            child: Assets.images.anonymousAvatar.image(
+              width: radius * 2,
+              height: radius * 2,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.montserrat(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.buttonText,
+          ),
+        ),
+        Text(
+          t.kudos.anonymousSender,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.montserrat(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textSecondary,
+          ),
         ),
       ],
     );

@@ -59,6 +59,22 @@ abstract final class AppColors {
   static const Color heart = Color(0xFFF17676);
   static const Color primary15 = Color.fromRGBO(255, 234, 158, 0.15);
 
+  // Profile feature
+  static const Color iconDark = Color(0xFF1A1A2E);
+  static const Color spam = Color(0xFFFF8C00);
+
+  // Send Kudos feature
+  static const Color errorRed = Color(0xFFD4271D);
+  static const Color errorBannerBg = Color.fromRGBO(212, 39, 29, 0.15);
+  static const Color sendButtonDisabledBg = Color.fromRGBO(255, 234, 158, 0.40);
+  static const Color sendButtonDisabledText = Color.fromRGBO(0, 16, 26, 0.40);
+  static const Color toolbarBg = Color(0xFF0A1A24);
+  static const Color toolbarActive = Color(0xFFFFEA9E);
+  static const Color toolbarInactive = Color(0xFF999999);
+  static const Color chipBg = Color.fromRGBO(255, 234, 158, 0.15);
+  static const Color chipBorder = Color(0xFF998C5F);
+  static const Color cancelButtonBg = Color.fromRGBO(255, 255, 255, 0.10);
+
   // Gradient header stops (top-to-bottom, 180deg)
   static const List<Color> headerGradientColors = [
     Color.fromRGBO(0, 16, 26, 1),

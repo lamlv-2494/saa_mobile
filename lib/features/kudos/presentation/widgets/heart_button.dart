@@ -30,7 +30,7 @@ class _HeartButtonState extends State<HeartButton>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
     _scaleAnimation = TweenSequence<double>([

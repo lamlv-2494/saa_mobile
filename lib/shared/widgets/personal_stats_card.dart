@@ -28,28 +28,32 @@ class PersonalStatsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _StatRow(
+          _PersonalStatRow(
             label: t.kudos.statsKudosReceived,
             value: stats.kudosReceived,
           ),
-          const SizedBox(height: 8),
-          _StatRow(label: t.kudos.statsKudosSent, value: stats.kudosSent),
-          const SizedBox(height: 8),
-          _StatRow(
+          const SizedBox(height: 12),
+          _PersonalStatRow(
+            label: t.kudos.statsKudosSent,
+            value: stats.kudosSent,
+          ),
+          const SizedBox(height: 12),
+          _PersonalStatRow(
             label: t.kudos.statsHeartsReceived,
             value: stats.heartsReceived,
             showBonusBadge: stats.isBonusActive,
           ),
-          const SizedBox(height: 8),
-          Container(height: 1, color: AppColors.outlineBtnBorder.withAlpha(77)),
-          const SizedBox(height: 8),
-          _StatRow(
+          const SizedBox(height: 12),
+          const Divider(height: 1, color: Color(0xFF2E3940)),
+          const SizedBox(height: 12),
+          _PersonalStatRow(
             label: t.kudos.statsBoxesOpened,
             value: stats.secretBoxesOpened,
           ),
-          const SizedBox(height: 8),
-          _StatRow(
+          const SizedBox(height: 12),
+          _PersonalStatRow(
             label: t.kudos.statsBoxesUnopened,
             value: stats.secretBoxesUnopened,
           ),
@@ -71,8 +75,8 @@ class PersonalStatsCard extends StatelessWidget {
   }
 }
 
-class _StatRow extends StatelessWidget {
-  const _StatRow({
+class _PersonalStatRow extends StatelessWidget {
+  const _PersonalStatRow({
     required this.label,
     required this.value,
     this.showBonusBadge = false,
@@ -84,37 +88,40 @@ class _StatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                height: 20 / 14,
-                color: AppColors.textWhite,
+    return Semantics(
+      label: '$label: $value',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  height: 16 / 12,
+                  color: AppColors.textWhite,
+                ),
               ),
-            ),
-            if (showBonusBadge) ...[
-              const SizedBox(width: 30),
-              Assets.images.kudosFire.image(width: 24, height: 24),
+              if (showBonusBadge) ...[
+                const SizedBox(width: 8),
+                Assets.images.kudosFire.image(width: 20, height: 20),
+              ],
             ],
-          ],
-        ),
-        Text(
-          '$value',
-          style: GoogleFonts.montserrat(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            height: 20 / 14,
-            color: AppColors.textAccent,
           ),
-        ),
-      ],
+          Text(
+            '$value',
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              height: 20 / 14,
+              color: AppColors.textAccent,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
