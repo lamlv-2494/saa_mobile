@@ -7,11 +7,14 @@ import 'package:saa_mobile/app/main_scaffold.dart';
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:saa_mobile/features/profile/presentation/viewmodels/other_profile_viewmodel.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/badge_collection_widget.dart';
+import 'package:saa_mobile/features/profile/presentation/widgets/kudos_section_header_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/profile_info_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/profile_kudos_filter_dropdown.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/profile_kudos_list_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/send_kudos_button_widget.dart';
+import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class OtherProfileScreen extends ConsumerStatefulWidget {
@@ -113,10 +116,23 @@ class _OtherProfileScreenState extends ConsumerState<OtherProfileScreen> {
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
-                const SliverAppBar(
-                  backgroundColor: AppColors.bgDark,
+                SliverAppBar(
+                  backgroundColor: Colors.transparent,
                   elevation: 0,
-                  leading: BackButton(color: AppColors.textWhite),
+                  leading: GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        Assets.icons.icChevronLeft.path,
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.textWhite,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
                   floating: true,
                 ),
                 SliverToBoxAdapter(
@@ -139,13 +155,14 @@ class _OtherProfileScreenState extends ConsumerState<OtherProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
+                      const KudosSectionHeaderWidget(),
+                      const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: ProfileKudosFilterDropdown(
                           currentFilter: state.kudosFilter,
-                          sentCount: state.personalStats?.kudosSent ?? 0,
-                          receivedCount:
-                              state.personalStats?.kudosReceived ?? 0,
+                          sentCount: state.kudosSentCount,
+                          receivedCount: state.kudosReceivedCount,
                           onChanged: (filter) => ref
                               .read(
                                 otherProfileViewModelProvider(

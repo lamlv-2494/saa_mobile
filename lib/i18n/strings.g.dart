@@ -6,7 +6,7 @@
 /// Locales: 2
 /// Strings: 370 (185 per locale)
 ///
-/// Built on 2026-04-15 at 11:12 UTC
+/// Built on 2026-04-16 at 03:30 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -351,7 +351,7 @@ class _StringsProfileEn {
 
 	// Translations
 	String get title => 'Profile';
-	String get myIconCollection => 'Icon collection';
+	String get myIconCollection => 'My icon collection';
 	String get kudosReceived => 'Kudos received';
 	String get kudosSent => 'Kudos sent';
 	String get heartsReceived => 'Hearts received';
@@ -662,7 +662,7 @@ class _StringsProfileVi implements _StringsProfileEn {
 
 	// Translations
 	@override String get title => 'Hồ sơ';
-	@override String get myIconCollection => 'Bộ sưu tập icon';
+	@override String get myIconCollection => 'Bộ sưu tập icon của tôi';
 	@override String get kudosReceived => 'Kudos nhận được';
 	@override String get kudosSent => 'Kudos đã gửi';
 	@override String get heartsReceived => 'Hearts nhận được';
@@ -864,7 +864,7 @@ extension on Translations {
 			case 'accessibility.kudosDetailButton': return 'Open Sun* Kudos detail page';
 			case 'accessibility.awardBadge': return 'Award badge';
 			case 'profile.title': return 'Profile';
-			case 'profile.myIconCollection': return 'Icon collection';
+			case 'profile.myIconCollection': return 'My icon collection';
 			case 'profile.kudosReceived': return 'Kudos received';
 			case 'profile.kudosSent': return 'Kudos sent';
 			case 'profile.heartsReceived': return 'Hearts received';
@@ -1057,7 +1057,7 @@ extension on _StringsVi {
 			case 'accessibility.kudosDetailButton': return 'Mở trang chi tiết Sun* Kudos';
 			case 'accessibility.awardBadge': return 'Huy hiệu giải';
 			case 'profile.title': return 'Hồ sơ';
-			case 'profile.myIconCollection': return 'Bộ sưu tập icon';
+			case 'profile.myIconCollection': return 'Bộ sưu tập icon của tôi';
 			case 'profile.kudosReceived': return 'Kudos nhận được';
 			case 'profile.kudosSent': return 'Kudos đã gửi';
 			case 'profile.heartsReceived': return 'Hearts nhận được';

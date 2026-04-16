@@ -1,319 +1,296 @@
-# Tasks: [iOS] Profile — Ban than & Nguoi khac
+# Tasks: Profile Bản Thân
 
-**Frame**: `hSH7L8doXB-ios-profile-ban-than` + `bEpdheM0yU-ios-profile-nguoi-khac`
-**Prerequisites**: plan.md, spec.md (ban than), spec.md (nguoi khac), design-style.md
+**Frame**: `hSH7L8doXB-ios-profile-ban-than`
+**Prerequisites**: plan.md ✅, spec.md ✅, design-style.md ✅
 
 ---
 
-## Dinh dang Task
+## Task Format
 
 ```
-- [ ] T### [P?] [Story?] Mo ta | duong/dan/file
+- [ ] T### [P?] [Story?] Description | file/path.dart
 ```
 
-- **[P]**: Co the chay song song (file khac nhau, khong phu thuoc lan nhau)
-- **[Story]**: User story lien quan (US1–US8 ban than, US1–US8 nguoi khac)
-- **|**: File bi anh huong boi task
+- **[P]**: Có thể chạy song song (file khác nhau, không phụ thuộc lẫn nhau)
+- **[Story]**: User story tương ứng (US1–US8)
+- **|**: File bị ảnh hưởng
 
 ---
 
-## Phase 0: Setup (Chuan bi assets, theme, i18n, seed data)
+## Phase 1: Setup (Chuẩn bị)
 
-**Muc dich**: Chuan bi nen tang truoc khi code — assets, colors, i18n strings, mock data
+**Mục đích**: Tạo SVG asset + test infrastructure dùng chung cho tất cả user stories
 
-### Assets & Theme
-
-- [x] T001 [P] Kiem tra SVG icons da co chua (`ic_back.svg`, `ic_edit.svg`) — download tu Figma neu thieu. Dung momorph tool `get_media_files` | `assets/icons/`
-- [x] T002 [P] Bo sung colors moi vao `AppColors`: `iconDark` (#1A1A2E), `spam` (#FF8C00) — chi them nhung chua co | `lib/app/theme/app_colors.dart`
-- [x] T003 [P] Them i18n strings cho profile section vao ca VN va EN: `profile.myIconCollection`, `profile.kudosReceived`, `profile.kudosSent`, `profile.heartsReceived`, `profile.secretBoxOpened`, `profile.secretBoxUnopened`, `profile.openSecretBox`, `profile.filterSent`, `profile.filterReceived`, `profile.sendKudosButton`, `profile.noKudos`, `profile.noBadges`, `profile.userNotFound`, `profile.errorRetry`, `profile.saaAwards`, `profile.kudosTitle` va cac string tuong ung tieng Anh | `lib/i18n/strings_vi.i18n.json`, `lib/i18n/strings_en.i18n.json`
-- [x] T004 Chay `dart run build_runner build` de generate flutter_gen assets + slang strings | `lib/gen/`, `lib/i18n/strings.g.dart`
-
-### Seed Data (APPEND vao seed.sql)
-
-- [x] T005 Append mock data vao cuoi `supabase/seed.sql`: them `user_badges` cho users 6-15 (17 entries) va `secret_boxes` cho users 2-5 (8 entries) voi ON CONFLICT DO NOTHING. Sau do chay `psql -h localhost -p 54322 -U postgres -d postgres -f supabase/seed.sql` | `supabase/seed.sql`
-
-**Checkpoint**: Assets, colors, i18n, seed data san sang. `flutter analyze` dat 0 warnings.
+- [ ] T001 Tạo file SVG ic_chevron_down.svg (16×16 viewBox, path mũi tên xuống, stroke: currentColor) | assets/icons/ic_chevron_down.svg
+- [ ] T002 Chạy `dart run build_runner build` để regenerate flutter_gen — verify `Assets.icons.icChevronDown` xuất hiện | lib/gen/assets.gen.dart
+- [ ] T003 [P] Tạo test helpers: MockProfileRepository, MockKudosRepository, factory makeUserProfile(), makePersonalStats(), makeIconBadge(), makeKudos() | test/helpers/profile_test_helpers.dart
 
 ---
 
-## Phase 1: Data Layer — Models (freezed)
+## Phase 2: Foundation (Bug Fix P0 — bắt buộc trước US7)
 
-**Muc dich**: Tao tat ca models can thiet cho Profile feature. REUSE `Kudos`, `PersonalStats`, `UserSummary` tu `lib/features/kudos/data/models/`
+**Mục đích**: Fix ViewModel bug `isLoadingMoreKudos` — bộ loading spinner cuối Kudos list không bao giờ hiện
 
-### UserProfile model
+**⚠️ CRITICAL**: US7 (infinite scroll loading indicator) bị broken cho đến khi phase này xong
 
-- [x] T006 [P] Viet test cho `UserProfile` model (serialization, equality, copyWith) | `test/unit/models/user_profile_test.dart`
-- [x] T007 [P] Tao `UserProfile` model (freezed + json_serializable): id, name, avatar, team, badgeTitle, heroTierUrl — mo rong tu UserSummary voi them thong tin | `lib/features/profile/data/models/user_profile.dart`
+- [ ] T004 Fix `loadMoreKudos()`: thêm early-return khi `isLoadingMoreKudos=true`; set `isLoadingMoreKudos: true` trước await; set `false` trong cả try-success và catch | lib/features/profile/presentation/viewmodels/profile_viewmodel.dart
+- [ ] T005 [P] Áp dụng fix `isLoadingMoreKudos` tương tự cho `OtherProfileViewModel.loadMoreKudos()` | lib/features/profile/presentation/viewmodels/other_profile_viewmodel.dart
 
-### IconBadge model
-
-- [x] T008 [P] Viet test cho `IconBadge` model (serialization, equality) | `test/unit/models/icon_badge_test.dart`
-- [x] T009 [P] Tao `IconBadge` model (freezed + json_serializable): id, name, imageUrl, earnedAt | `lib/features/profile/data/models/icon_badge.dart`
-
-### Badge model
-
-- [x] T010 [P] Viet test cho `Badge` model (serialization, equality) | `test/unit/models/badge_test.dart`
-- [x] T011 [P] Tao `Badge` model (freezed + json_serializable): id, name, imageUrl, type | `lib/features/profile/data/models/badge.dart`
-
-### KudosFilterType enum
-
-- [x] T012 [P] Tao `KudosFilterType` enum: `received`, `sent` | `lib/features/profile/data/models/kudos_filter_type.dart`
-
-### ProfileState model
-
-- [x] T013 Viet test cho `ProfileState` model (default values, copyWith) | `test/unit/models/profile_state_test.dart`
-- [x] T014 Tao `ProfileState` model (freezed): userProfile, iconCollection (List<IconBadge>), personalStats (PersonalStats — reuse tu kudos), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/profile_state.dart`
-
-### OtherProfileState model
-
-- [x] T015 Viet test cho `OtherProfileState` model (default values, copyWith) | `test/unit/models/other_profile_state_test.dart`
-- [x] T016 Tao `OtherProfileState` model (freezed): userProfile, badgeCollection (List<Badge>), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/other_profile_state.dart`
-
-- [x] T017 Chay `dart run build_runner build` de generate `.freezed.dart` + `.g.dart` cho tat ca models | `lib/features/profile/data/models/`
-
-### Test helpers
-
-- [x] T018 Tao test helpers: mock factories cho UserProfile, IconBadge, Badge, ProfileState, OtherProfileState | `test/helpers/profile_test_helpers.dart`
-
-**Checkpoint**: Models hoan chinh. `flutter test test/unit/models/` pass 100%.
+**Checkpoint**: `isLoadingMoreKudos` được toggle đúng — Phase 8 (US7) có thể tiến hành
 
 ---
 
-## Phase 2: Data Layer — Datasource + Repository + ViewModels
+## Phase 3: US1 — Xem thông tin profile cá nhân (Priority: P1) 🎯 MVP
 
-**Muc dich**: API layer + business logic — nen tang cho tat ca UI phases
+**Goal**: Avatar 72×72, border 1.911px, tên vàng 18px Bold, team code trắng 14px Regular, gap 24px khớp Figma
 
-### Datasource
+**Independent Test**: `flutter test test/widget/profile/profile_info_widget_test.dart` pass toàn bộ
 
-- [x] T019 Viet test cho `ProfileRemoteDatasource` (mock Supabase client, test 7 methods: fetchMyProfile, fetchUserProfile, fetchMyIcons, fetchUserBadges, fetchUserKudos, fetchUserKudosCount, fetchMyStats) | `test/unit/datasources/profile_remote_datasource_test.dart`
-- [x] T020 Tao `ProfileRemoteDatasource` voi 7 methods: fetchMyProfile(), fetchUserProfile(userId), fetchMyIcons(), fetchUserBadges(userId), fetchUserKudos(userId, filter, page, limit), fetchUserKudosCount(userId), fetchMyStats() — delegate/reuse logic tu KudosRemoteDatasource khi co the | `lib/features/profile/data/datasources/profile_remote_datasource.dart`
+### Tests (TDD — viết trước implementation, sẽ FAIL với code hiện tại)
 
-### Repository
+- [ ] T006 [P] Viết widget test: avatar container 72×72px + border width 1.911px | test/widget/profile/profile_info_widget_test.dart
+- [ ] T007 [P] Viết widget test: username color=AppColors.textAccent (vàng) + fontSize=18 + fontWeight=w700 | test/widget/profile/profile_info_widget_test.dart
+- [ ] T008 [P] Viết widget test: teamCode color=AppColors.textWhite + fontSize=14 + fontWeight=w400 | test/widget/profile/profile_info_widget_test.dart
+- [ ] T009 [P] Viết widget test: SizedBox height=24 giữa avatar và name group | test/widget/profile/profile_info_widget_test.dart
+- [ ] T010 [P] Viết widget test: heroTier='none' → không render hình danh hiệu | test/widget/profile/profile_info_widget_test.dart
+- [ ] T011 [P] Viết widget test: avatarUrl null → hiển thị placeholder chữ cái đầu tên | test/widget/profile/profile_info_widget_test.dart
+- [ ] T012 [P] Viết unit test: `build()` trả về state có profile + stats + badges + kudosList đầy đủ | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T013 [P] Viết unit test: `build()` sets `kudosFilter = KudosFilterType.sent` (default filter) | test/unit/viewmodels/profile_viewmodel_test.dart
 
-- [x] T021 Viet test cho `ProfileRepository` (mock datasource, test error handling, mapping, pagination logic) | `test/unit/repositories/profile_repository_test.dart`
-- [x] T022 Tao `ProfileRepository` — inject ProfileRemoteDatasource + KudosRepository (cho heart toggle). Methods: getMyProfile(), getUserProfile(userId), getMyIcons(), getUserBadges(userId), getUserKudos(userId, filter, page, limit), getUserKudosCount(userId), getMyStats() | `lib/features/profile/data/repositories/profile_repository.dart`
+### Implementation (US1)
 
-### ViewModel — Profile ban than
+- [ ] T014 [US1] Fix profile_info_widget.dart — 5 thay đổi: (1) avatar `width/height: 64`→`72`, `Border.all(width: 0.865)`→`width: 1.911`; (2) username `fontSize: 16`→`18`, `color: AppColors.textWhite`→`AppColors.textAccent`; (3) teamCode `fontSize: 12, w500, textSecondary`→`14, w400, textWhite`; (4) SizedBox after `_buildAvatar()`: `height: 8`→`height: 24` | lib/features/profile/presentation/widgets/profile_info_widget.dart
 
-- [x] T023 Viet test cho `ProfileViewModel` — test build(), changeFilter(), loadMoreKudos(), toggleHeart() (optimistic update + rollback), refresh() | `test/unit/viewmodels/profile_viewmodel_test.dart`
-- [x] T024 Tao `ProfileViewModel extends AsyncNotifier<ProfileState>` — build() parallel fetch profile + icons + stats + kudos list (default: sent) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId) (optimistic update + delegate KudosRepository), refresh() | `lib/features/profile/presentation/viewmodels/profile_viewmodel.dart`
-
-### ViewModel — Profile nguoi khac
-
-- [x] T025 Viet test cho `OtherProfileViewModel` — test build(userId), changeFilter(), loadMoreKudos(), toggleHeart(), refresh() | `test/unit/viewmodels/other_profile_viewmodel_test.dart`
-- [x] T026 Tao `OtherProfileViewModel extends FamilyAsyncNotifier<OtherProfileState, String>` — build(userId) parallel fetch profile + badges + kudos list (default: received) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId), refresh() | `lib/features/profile/presentation/viewmodels/other_profile_viewmodel.dart`
-
-**Checkpoint**: Data layer hoan chinh. `flutter test test/unit/` pass 100%. Co the bat dau UI.
+**Checkpoint**: US1 complete — T006–T011 tests pass ✅
 
 ---
 
-## Phase 3: Core UI — Profile ban than (US1 + US2 + US3 + US4 + US6) — MVP
+## Phase 4: US3 + US4 — Thống kê cá nhân & Mở Secret Box (Priority: P1)
 
-**Muc tieu**: Hien thi man hinh Profile ban than day du voi data — tab 4 trong bottom nav.
+**Goal**: 5 stat rows đúng giá trị + màu; nút "Mở Secret Box" enabled/disabled đúng trạng thái; disabled text opacity 40%
 
-**User stories**: US1 (thong tin ca nhan), US2 (bo suu tap icon), US3 (thong ke), US4 (lich su kudos + filter), US6 (bottom navigation).
+**Independent Test**: `flutter test test/widget/profile/personal_stats_card_test.dart` pass toàn bộ
 
-### Shared Widgets (dung chung cho ca 2 man hinh)
+### Tests (TDD — viết trước)
 
-- [x] T027 [P] Viet test cho `ProfileInfoWidget` (hien thi avatar, ten, team, badge; fallback avatar khi khong co anh) | `test/widget/profile/profile_info_widget_test.dart`
-- [x] T028 [P] [US1] Tao `ProfileInfoWidget` (StatelessWidget) — Column center: avatar (CircleAvatar 64px, border trang 0.865px, fallback chu cai dau), ten (Montserrat 16px Bold, trang), team code (12px Medium, #999), badge title (12px Medium, #FFEA9E). Nhan `UserProfile` | `lib/features/profile/presentation/widgets/profile_info_widget.dart`
+- [ ] T015 [P] [US3] Viết widget test: PersonalStatsCard hiển thị đủ 5 stat labels + giá trị màu AppColors.textAccent | test/widget/profile/personal_stats_card_test.dart
+- [ ] T016 [P] [US3] Viết widget test: Divider color=Color(0xFF2E3940) xuất hiện giữa nhóm Kudos/Hearts và Secret Box | test/widget/profile/personal_stats_card_test.dart
+- [ ] T017 [P] [US4] Viết widget test: `secretBoxesUnopened > 0` → PrimaryButton enabled (opacity 1.0, bg=AppColors.buttonBg) | test/widget/profile/personal_stats_card_test.dart
+- [ ] T018 [P] [US4] Viết widget test: `secretBoxesUnopened == 0` → PrimaryButton disabled (text withAlpha(102) ≈ 40%) — **sẽ FAIL** với code hiện tại (128≠102) | test/widget/profile/personal_stats_card_test.dart
+- [ ] T019 [P] [US4] Viết widget test: tap PrimaryButton enabled → `onOpenSecretBox` callback được gọi | test/widget/profile/personal_stats_card_test.dart
+- [ ] T020 [P] [US4] Viết widget test: tap PrimaryButton disabled → `onOpenSecretBox` callback KHÔNG được gọi | test/widget/profile/personal_stats_card_test.dart
 
-- [x] T029 [P] Viet test cho `KudosSectionHeaderWidget` (hien thi banner va tieu de "KUDOS") | `test/widget/profile/kudos_section_header_widget_test.dart`
-- [x] T030 [P] [US4] Tao `KudosSectionHeaderWidget` (StatelessWidget) — banner trang tri + subtitle "Sun* Annual Awards 2025" (12px Regular, trang) + title "KUDOS" (22px Medium, #FFEA9E). Dung i18n keys | `lib/features/profile/presentation/widgets/kudos_section_header_widget.dart`
+### Implementation (US3+US4)
 
-- [x] T031 [P] Viet test cho `ProfileKudosFilterDropdown` (tap mo overlay, chon filter, hien thi count) | `test/widget/profile/profile_kudos_filter_dropdown_test.dart`
-- [x] T032 [P] [US4] Tao `ProfileKudosFilterDropdown` (StatelessWidget) — dropdown button "Da gui (N)" / "Da nhan (N)" (bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E, icon chevron_down SVG). Tap -> overlay 2 pill options tren nen toi (#00101A, border: #998C5F). Nhan currentFilter, sentCount, receivedCount, onChanged. Animation open/close 200ms ease-out | `lib/features/profile/presentation/widgets/profile_kudos_filter_dropdown.dart`
+- [ ] T021 [US4] Fix primary_button.dart: disabled text `AppColors.buttonText.withAlpha(128)` → `AppColors.buttonText.withAlpha(102)` (40% opacity per design-style) | lib/shared/widgets/primary_button.dart
 
-- [x] T033 [P] Viet test cho `ProfileKudosListWidget` (hien thi list kudos cards, empty state, loading indicator) | `test/widget/profile/profile_kudos_list_widget_test.dart`
-- [x] T034 [P] [US4] Tao `ProfileKudosListWidget` (StatelessWidget) — danh sach kudos cards REUSE `KudosCard` tu `lib/features/kudos/presentation/widgets/kudos_card.dart`. Nhan List<Kudos>, isLoading, isEmpty. Empty state: "Chua co Kudos nao." (i18n). Loading indicator o cuoi danh sach | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
-
-### Widgets chi cho Profile ban than
-
-- [x] T035 [P] Viet test cho `IconCollectionWidget` (hien thi hang icon badges, empty state an section) | `test/widget/profile/icon_collection_widget_test.dart`
-- [x] T036 [P] [US2] Tao `IconCollectionWidget` (StatelessWidget) — Column: label "Bo suu tap icon cua toi" (14px Medium, #FFEA9E) + Row (gap: 8px) cac icon badges (44x44, circle, dark bg #1A1A2E). Chi hien thi icon, khong co ten. Nhan List<IconBadge>. Empty: an section | `lib/features/profile/presentation/widgets/icon_collection_widget.dart`
-
-- [x] T037 [P] Viet test cho `StatRowWidget` (hien thi label va value) | `test/widget/profile/stat_row_widget_test.dart`
-- [x] T038 [P] [US3] Tao `StatRowWidget` (StatelessWidget) — Row space-between: label (12px Regular, trang) + value (14px Bold, #FFEA9E). Nhan label va value (String/int) | `lib/features/profile/presentation/widgets/stat_row_widget.dart`
-
-- [x] T039 Viet test cho `StatisticsContainerWidget` (hien thi 5 stat rows, divider, button Mo Secret Box, empty state gia tri 0, button disabled khi unopened = 0) | `test/widget/profile/statistics_container_widget_test.dart`
-- [x] T040 [US3] Tao `StatisticsContainerWidget` (StatelessWidget) — dark panel (bg: #00070C, border: 0.794px #998C5F, radius: 8px, padding: 12px, margin: 20px horizontal). Chua 5 StatRowWidget (kudos nhan, kudos gui, hearts nhan, divider #2E3940, secret box da mo, secret box chua mo) + Button "Mo Secret Box" (reuse OutlineButtonWidget, bg: primary-10, border: #998C5F, font: 14px Medium, #FFEA9E). Button disabled khi unopenedSecretBoxes = 0. Nhan PersonalStats | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
-
-### Man hinh Profile ban than
-
-- [x] T041 Viet test cho `ProfileScreen` (verify sections render dung thu tu, pull-to-refresh goi refresh, infinite scroll goi loadMoreKudos, filter change goi changeFilter) | `test/widget/profile/profile_screen_test.dart`
-- [x] T042 [US1+US2+US3+US4+US6] Tao `ProfileScreen` (ConsumerWidget) — Scaffold(bg: #00101A) + RefreshIndicator (pull-to-refresh -> viewModel.refresh()) + CustomScrollView: ProfileInfoWidget + IconCollectionWidget + StatisticsContainerWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList, reuse KudosCard). ScrollController cho infinite scroll (loadMoreKudos khi scroll den cuoi). Loading: shimmer placeholders. Error: thong bao loi + nut retry | `lib/features/profile/presentation/screens/profile_screen.dart`
-
-### Tich hop MainScaffold
-
-- [x] T043 [US6] Thay `_PlaceholderTab(title: 'Profile')` tai index 3 trong `MainScaffold` bang `ProfileScreen()`. Xoa class `_PlaceholderTab` neu khong con su dung | `lib/app/main_scaffold.dart`
-
-**Checkpoint**: Profile ban than hien thi day du. Tab Profile active. Pull-to-refresh + infinite scroll + filter hoat dong. `flutter test` pass.
+**Checkpoint**: US3+US4 complete — T015–T020 tests pass ✅
 
 ---
 
-## Phase 4: Core UI — Profile nguoi khac (US1–US8 nguoi khac)
+## Phase 5: US5 — Xem danh sách Kudos theo filter (Priority: P1)
 
-**Muc tieu**: Man hinh Profile nguoi khac day du chuc nang — push route `/profile/:userId`
+**Goal**: Dropdown filter đúng style Figma (overlay bg #00070C, selected bg 10% gold, option text trắng, chevron SVG)
 
-### Widgets chi cho Profile nguoi khac
+**Independent Test**: `flutter test test/widget/profile/profile_kudos_filter_dropdown_test.dart` pass toàn bộ
 
-- [x] T044 [P] Viet test cho `BadgeCollectionWidget` (hien thi Wrap layout badges voi icon + ten, empty state an section) | `test/widget/profile/badge_collection_widget_test.dart`
-- [x] T045 [P] [US3-other] Tao `BadgeCollectionWidget` (StatelessWidget) — Wrap layout (gap: 12px), moi badge la Column: icon (44x44, circle, dark bg) + ten (10px Regular, trang). Nhan List<Badge>. Empty: an section | `lib/features/profile/presentation/widgets/badge_collection_widget.dart`
+### Tests (TDD — viết trước, sẽ FAIL với code hiện tại)
 
-- [x] T046 [P] Viet test cho `SendKudosButtonWidget` (hien thi CTA, tap callback navigate) | `test/widget/profile/send_kudos_button_widget_test.dart`
-- [x] T047 [P] [US2-other] Tao `SendKudosButtonWidget` (StatelessWidget) — CTA button "Gui loi cam on" (full width, bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E). Co icon edit SVG. Tap -> navigate sang man hinh gui kudos (screenId: `PV7jBVZU1N`) voi nguoi nhan pre-fill. Nhan userId va userName | `lib/features/profile/presentation/widgets/send_kudos_button_widget.dart`
+- [ ] T022 [P] [US5] Viết unit test: `changeFilter(received)` → repo được gọi với `filter='received'`, page reset về 1 | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T023 [P] [US5] Viết widget test: dropdown button hiển thị label + icon (Chevron SVG sau fix) | test/widget/profile/profile_kudos_filter_dropdown_test.dart
+- [ ] T024 [P] [US5] Viết widget test: tap dropdown → overlay xuất hiện với bg=AppColors.surfaceDark (#00070C) | test/widget/profile/profile_kudos_filter_dropdown_test.dart
+- [ ] T025 [P] [US5] Viết widget test: option đang selected có bg=Color(0x1AFFEA9E); option còn lại bg=transparent | test/widget/profile/profile_kudos_filter_dropdown_test.dart
+- [ ] T026 [P] [US5] Viết widget test: option text color=AppColors.textWhite (trắng, không phải vàng) | test/widget/profile/profile_kudos_filter_dropdown_test.dart
+- [ ] T027 [P] [US5] Viết widget test: tap option → overlay đóng + `onChanged` callback được gọi với filter đúng | test/widget/profile/profile_kudos_filter_dropdown_test.dart
 
-### Man hinh Profile nguoi khac
+### Implementation (US5)
 
-- [x] T048 Viet test cho `OtherProfileScreen` (verify sections render, khong co stats panel, co CTA button, back button, self-redirect khi userId = currentUser, error state user not found) | `test/widget/profile/other_profile_screen_test.dart`
-- [x] T049 [US1-8-other] Tao `OtherProfileScreen` (ConsumerWidget) nhan `userId` tu route param — AppBar transparent voi nut back + Scaffold(bg: #00101A) + RefreshIndicator + CustomScrollView: ProfileInfoWidget + BadgeCollectionWidget + SendKudosButtonWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList). ScrollController cho infinite scroll. Self-redirect: neu userId == currentUserId -> set currentTabIndexProvider = 3 va context.pop(). Error: "Khong tim thay nguoi dung" (i18n) voi nut quay lai. Bottom nav: tat ca tabs inactive | `lib/features/profile/presentation/screens/other_profile_screen.dart`
+- [ ] T028 [US5] Fix profile_kudos_filter_dropdown.dart — 4 thay đổi: (1) overlay bg `AppColors.bgDark`→`AppColors.surfaceDark`; (2) selected item bg `AppColors.outlineBtnBg`→`const Color(0x1AFFEA9E)`; (3) option text `AppColors.textAccent`→`AppColors.textWhite`; (4) chevron `Icons.keyboard_arrow_up/down`→`Assets.icons.icChevronDown.svg(width: 16, height: 16, colorFilter: const ColorFilter.mode(AppColors.textAccent, BlendMode.srcIn))` | lib/features/profile/presentation/widgets/profile_kudos_filter_dropdown.dart
 
-### Tich hop Router
-
-- [x] T050 Them route `/profile/:userId` trong `router.dart` — GoRoute builder tao `OtherProfileScreen(userId: state.pathParameters['userId']!)`. Them placeholder route cho send kudos (`/kudos/send`) va open secret box neu chua co | `lib/app/router.dart`
-
-**Checkpoint**: Profile nguoi khac hien thi day du. Back button hoat dong. CTA "Gui loi cam on" navigate. Self-redirect correct. `flutter test` pass.
+**Checkpoint**: US5 complete — T022–T027 tests pass ✅
 
 ---
 
-## Phase 5: Tuong tac & Tinh nang mo rong (US5 + US7 + US8 — ca 2 man hinh)
+## Phase 6: US2 — Xem bộ sưu tập icon (Priority: P2)
 
-**Muc dich**: Heart toggle, copy link, avatar navigation, spam label — ap dung cho ca 2 man hinh Profile
+**Goal**: Icon badge 32×32px tròn, gap 14px, section label 12px trắng; ẩn hoàn toàn khi rỗng
 
-### Heart toggle
+**Independent Test**: `flutter test test/widget/profile/icon_collection_widget_test.dart` pass toàn bộ
 
-- [x] T051 [US5] Tich hop HeartButton (REUSE tu `lib/features/kudos/presentation/widgets/heart_button.dart`) vao ProfileKudosListWidget — onToggle -> viewModel.toggleHeart(kudosId). Optimistic update state -> sync server qua KudosRepository.toggleHeart() | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+### Tests (TDD — viết trước, sẽ FAIL với code hiện tại)
 
-### Copy link
+- [ ] T029 [P] [US2] Viết widget test: icon badge slot 32×32px + shape circle + bg AppColors.iconDark (#1A1A2E) | test/widget/profile/icon_collection_widget_test.dart
+- [ ] T030 [P] [US2] Viết widget test: gap giữa slots = EdgeInsets.only(right: 14) | test/widget/profile/icon_collection_widget_test.dart
+- [ ] T031 [P] [US2] Viết widget test: section label fontSize=12, fontWeight=w400, color=AppColors.textWhite | test/widget/profile/icon_collection_widget_test.dart
+- [ ] T032 [P] [US2] Viết widget test: iconBadges=[] → widget return SizedBox.shrink (không render) | test/widget/profile/icon_collection_widget_test.dart
 
-- [x] T052 [P] [US5] Tich hop copy link vao ProfileKudosListWidget — tap icon copy -> Clipboard.setData(kudos.shareUrl) + ScaffoldMessenger.showSnackBar("Da sao chep lien ket", duration: 2s). Dung i18n key | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+### Implementation (US2)
 
-### Avatar tap -> Profile navigation
+- [ ] T033 [US2] Fix icon_collection_widget.dart — 3 thay đổi: (1) section label `fontSize: 14, w500, textAccent`→`12, w400, textWhite`; (2) icon slot `width/height: 44`→`32`; (3) slot gap `padding right: 8`→`14` | lib/features/profile/presentation/widgets/icon_collection_widget.dart
 
-- [x] T053 [P] [US5] Tich hop avatar tap tren kudos card trong ProfileKudosListWidget — GestureDetector tren avatar -> context.push('/profile/$userId'). Neu userId = currentUser -> redirect sang tab 4 | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
-
-### "Xem chi tiet" navigation
-
-- [x] T054 [P] [US5] Tich hop "Xem chi tiet" tap tren kudos card -> navigate sang man hinh chi tiet kudos (placeholder route neu chua build) | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
-
-### Spam label
-
-- [x] T055 [P] [US5] Hien thi orange pill tag "Spam" (#FF8C00, radius: 100px) tren kudos card khi isSpam = true. Kiem tra Kudos model da co field `isSpam` chua — them neu can | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
-
-### "Mo Secret Box" navigation
-
-- [x] T056 [US3] Tich hop nut "Mo Secret Box" trong StatisticsContainerWidget — tap -> navigate sang man hinh Open Secret Box (screenId: `kQk65hSYF2`). Placeholder route neu chua build. Button disabled khi unopenedSecretBoxes = 0 | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
-
-**Checkpoint**: Heart like/unlike + copy link + avatar nav + xem chi tiet + spam label + Mo Secret Box — tat ca hoat dong. `flutter test` pass.
+**Checkpoint**: US2 complete — T029–T032 tests pass ✅
 
 ---
 
-## Phase 6: Polish & Cross-cutting Concerns
+## Phase 7: US6 — Tương tác với Kudos card (Priority: P2)
 
-**Muc dich**: Accessibility, animations, error boundary, deep link, performance
+**Goal**: Heart toggle dùng optimistic update + rollback đúng; copy link + view detail callbacks hoạt động
 
-### Accessibility
+**Independent Test**: Unit tests T034–T036 pass; `ProfileKudosListWidget` đã có callbacks — không cần sửa implementation
 
-- [x] T057 [P] Them `Semantics` widgets cho tat ca interactive elements theo bang VoiceOver trong spec: Avatar "Anh dai dien cua {ten}", Badge "{danh hieu}", Stat Row "{label}: {count}", Button "Mo Secret Box" "Mo Secret Box. Ban co {count} hop chua mo", Heart "{count} luot thich. {Da thich / Chua thich}", Copy Link "Sao chep lien ket", "Xem chi tiet" "Xem chi tiet kudos", Back button "Quay lai", CTA "Gui loi cam on cho {ten}", Nav tabs "{Tab name}. Tab {index} tren 4" | `lib/features/profile/presentation/widgets/*.dart`
+### Tests (TDD — US6)
 
-### Animations
+- [ ] T034 [P] [US6] Viết unit test: `toggleHeart(like)` → state.isLikedByMe=true, heartCount+1 ngay lập tức (optimistic) | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T035 [P] [US6] Viết unit test: `toggleHeart(like)` → repo throw → rollback isLikedByMe=false, heartCount trở về ban đầu | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T036 [P] [US6] Viết unit test: `toggleHeart(unlike)` → state.isLikedByMe=false, heartCount-1 ngay lập tức | test/unit/viewmodels/profile_viewmodel_test.dart
 
-- [x] T058 [P] Fine-tune animations: dropdown overlay open/close (200ms ease-out), heart scale (150ms ease-in-out), push/pop transition (300ms ease-in-out) | `lib/features/profile/presentation/widgets/*.dart`
+*`ProfileKudosListWidget` đã có đầy đủ onHeartTap/onCopyLink/onViewDetail/onAvatarTap — không cần sửa implementation.*
 
-### Error boundary & Auth
-
-- [x] T059 [P] Xu ly 401 error -> verify auth redirect flow hoat dong khi token expired (tich hop voi existing auth redirect trong router.dart) | `lib/features/profile/data/datasources/profile_remote_datasource.dart`
-
-### Deep link
-
-- [x] T060 [P] Kiem tra deep link: `/profile` -> mo tab Profile ban than, `/profile/:userId` -> mo Profile nguoi khac. Dam bao routing hoat dong dung | `lib/app/router.dart`
-
-### Performance & Quality
-
-- [x] T061 Performance audit tren device that — profile screen load < 2 giay, filter switch < 1 giay, infinite scroll smooth, avatar loading | Device testing
-- [x] T062 Chay `flutter analyze` + `dart format` — dam bao 0 warnings, 0 lint errors | Toan bo project
-- [x] T063 Chay toan bo test suite: `flutter test` — dam bao tat ca tests pass, coverage >= 80% cho ViewModel + Repository | `test/`
-
-**Checkpoint**: Feature hoan chinh. Tat ca tests pass. Lint clean. Accessibility OK. Performance OK tren device that.
+**Checkpoint**: US6 complete — T034–T036 tests pass ✅
 
 ---
 
-## Phu thuoc & Thu tu thuc thi
+## Phase 8: US7 — Tải thêm Kudos - Infinite Scroll (Priority: P2)
 
-### Phu thuoc giua Phases
+**Goal**: Loading spinner cuối list hiện khi đang tải; pagination append đúng; guard chống double-trigger; card gap 24px
+
+**Independent Test**: Unit tests T037–T041 pass; widget test T042–T043 pass
+
+### Tests (TDD — US7)
+
+- [ ] T037 [P] [US7] Viết unit test: `loadMoreKudos()` → `state.isLoadingMoreKudos=true` ngay khi gọi, `false` sau khi hoàn tất | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T038 [P] [US7] Viết unit test: `loadMoreKudos()` → kudosList được append + page tăng lên | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T039 [P] [US7] Viết unit test: `loadMoreKudos()` khi `hasMoreKudos=false` → repo KHÔNG được gọi | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T040 [P] [US7] Viết unit test: `loadMoreKudos()` khi `isLoadingMoreKudos=true` → repo KHÔNG được gọi (guard double-trigger) | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T041 [P] [US7] Viết unit test: `loadMoreKudos()` → repo throw → page decrement, `isLoadingMoreKudos=false` | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T042 [P] [US7] Viết widget test: ProfileKudosListWidget `isLoadingMore=true` → CircularProgressIndicator visible ở cuối list | test/widget/profile/profile_screen_test.dart
+- [ ] T043 [P] [US7] Viết widget test: ProfileKudosListWidget `kudosList=[]` + `isLoadingMore=false` → text "Chưa có Kudos nào." visible | test/widget/profile/profile_screen_test.dart
+
+### Implementation (US7)
+
+- [ ] T044 [US7] Fix profile_kudos_list_widget.dart: card gap `Padding(padding: const EdgeInsets.only(bottom: 8))`→`EdgeInsets.only(bottom: 24)` | lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart
+
+*Bug fix `isLoadingMoreKudos` đã được xử lý trong Phase 2 (T004).*
+
+**Checkpoint**: US7 complete — T037–T043 tests pass, loading indicator hoạt động ✅
+
+---
+
+## Phase 9: US8 — Pull-to-refresh (Priority: P2)
+
+**Goal**: Kéo xuống reload toàn bộ dữ liệu profile; error state có retry
+
+**Independent Test**: Unit test T045 pass; widget test T046 pass
+
+### Tests (TDD — US8)
+
+- [ ] T045 [P] [US8] Viết unit test: `refresh()` → state chuyển AsyncLoading → AsyncData với dữ liệu mới | test/unit/viewmodels/profile_viewmodel_test.dart
+- [ ] T046 [P] [US8] Viết widget test: ProfileScreen error state → tap retry text → `profileViewModelProvider.notifier.refresh()` được gọi | test/widget/profile/profile_screen_test.dart
+
+*`ProfileScreen.RefreshIndicator` đã gọi `ProfileViewModel.refresh()` — không cần sửa implementation.*
+
+**Checkpoint**: US8 complete — T045–T046 tests pass ✅
+
+---
+
+## Phase 10: Polish & Cross-Cutting Concerns
+
+**Mục đích**: Hoàn thiện ProfileScreen widget tests, lint, format, manual verification
+
+- [ ] T047 [P] Viết widget test: ProfileScreen state=loading → CircularProgressIndicator visible | test/widget/profile/profile_screen_test.dart
+- [ ] T048 [P] Viết widget test: ProfileScreen state=error → error text visible | test/widget/profile/profile_screen_test.dart
+- [ ] T049 Run `dart format lib/features/profile test/` trên tất cả files đã thay đổi
+- [ ] T050 Run `flutter analyze` → fix tất cả warnings về 0 warnings
+- [ ] T051 Test trên iOS simulator: verify tất cả visual fixes khớp Figma design (avatar, typography, dropdown, icon collection, card gap)
+
+---
+
+## Dependencies & Execution Order
+
+### Phase Dependencies
 
 ```
-Phase 0 (Setup) ──────────────────────────────────────────────────┐
-    |                                                              |
-    v                                                              |
-Phase 1 (Models) ──────────────────────────────────┐              |
-    |                                               |              |
-    v                                               |              |
-Phase 2 (Datasource + Repository + ViewModels) ────┘              |
-    |                                                              |
-    v                                                              |
-Phase 3 (Profile ban than — MVP) ──────────────────────────────── |
-    |                                                              |
-    ├──> Phase 4 (Profile nguoi khac) ── sau Phase 3              |
-    |                                                              |
-    └──> Phase 5 (Tuong tac) ── sau Phase 3 + Phase 4            |
-         |                                                         |
-         v                                                         |
-    Phase 6 (Polish) ─────────────────────────────────────────────┘
+Phase 1 (Setup)
+  ├── T001-T002 (SVG + build_runner) → BLOCKS Phase 5 (US5, cần Assets.icons.icChevronDown)
+  └── T003 (test helpers) → BLOCKS tất cả test phases
+
+Phase 2 (Foundation)
+  └── T004-T005 (bug fix) → BLOCKS US7 tests (Phase 8)
+
+Phase 3 (US1): Độc lập sau Phase 1
+Phase 4 (US3+US4): Độc lập sau Phase 1
+Phase 5 (US5): Phụ thuộc T002 (cần Assets.icons.icChevronDown)
+Phase 6 (US2): Độc lập sau Phase 1
+Phase 7 (US6): Độc lập sau Phase 1 (chỉ unit tests)
+Phase 8 (US7): Phụ thuộc Phase 2 (T004)
+Phase 9 (US8): Độc lập sau Phase 1
+Phase 10 (Polish): Phụ thuộc tất cả phases trước
 ```
 
-### Song song trong moi Phase
+### TDD Order Trong Mỗi User Story
 
-- **Phase 0**: T001, T002, T003 song song (files khac nhau). T005 doc lap
-- **Phase 1**: Tat ca model tests + implementations (T006–T016) song song. T017 cuoi cung (build_runner)
-- **Phase 2**: T019-T020 (datasource) -> T021-T022 (repository) -> T023-T026 (viewmodels) tuan tu. T023+T025 co the song song
-- **Phase 3**: T027-T040 (widgets) song song. T041-T042 (screen) sau widgets. T043 (tich hop) cuoi
-- **Phase 4**: T044-T047 (widgets) song song. T048-T049 (screen) sau widgets. T050 (router) song song voi widgets
-- **Phase 5**: T051-T056 song song (cung file nhung logic doc lap)
-- **Phase 6**: T057-T060 song song. T061-T063 cuoi cung
+1. **Viết test** → test FAIL hoặc PASS (document expected behavior)
+2. **Sửa code** → test PASS
+3. **Run `flutter analyze`** → 0 warnings
+4. **Commit** logical group
 
-### Trong moi task
+### Parallel Execution (Sau Phase 1 + 2)
 
-1. Test PHAI viet truoc va FAIL (Red)
-2. Implement minimal code de pass (Green)
-3. Refactor neu can
-4. Models truoc services, widgets truoc screen integration
+```
+Thread A │ T006-T014 │ US1 — ProfileInfoWidget
+Thread B │ T015-T021 │ US3+US4 — PersonalStatsCard + PrimaryButton
+Thread C │ T022-T028 │ US5 — ProfileKudosFilterDropdown
+Thread D │ T029-T033 │ US2 — IconCollectionWidget
+Thread E │ T034-T036 │ US6 — Unit tests toggleHeart (không cần wait US7)
+```
 
----
-
-## Chien luoc trien khai
-
-### MVP First (Khuyen nghi)
-
-1. Hoan thanh Phase 0 + 1 + 2
-2. Hoan thanh Phase 3 (Profile ban than — MVP)
-3. **DUNG va KIEM TRA**: Test doc lap tren device
-4. Hoan thanh Phase 4 (Profile nguoi khac)
-5. Hoan thanh Phase 5 + 6
-
-### Tong so tasks: 63
-
-| Phase | So tasks | Uu tien |
-|-------|---------|---------|
-| Phase 0: Setup | 5 | Nen tang |
-| Phase 1: Models | 13 | Nen tang |
-| Phase 2: Data Layer | 8 | Nen tang |
-| Phase 3: Profile ban than (MVP) | 17 | P1 |
-| Phase 4: Profile nguoi khac | 7 | P1 |
-| Phase 5: Tuong tac | 6 | P2 |
-| Phase 6: Polish | 7 | P2 |
+Phase 8 (US7) bắt đầu sau Phase 2 (T004+T005) xong.
 
 ---
 
-## Ghi chu
+## Implementation Strategy
 
-- Commit sau moi task hoac nhom logic
-- Chay `flutter test` truoc khi chuyen phase
-- Cap nhat spec.md neu requirements thay doi trong qua trinh implement
-- Danh dau task hoan thanh: `[x]`
-- TDD bat buoc: Viet test -> Test FAIL (Red) -> Implement -> Test PASS (Green) -> Refactor
-- REUSE tu Kudos feature: `KudosCard`, `HeartButton`, `KudosRepository`, `Kudos` model, `PersonalStats` model, `UserSummary` model — KHONG tao lai
-- REUSE tu shared/: `OutlineButtonWidget`, `SectionHeaderWidget`, `BottomNavBar` — KHONG tao lai
-- Tat ca text PHAI dung i18n (slang), khong hardcode string
-- Asset paths PHAI dung `flutter_gen` (`Assets.xxx`), khong hardcode string
-- Moi seed data chi APPEND, KHONG xoa du lieu cu, KHONG chay `supabase db reset`
+### MVP Scope (P1 Stories — Phase 3+4+5)
+
+1. Phase 1 (Setup) → Phase 2 (Bug Fix)
+2. Phase 3 + Phase 4 + Phase 5 (song song)
+3. **STOP và VALIDATE**: Visual match Figma, filter hoạt động → ship MVP
+4. Tiếp tục Phase 6–9 (P2 stories)
+
+### Incremental Delivery
+
+1. Phase 1+2 → Commit "setup: add ic_chevron_down asset + fix loadMoreKudos bug"
+2. Phase 3 (US1) → Commit "fix: profile info widget visual discrepancies"
+3. Phase 4 (US3+US4) → Commit "fix: primary button disabled opacity"
+4. Phase 5 (US5) → Commit "fix: kudos filter dropdown visual fixes"
+5. Phase 6 (US2) → Commit "fix: icon collection widget visual fixes"
+6. Phase 7+8 (US6+US7) → Commit "feat: kudos interactions + scroll indicator"
+7. Phase 9 (US8) → Commit "test: add refresh + pull-to-refresh tests"
+8. Phase 10 → Commit "chore: lint, format, final polish"
+
+---
+
+## Summary
+
+| Metric | Giá trị |
+|--------|---------|
+| Tổng số tasks | 51 |
+| Tasks tạo file mới | T001, T003, T006–T013, T015–T020, T022–T027, T029–T032, T034–T036, T037–T043, T045–T048 |
+| Tasks sửa file | T004, T005, T014, T021, T028, T033, T044 |
+| Tasks implementation | 7 (fix code) |
+| Tasks tests | 39 (unit + widget) |
+| Tasks tooling | 5 (build_runner, format, analyze, simulator) |
+| P1 stories | US1, US3, US4, US5 |
+| P2 stories | US2, US6, US7, US8 |
+| Parallel opportunities | 5 threads sau Phase 1+2 |
+| MVP scope | Phase 1–5 (US1 + US3 + US4 + US5) |
+
+---
+
+## Notes
+
+- **TDD nghiêm ngặt per constitution**: Test phải viết TRƯỚC implementation trong cùng user story
+- Test cho visual fixes (T006–T011, T023–T026, T029–T031, T042–T043) sẽ **FAIL** với code hiện tại — đây là expected
+- Test cho logic đã work (T012–T013, T022, T034–T036, T045) sẽ **PASS** ngay — vẫn quan trọng để document behavior và bảo vệ khỏi regression
+- `primary_button.dart` là shared widget — kiểm tra tất cả usages (`PersonalStatsCard`, `send_kudos`) trước khi commit T021
+- Mark tasks complete khi xong: `- [x] T###`

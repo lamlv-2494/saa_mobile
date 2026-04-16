@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
@@ -63,15 +61,7 @@ class _KudosFabWidgetState extends State<KudosFabWidget> {
           // Divider
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              '/',
-              style: GoogleFonts.montserrat(
-                fontSize: 24,
-                fontWeight: FontWeight.w400,
-                height: 32 / 24,
-                color: AppColors.buttonText,
-              ),
-            ),
+            child: Container(width: 1, height: 24, color: AppColors.buttonText),
           ),
           // View kudos
           Semantics(

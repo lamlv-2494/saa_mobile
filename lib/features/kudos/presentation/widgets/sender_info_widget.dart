@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
-import 'package:saa_mobile/core/env/env_config.dart';
+import 'package:saa_mobile/core/utils/asset_mapper.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
@@ -125,19 +125,11 @@ class SenderInfoWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (sender.heroTierUrl.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Assets.icons.icDot.svg(width: 2, height: 2),
-                ),
-                Flexible(
-                  child: Image.network(
-                    '${EnvConfig.supabaseUrl}${sender.heroTierUrl}',
-                    height: 9,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                  ),
-                ),
+              if (AssetMapper.heroTierImage(sender.heroTier) != null) ...[
+                if (sender.department.isNotEmpty)
+                  Assets.icons.icDot.svg(width: 6, height: 6),
+                AssetMapper.heroTierImage(sender.heroTier)!
+                    .image(width: 12, height: 12),
               ],
             ],
           ),

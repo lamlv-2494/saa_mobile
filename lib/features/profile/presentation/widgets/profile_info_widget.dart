@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
+import 'package:saa_mobile/core/utils/asset_mapper.dart';
 import 'package:saa_mobile/features/profile/data/models/user_profile.dart';
 
 class ProfileInfoWidget extends StatelessWidget {
@@ -45,15 +46,12 @@ class ProfileInfoWidget extends StatelessWidget {
               ),
             ),
           ],
-          if (profile.heroTier.isNotEmpty && profile.heroTier != 'none') ...[
-            const SizedBox(height: 2),
-            Text(
-              profile.heroTier,
-              style: GoogleFonts.montserrat(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                height: 16 / 12,
-                color: AppColors.textAccent,
+          if (AssetMapper.heroTierImage(profile.heroTier) != null) ...[
+            const SizedBox(height: 4),
+            Semantics(
+              label: 'Hero tier badge',
+              child: AssetMapper.heroTierImage(profile.heroTier)!.image(
+                height: 20,
               ),
             ),
           ],

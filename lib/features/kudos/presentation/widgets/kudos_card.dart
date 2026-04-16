@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
-import 'package:saa_mobile/core/env/env_config.dart';
+import 'package:saa_mobile/core/utils/asset_mapper.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_content_card.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
@@ -138,7 +138,7 @@ class _SenderReceiverRow extends StatelessWidget {
                   avatar: kudos.sender.avatar,
                   name: kudos.sender.name,
                   department: kudos.sender.department,
-                  heroTierUrl: kudos.sender.heroTierUrl,
+                  heroTier: kudos.sender.heroTier,
                   radius: 14,
                   onTap: () => onAvatarTap?.call(kudos.sender.id),
                 ),
@@ -152,7 +152,7 @@ class _SenderReceiverRow extends StatelessWidget {
             avatar: kudos.receiver.avatar,
             name: kudos.receiver.name,
             department: kudos.receiver.department,
-            heroTierUrl: kudos.receiver.heroTierUrl,
+            heroTier: kudos.receiver.heroTier,
             radius: 14,
             onTap: () => onAvatarTap?.call(kudos.receiver.id),
           ),
@@ -183,7 +183,7 @@ class _SenderReceiverRow extends StatelessWidget {
                   avatar: kudos.sender.avatar,
                   name: kudos.sender.name,
                   department: kudos.sender.department,
-                  heroTierUrl: kudos.sender.heroTierUrl,
+                  heroTier: kudos.sender.heroTier,
                   radius: 16,
                 ),
               ),
@@ -217,7 +217,7 @@ class _SenderReceiverRow extends StatelessWidget {
             avatar: kudos.receiver.avatar,
             name: kudos.receiver.name,
             department: kudos.receiver.department,
-            heroTierUrl: kudos.receiver.heroTierUrl,
+            heroTier: kudos.receiver.heroTier,
             radius: 16,
           ),
         ),
@@ -245,15 +245,15 @@ class _UserAvatar extends StatelessWidget {
     required this.name,
     required this.department,
     required this.radius,
-    this.heroTierUrl = '',
+    this.heroTier = 'none',
     this.onTap,
   });
 
   final String avatar;
   final String name;
   final String department;
-  final String heroTierUrl;
   final double radius;
+  final String heroTier;
   final VoidCallback? onTap;
 
   @override
@@ -298,26 +298,19 @@ class _UserAvatar extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.montserrat(
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w400,
                     color: AppColors.textSecondary,
                   ),
                 ),
               ),
-            if (heroTierUrl.isNotEmpty) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Assets.icons.icDot.svg(width: 2, height: 2),
-              ),
-              Flexible(
-                child: Image.network(
-                  '${EnvConfig.supabaseUrl}$heroTierUrl',
-                  // width: 60,
-                  height: 15,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            if (AssetMapper.heroTierImage(heroTier) != null) ...[
+              if (department.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Assets.icons.icDot.svg(width: 2, height: 2),
                 ),
-              ),
+              AssetMapper.heroTierImage(heroTier)!.image(width: 45, height: 9),
             ],
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
+import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
 import 'package:saa_mobile/features/kudos/data/repositories/kudos_repository.dart';
 import 'package:saa_mobile/features/profile/data/models/kudos_filter_type.dart';
 import 'package:saa_mobile/features/profile/data/repositories/profile_repository.dart';
@@ -42,11 +43,14 @@ void main() {
     String userId = _testUserId,
     List<Kudos>? kudosList,
     int kudosCount = 5,
+    PersonalStats stats = const PersonalStats(kudosSent: 3, kudosReceived: 7),
   }) {
     when(() => mockProfileRepo.getUserProfile(userId))
         .thenAnswer((_) async => createUserProfile(id: userId));
     when(() => mockProfileRepo.getUserBadges(userId))
         .thenAnswer((_) async => createBadgeList());
+    when(() => mockProfileRepo.getUserStats(userId))
+        .thenAnswer((_) async => stats);
     when(
       () => mockProfileRepo.getKudosHistory(
         userId: userId,
@@ -72,6 +76,8 @@ void main() {
           .thenAnswer((_) async => profile);
       when(() => mockProfileRepo.getUserBadges(_testUserId))
           .thenAnswer((_) async => badges);
+      when(() => mockProfileRepo.getUserStats(_testUserId))
+          .thenAnswer((_) async => const PersonalStats(kudosSent: 4, kudosReceived: 10));
       when(
         () => mockProfileRepo.getKudosHistory(
           userId: _testUserId,
@@ -97,6 +103,8 @@ void main() {
       expect(state.kudosList, kudos);
       expect(state.kudosFilter, KudosFilterType.received);
       expect(state.hasMoreKudos, false); // 2 < 20
+      expect(state.kudosSentCount, 4);
+      expect(state.kudosReceivedCount, 10);
     });
 
     test('hasMoreKudos = true khi kudos.length >= 20', () async {
@@ -124,6 +132,8 @@ void main() {
           .thenThrow(Exception('Network error'));
       when(() => mockProfileRepo.getUserBadges(_testUserId))
           .thenAnswer((_) async => createBadgeList());
+      when(() => mockProfileRepo.getUserStats(_testUserId))
+          .thenAnswer((_) async => const PersonalStats());
       when(
         () => mockProfileRepo.getKudosHistory(
           userId: _testUserId,

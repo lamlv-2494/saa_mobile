@@ -40,7 +40,8 @@ class OtherProfileViewModel
 
     return OtherProfileState(
       profile: profile,
-      personalStats: stats,
+      kudosSentCount: stats.kudosSent,
+      kudosReceivedCount: stats.kudosReceived,
       badges: badges,
       kudosList: kudosList,
       kudosFilter: KudosFilterType.received,

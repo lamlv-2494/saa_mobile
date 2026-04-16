@@ -13,7 +13,7 @@ UserSummary createUserSummary({
   String avatar = 'https://example.com/avatar.png',
   String department = 'CECV1',
   int badgeLevel = 1,
-  String heroTierUrl = '',
+  String heroTier = 'none',
 }) =>
     UserSummary(
       id: id,
@@ -21,7 +21,7 @@ UserSummary createUserSummary({
       avatar: avatar,
       department: department,
       badgeLevel: badgeLevel,
-      heroTierUrl: heroTierUrl,
+      heroTier: heroTier,
     );
 
 Hashtag createHashtag({int id = 1, String name = '#teamwork'}) =>

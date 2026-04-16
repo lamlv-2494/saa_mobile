@@ -28,11 +28,25 @@ void main() {
       expect(find.text('KUDOS'), findsOneWidget);
     });
 
-    testWidgets('render Stack với banner image', (tester) async {
+    testWidgets('render Stack với banner image background', (tester) async {
       await tester.pumpWidget(_buildWidget());
       await tester.pumpAndSettle();
 
-      expect(find.byType(Stack), findsAtLeastNWidgets(1));
+      // Widget phải chứa Stack với image background bên trong
+      expect(
+        find.descendant(
+          of: find.byType(KudosSectionHeaderWidget),
+          matching: find.byType(Stack),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(KudosSectionHeaderWidget),
+          matching: find.byType(Image),
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

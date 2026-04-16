@@ -23,8 +23,7 @@ void main() {
           name: 'Nguyễn Văn A',
           department: 'CECV10',
           avatar: '',
-          heroTierUrl: '',
-        ),
+            ),
       );
 
       await tester.pumpWidget(buildTestWidget(kudos));
@@ -41,8 +40,7 @@ void main() {
         sender: createUserSummary(
           name: 'Người gửi',
           avatar: '',
-          heroTierUrl: '',
-        ),
+            ),
       );
 
       await tester.pumpWidget(
@@ -59,7 +57,7 @@ void main() {
     testWidgets('hiển thị "User not found." — không nhầm với anonymous', (tester) async {
       final kudos = createKudos(
         isAnonymous: false,
-        sender: createUserSummary(name: '', avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(name: '', avatar: ''),
       );
 
       await tester.pumpWidget(buildTestWidget(kudos));
@@ -74,7 +72,7 @@ void main() {
       var tapped = false;
       final kudos = createKudos(
         isAnonymous: false,
-        sender: createUserSummary(name: '', avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(name: '', avatar: ''),
       );
 
       await tester.pumpWidget(
@@ -118,9 +116,7 @@ void main() {
     testWidgets('badge ẩn hoàn toàn khi anonymous', (tester) async {
       final kudos = createKudos(
         isAnonymous: true,
-        sender: createUserSummary(
-          heroTierUrl: '/badges/rising_hero.png',
-        ),
+        sender: createUserSummary(),
       );
 
       await tester.pumpWidget(buildTestWidget(kudos));

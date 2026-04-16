@@ -27,7 +27,7 @@ class AwardInfoBlock extends StatelessWidget {
       children: [
         // Badge image
         AwardBadgeImage(
-          imageUrl: category.imageUrl,
+          slug: category.slug,
           semanticLabel: '${t.accessibility.awardBadge} ${category.name}',
         ),
         const SizedBox(height: 16),

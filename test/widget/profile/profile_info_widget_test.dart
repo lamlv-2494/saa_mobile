@@ -17,7 +17,7 @@ const _profile = UserProfile(
   name: 'Nguyễn Văn A',
   email: 'a@sun-asterisk.com',
   teamCode: 'CECV1',
-  heroTier: 'Legend Hero',
+  heroTier: 'legend_hero',
 );
 
 const _profileWithAvatar = UserProfile(
@@ -25,7 +25,7 @@ const _profileWithAvatar = UserProfile(
   name: 'Trần Thị B',
   email: 'b@sun-asterisk.com',
   teamCode: 'CEVC3',
-  heroTier: 'New Hero',
+  heroTier: 'new_hero',
   avatarUrl: 'https://example.com/avatar.png',
 );
 
@@ -45,11 +45,16 @@ void main() {
       expect(find.text('CECV1'), findsOneWidget);
     });
 
-    testWidgets('hiển thị hero tier (badge title)', (tester) async {
+    testWidgets('hiển thị hero tier dưới dạng ảnh', (tester) async {
       await tester.pumpWidget(_buildWidget(_profile));
       await tester.pumpAndSettle();
 
-      expect(find.text('Legend Hero'), findsOneWidget);
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is Semantics && w.properties.label == 'Hero tier badge',
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('hiển thị CircleAvatar', (tester) async {

@@ -34,13 +34,13 @@ void main() {
     AwardCategory(
       id: 1,
       name: 'Top Talent',
-      imageUrl: '',
+
       description: 'Giải thưởng Top Talent',
     ),
     AwardCategory(
       id: 2,
       name: 'Top Project',
-      imageUrl: '',
+
       description: 'Giải thưởng Top Project',
     ),
   ];
@@ -116,8 +116,13 @@ void main() {
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
-      // FAB has "/" divider and 2 Semantics buttons
-      expect(find.text('/'), findsOneWidget);
+      // FAB has 1px Container divider and 2 Semantics buttons
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is Container && w.constraints?.maxWidth == 1,
+        ),
+        findsOneWidget,
+      );
       expect(
         find.byWidgetPredicate(
           (w) => w is Semantics && w.properties.label == 'Write a kudos',

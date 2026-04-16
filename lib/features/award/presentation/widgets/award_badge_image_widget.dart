@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
-import 'package:saa_mobile/core/env/env_config.dart';
+import 'package:saa_mobile/core/utils/asset_mapper.dart';
 
 class AwardBadgeImage extends StatelessWidget {
   const AwardBadgeImage({
     super.key,
-    required this.imageUrl,
+    required this.slug,
     this.semanticLabel,
   });
 
-  final String imageUrl;
+  final String slug;
   final String? semanticLabel;
 
   @override
@@ -36,11 +36,12 @@ class AwardBadgeImage extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(11.429),
-            child: Image.network(
-              '${EnvConfig.supabaseUrl}$imageUrl',
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => const SizedBox.shrink(),
-            ),
+            child: AssetMapper.awardImage(slug)?.image(
+                  fit: BoxFit.cover,
+                  width: 160,
+                  height: 160,
+                ) ??
+                const SizedBox.shrink(),
           ),
         ),
       ),

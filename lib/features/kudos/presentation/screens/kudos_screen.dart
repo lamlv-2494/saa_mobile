@@ -373,9 +373,8 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
                             kudos: kudos,
                             timeText: formatKudosTimeAgo(kudos.createdAt),
                             onHeartTap: () => vm.toggleHeart(kudos.id),
-                            onAvatarTap: (userId) {
-                              // Placeholder — navigate to profile
-                            },
+                            onAvatarTap: (userId) =>
+                                context.push('/profile/$userId'),
                             onViewDetail: () =>
                                 context.push('/kudos/${kudos.id}'),
                           );
@@ -435,9 +434,7 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
               onLoadMore: () => vm.loadMoreAllKudos(),
               onRefresh: () => vm.refreshAllKudos(),
               onHeartTap: (id) => vm.toggleHeart(id),
-              onAvatarTap: (userId) {
-                // Placeholder — navigate to profile
-              },
+              onAvatarTap: (userId) => context.push('/profile/$userId'),
               formatTimeAgo: formatKudosTimeAgo,
               onViewDetail: (id) => context.push('/kudos/$id'),
             ),

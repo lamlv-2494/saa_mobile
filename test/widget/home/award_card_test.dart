@@ -14,7 +14,6 @@ void main() {
   const testAward = AwardCategory(
     id: 1,
     name: 'Top Talent',
-    imageUrl: '',
     description:
         'Giải thưởng Top Talent vinh danh những cá nhân xuất sắc toàn diện trên mọi phương diện trong năm vừa qua.',
   );

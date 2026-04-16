@@ -15,7 +15,7 @@ class ProfileState with _$ProfileState {
     PersonalStats? personalStats,
     @Default([]) List<IconBadge> iconBadges,
     @Default([]) List<Kudos> kudosList,
-    @Default(KudosFilterType.received) KudosFilterType kudosFilter,
+    @Default(KudosFilterType.sent) KudosFilterType kudosFilter,
     @Default(true) bool hasMoreKudos,
     @Default(false) bool isLoadingMoreKudos,
   }) = _ProfileState;

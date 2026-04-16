@@ -43,36 +43,30 @@ SELECT setval('events_id_seq', GREATEST((SELECT MAX(id) FROM events), 1));
 -- 3. AWARD CATEGORIES (6 giải)
 -- ==========================================
 
-INSERT INTO award_categories (event_id, name, name_en, slug, description, description_en, image_url, quantity, unit, unit_en, prize_value, prize_note, prize_note_en, sort_order) VALUES
+INSERT INTO award_categories (event_id, name, name_en, slug, description, description_en, quantity, unit, unit_en, prize_value, prize_note, prize_note_en, sort_order) VALUES
     (1, 'Top Talent', 'Top Talent', 'top-talent',
      'Giải thưởng Top Talent vinh danh những cá nhân xuất sắc toàn diện – những người không ngừng khẳng định năng lực chuyên môn vững vàng, hiệu suất công việc vượt trội, luôn mang lại giá trị vượt kỳ vọng, được đánh giá cao bởi khách hàng và đồng đội. Với tinh thần sẵn sàng nhận mọi nhiệm vụ tổ chức giao phó, họ luôn là nguồn cảm hứng, thúc đẩy động lực và tạo ảnh hưởng tích cực đến cả tập thể.',
      'The Top Talent award honors well-rounded outstanding individuals – those who continuously demonstrate solid professional competence, exceptional work performance, consistently deliver beyond expectations, and are highly regarded by clients and colleagues. With a spirit of readiness to take on any task assigned by the organization, they are always a source of inspiration, driving motivation and creating a positive impact on the entire team.',
-     '/storage/v1/object/public/awards/top_talent.png',
      10, 'Cá nhân', 'Individual', 7000000, 'cho mỗi giải thưởng', 'per award', 1),
     (1, 'Top Project', 'Top Project', 'top-project',
      'Giải thưởng Top Project vinh danh các tập thể dự án xuất sắc với kết quả kinh doanh vượt kỳ vọng, hiệu quả vận hành tối ưu và tinh thần làm việc tận tâm. Đây là các dự án có độ phức tạp kỹ thuật cao, hiệu quả tối ưu hóa nguồn lực và chi phí tốt, đề xuất các ý tưởng có giá trị cho khách hàng, đem lại lợi nhuận vượt trội và nhận được phản hồi tích cực từ khách hàng. Các thành viên tuân thủ nghiêm ngặt các tiêu chuẩn phát triển nội bộ trong phát triển dự án, tạo nên một hình mẫu về sự xuất sắc và chuyên nghiệp.',
      'The Top Project award honors outstanding project teams with business results exceeding expectations, optimal operational efficiency, and a dedicated work ethic. These are projects with high technical complexity, excellent resource and cost optimization, valuable ideas proposed to clients, outstanding profitability, and positive client feedback. Team members strictly adhere to internal development standards, creating a model of excellence and professionalism.',
-     '/storage/v1/object/public/awards/top_project.png',
      2, 'Tập thể', 'Team', 15000000, 'cho mỗi giải thưởng', 'per award', 2),
     (1, 'Top Project Leader', 'Top Project Leader', 'top-project-leader',
      'Giải thưởng Top Project Leader vinh danh những nhà quản lý dự án xuất sắc – những người hội tụ năng lực quản lý vững vàng, khả năng truyền cảm hứng mạnh mẽ, và tư duy "Aim High – Be Agile" trong mọi bài toán và bối cảnh. Dưới sự dẫn dắt của họ, các thành viên không chỉ cùng nhau vượt qua thử thách và đạt được mục tiêu đề ra, mà còn giữ vững ngọn lửa nhiệt huyết, tinh thần Wasshoi, và trưởng thành để trở thành phiên bản tinh hoa – hạnh phúc hơn của chính mình.',
      'The Top Project Leader award honors outstanding project managers – those who combine solid management capabilities, strong inspirational skills, and an "Aim High – Be Agile" mindset in every challenge and context. Under their leadership, team members not only overcome challenges together and achieve set goals, but also maintain the fire of enthusiasm, the Wasshoi spirit, and grow to become the finest, happiest version of themselves.',
-     '/storage/v1/object/public/awards/top_project_leader.png',
      3, 'Cá nhân', 'Individual', 7000000, 'cho mỗi giải thưởng', 'per award', 3),
     (1, 'Best Manager', 'Best Manager', 'best-manager',
      'Giải thưởng Best Manager vinh danh những nhà lãnh đạo tiêu biểu – người đã dẫn dắt đội ngũ của mình tạo ra kết quả vượt kỳ vọng, tác động nổi bật đến hiệu quả kinh doanh và sự phát triển bền vững của tổ chức. Dưới sự lãnh đạo của họ, đội ngũ luôn chinh phục và làm chủ mọi mục tiêu bằng năng lực đa nhiệm, khả năng phối hợp hiệu quả, và tư duy ứng dụng công nghệ linh hoạt trong kỷ nguyên số. Họ truyền cảm hứng để tập thể trở nên tự tin tràn đầy năng lượng, sẵn sàng đón nhận, thậm chí dẫn dắt tạo ra những thay đổi có tính cách mạng.',
      'The Best Manager award honors exemplary leaders – those who have led their teams to deliver results exceeding expectations, making a remarkable impact on business efficiency and the sustainable development of the organization. Under their leadership, teams consistently conquer and master every goal through multitasking capabilities, effective coordination, and flexible technology-driven thinking in the digital era. They inspire their teams to become confident, energized, and ready to embrace – even lead – revolutionary changes.',
-     '/storage/v1/object/public/awards/best_manager.png',
      1, 'Cá nhân', 'Individual', 10000000, 'cho mỗi giải thưởng', 'per award', 4),
     (1, 'MVP', 'MVP (Most Valuable Person)', 'mvp',
      'Giải thưởng MVP vinh danh cá nhân xuất sắc nhất năm – gương mặt tiêu biểu đại diện cho toàn bộ tập thể Sun*. Họ là người đã thể hiện năng lực vượt trội, tinh thần cống hiến bền bỉ, và tầm ảnh hưởng sâu rộng, để lại dấu ấn mạnh mẽ trong hành trình của Sun* suốt năm qua. Không chỉ nổi bật bởi hiệu suất và kết quả công việc, họ còn là nguồn cảm hứng lan tỏa – thông qua suy nghĩ, hành động và ảnh hưởng tích cực của mình đối với tập thể. MVP là người hội tụ đầy đủ phẩm chất của người Sun* ưu tú, đồng thời mang trên mình trọng trách lớn lao: trở thành hình mẫu đại diện cho con người và tinh thần Sun*, góp phần dẫn dắt tập thể vươn tới những đỉnh cao mới.',
      'The MVP award honors the most outstanding individual of the year – the representative face of the entire Sun* community. They have demonstrated exceptional capabilities, persistent dedication, and far-reaching influence, leaving a strong mark on Sun*''s journey throughout the past year. Not only standing out for their performance and work results, they are also a spreading source of inspiration – through their thinking, actions, and positive influence on the team. The MVP embodies all the qualities of an elite Sun* member, while carrying the great responsibility of becoming a role model representing the people and spirit of Sun*, helping to lead the community toward new heights.',
-     '/storage/v1/object/public/awards/mvp.png',
      1, 'Cá nhân', 'Individual', 15000000, 'cho giải cá nhân', 'for individual award', 5),
     (1, 'Signature 2025 - Creator', 'Signature 2025 - Creator', 'signature-2025-creator',
      'Giải thưởng Signature vinh danh cá nhân hoặc tập thể thể hiện tinh thần đặc trưng mà Sun* hướng tới trong từng thời kỳ. Trong năm 2025, giải thưởng Signature vinh danh Creator - cá nhân/tập thể mang tư duy chủ động và nhạy bén, luôn nhìn thấy cơ hội trong thách thức và tiên phong trong hành động. Họ không chỉ dừng lại ở việc thực hiện nhiệm vụ mà còn kiến tạo giá trị mới, mở ra hướng đi sáng tạo cho tập thể và tổ chức. Creator là người dám nghĩ khác, dám làm khác và truyền cảm hứng để những người xung quanh cùng bứt phá.',
      'The Signature award honors individuals or teams that embody the distinctive spirit Sun* strives for in each era. In 2025, the Signature award celebrates the Creator – individuals/teams with a proactive and agile mindset, who always see opportunities in challenges and pioneer in action. They go beyond just executing tasks to create new value, opening creative pathways for the team and organization. The Creator dares to think differently, act differently, and inspires those around them to break through together.',
-     '/storage/v1/object/public/awards/signature_creator.png',
      1, 'Cá nhân hoặc tập thể', 'Individual or Team', NULL, NULL, NULL, 6)
 ON CONFLICT (id) DO NOTHING;
 
@@ -157,29 +151,28 @@ INSERT INTO auth.users (id, email, raw_user_meta_data, created_at, updated_at, i
 ON CONFLICT (id) DO NOTHING;
 
 -- 7b. App-level user profiles
-INSERT INTO users (id, auth_id, email, name, avatar_url, team_code, department_id, hero_tier, hero_tier_url) VALUES
-    (1, 'a1111111-1111-1111-1111-111111111111', 'nguyenvana@sun-asterisk.com', 'Nguyễn Văn A', 'https://i.pravatar.cc/150?u=a', 'TEAM-01', 1, 'rising_hero', '/storage/v1/object/public/hero-tiers/rising_hero.png'),
-    (2, 'b2222222-2222-2222-2222-222222222222', 'tranthib@sun-asterisk.com', 'Trần Thị B', 'https://i.pravatar.cc/150?u=b', 'TEAM-02', 2, 'new_hero', '/storage/v1/object/public/hero-tiers/new_hero.png'),
-    (3, 'c3333333-3333-3333-3333-333333333333', 'levanc@sun-asterisk.com', 'Lê Văn C', 'https://i.pravatar.cc/150?u=c', 'TEAM-01', 1, 'super_hero', '/storage/v1/object/public/hero-tiers/super_hero.png'),
-    (4, 'd4444444-4444-4444-4444-444444444444', 'phamthid@sun-asterisk.com', 'Phạm Thị D', 'https://i.pravatar.cc/150?u=d', 'TEAM-03', 3, 'super_hero', '/storage/v1/object/public/hero-tiers/super_hero.png'),
-    (5, 'e5555555-5555-5555-5555-555555555555', 'hoangvane@sun-asterisk.com', 'Hoàng Văn E', 'https://i.pravatar.cc/150?u=e', 'TEAM-02', 2, 'legend_hero', '/storage/v1/object/public/hero-tiers/legend_hero.png'),
-    (6, 'f6666666-6666-6666-6666-666666666666', 'dohoahiep@sun-asterisk.com', 'Đỗ Hoàng Hiệp', 'https://i.pravatar.cc/150?u=f6', 'TEAM-01', 1, 'super_hero', '/storage/v1/object/public/hero-tiers/super_hero.png'),
-    (7, 'a7777777-7777-7777-7777-777777777777', 'duongthuyan@sun-asterisk.com', 'Dương Thúy An', 'https://i.pravatar.cc/150?u=a7', 'TEAM-02', 2, 'rising_hero', '/storage/v1/object/public/hero-tiers/rising_hero.png'),
-    (8, 'b8888888-8888-8888-8888-888888888888', 'phamdindat@sun-asterisk.com', 'Phạm Đình Đạt', 'https://i.pravatar.cc/150?u=b8', 'TEAM-03', 3, 'new_hero', '/storage/v1/object/public/hero-tiers/new_hero.png'),
-    (9, 'c9999999-9999-9999-9999-999999999999', 'huynhdindat@sun-asterisk.com', 'Huỳnh Đình Đạt', 'https://i.pravatar.cc/150?u=c9', 'TEAM-01', 1, 'legend_hero', '/storage/v1/object/public/hero-tiers/legend_hero.png'),
-    (10, 'd0000000-0000-0000-0000-000000000010', 'nguyenthimai@sun-asterisk.com', 'Nguyễn Thị Mai', 'https://i.pravatar.cc/150?u=d0', 'TEAM-02', 4, 'rising_hero', '/storage/v1/object/public/hero-tiers/rising_hero.png'),
-    (11, 'e1111111-1111-1111-1111-111111111112', 'vothanhson@sun-asterisk.com', 'Võ Thanh Sơn', 'https://i.pravatar.cc/150?u=e1', 'TEAM-03', 5, 'new_hero', '/storage/v1/object/public/hero-tiers/new_hero.png'),
-    (12, 'f2222222-2222-2222-2222-222222222223', 'tranminhquan@sun-asterisk.com', 'Trần Minh Quân', 'https://i.pravatar.cc/150?u=f2', 'TEAM-01', 6, 'super_hero', '/storage/v1/object/public/hero-tiers/super_hero.png'),
-    (13, 'a3333333-3333-3333-3333-333333333334', 'lethihong@sun-asterisk.com', 'Lê Thị Hồng', 'https://i.pravatar.cc/150?u=a3', 'TEAM-02', 1, 'rising_hero', '/storage/v1/object/public/hero-tiers/rising_hero.png'),
-    (14, 'b4444444-4444-4444-4444-444444444445', 'dangvantung@sun-asterisk.com', 'Đặng Văn Tùng', 'https://i.pravatar.cc/150?u=b4', 'TEAM-03', 2, 'rising_hero', '/storage/v1/object/public/hero-tiers/rising_hero.png'),
-    (15, 'c5555555-5555-5555-5555-555555555556', 'buithiyen@sun-asterisk.com', 'Bùi Thị Yến', 'https://i.pravatar.cc/150?u=c5', 'TEAM-01', 3, 'new_hero', '/storage/v1/object/public/hero-tiers/new_hero.png')
+INSERT INTO users (id, auth_id, email, name, avatar_url, team_code, department_id, hero_tier) VALUES
+    (1, 'a1111111-1111-1111-1111-111111111111', 'nguyenvana@sun-asterisk.com', 'Nguyễn Văn A', 'https://i.pravatar.cc/150?u=a', 'TEAM-01', 1, 'rising_hero'),
+    (2, 'b2222222-2222-2222-2222-222222222222', 'tranthib@sun-asterisk.com', 'Trần Thị B', 'https://i.pravatar.cc/150?u=b', 'TEAM-02', 2, 'new_hero'),
+    (3, 'c3333333-3333-3333-3333-333333333333', 'levanc@sun-asterisk.com', 'Lê Văn C', 'https://i.pravatar.cc/150?u=c', 'TEAM-01', 1, 'super_hero'),
+    (4, 'd4444444-4444-4444-4444-444444444444', 'phamthid@sun-asterisk.com', 'Phạm Thị D', 'https://i.pravatar.cc/150?u=d', 'TEAM-03', 3, 'super_hero'),
+    (5, 'e5555555-5555-5555-5555-555555555555', 'hoangvane@sun-asterisk.com', 'Hoàng Văn E', 'https://i.pravatar.cc/150?u=e', 'TEAM-02', 2, 'legend_hero'),
+    (6, 'f6666666-6666-6666-6666-666666666666', 'dohoahiep@sun-asterisk.com', 'Đỗ Hoàng Hiệp', 'https://i.pravatar.cc/150?u=f6', 'TEAM-01', 1, 'super_hero'),
+    (7, 'a7777777-7777-7777-7777-777777777777', 'duongthuyan@sun-asterisk.com', 'Dương Thúy An', 'https://i.pravatar.cc/150?u=a7', 'TEAM-02', 2, 'rising_hero'),
+    (8, 'b8888888-8888-8888-8888-888888888888', 'phamdindat@sun-asterisk.com', 'Phạm Đình Đạt', 'https://i.pravatar.cc/150?u=b8', 'TEAM-03', 3, 'new_hero'),
+    (9, 'c9999999-9999-9999-9999-999999999999', 'huynhdindat@sun-asterisk.com', 'Huỳnh Đình Đạt', 'https://i.pravatar.cc/150?u=c9', 'TEAM-01', 1, 'legend_hero'),
+    (10, 'd0000000-0000-0000-0000-000000000010', 'nguyenthimai@sun-asterisk.com', 'Nguyễn Thị Mai', 'https://i.pravatar.cc/150?u=d0', 'TEAM-02', 4, 'rising_hero'),
+    (11, 'e1111111-1111-1111-1111-111111111112', 'vothanhson@sun-asterisk.com', 'Võ Thanh Sơn', 'https://i.pravatar.cc/150?u=e1', 'TEAM-03', 5, 'new_hero'),
+    (12, 'f2222222-2222-2222-2222-222222222223', 'tranminhquan@sun-asterisk.com', 'Trần Minh Quân', 'https://i.pravatar.cc/150?u=f2', 'TEAM-01', 6, 'super_hero'),
+    (13, 'a3333333-3333-3333-3333-333333333334', 'lethihong@sun-asterisk.com', 'Lê Thị Hồng', 'https://i.pravatar.cc/150?u=a3', 'TEAM-02', 1, 'rising_hero'),
+    (14, 'b4444444-4444-4444-4444-444444444445', 'dangvantung@sun-asterisk.com', 'Đặng Văn Tùng', 'https://i.pravatar.cc/150?u=b4', 'TEAM-03', 2, 'rising_hero'),
+    (15, 'c5555555-5555-5555-5555-555555555556', 'buithiyen@sun-asterisk.com', 'Bùi Thị Yến', 'https://i.pravatar.cc/150?u=c5', 'TEAM-01', 3, 'new_hero')
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     avatar_url = EXCLUDED.avatar_url,
     team_code = EXCLUDED.team_code,
     department_id = EXCLUDED.department_id,
-    hero_tier = EXCLUDED.hero_tier,
-    hero_tier_url = EXCLUDED.hero_tier_url;
+    hero_tier = EXCLUDED.hero_tier;
 
 SELECT setval('users_id_seq', GREATEST((SELECT MAX(id) FROM users), 15));
 

@@ -26,7 +26,7 @@ class ProfileViewModel extends AsyncNotifier<ProfileState> {
     final badgesFuture = _profileRepo.getMyIconBadges();
     final kudosFuture = _profileRepo.getKudosHistory(
       userId: profile.id,
-      filter: 'received',
+      filter: 'sent',
       page: 1,
       limit: _pageLimit,
     );
@@ -40,7 +40,7 @@ class ProfileViewModel extends AsyncNotifier<ProfileState> {
       personalStats: stats,
       iconBadges: badges,
       kudosList: kudosList,
-      kudosFilter: KudosFilterType.received,
+      kudosFilter: KudosFilterType.sent,
       hasMoreKudos: kudosList.length >= _pageLimit,
     );
   }

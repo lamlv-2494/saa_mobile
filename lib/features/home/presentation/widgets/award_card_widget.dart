@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
-import 'package:saa_mobile/core/env/env_config.dart';
+import 'package:saa_mobile/core/utils/asset_mapper.dart';
 import 'package:saa_mobile/features/home/data/models/award_category.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
@@ -28,23 +28,24 @@ class AwardCardWidget extends StatelessWidget {
           SizedBox(
             width: 160,
             height: 160,
-            child: Image.network(
-              '${EnvConfig.supabaseUrl}${award.imageUrl}',
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => Container(
-                color: AppColors.bgDark,
-                alignment: Alignment.center,
-                child: Text(
-                  award.name,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textAccent,
+            child: AssetMapper.awardImage(award.slug)?.image(
+                  fit: BoxFit.cover,
+                  width: 160,
+                  height: 160,
+                ) ??
+                Container(
+                  color: AppColors.bgDark,
+                  alignment: Alignment.center,
+                  child: Text(
+                    award.name,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textAccent,
+                    ),
                   ),
                 ),
-              ),
-            ),
           ),
           const SizedBox(height: 12),
           // Award name

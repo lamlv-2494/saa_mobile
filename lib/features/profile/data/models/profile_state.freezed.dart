@@ -230,7 +230,7 @@ class _$ProfileStateImpl implements _ProfileState {
     this.personalStats,
     final List<IconBadge> iconBadges = const [],
     final List<Kudos> kudosList = const [],
-    this.kudosFilter = KudosFilterType.received,
+    this.kudosFilter = KudosFilterType.sent,
     this.hasMoreKudos = true,
     this.isLoadingMoreKudos = false,
   }) : _iconBadges = iconBadges,

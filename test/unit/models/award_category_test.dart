@@ -12,7 +12,6 @@ void main() {
         'slug': 'top-talent',
         'description': 'Giải thưởng Top Talent vinh danh...',
         'description_en': 'The Top Talent award honors...',
-        'image_url': '/awards/top_talent.png',
         'quantity': 10,
         'unit': 'Cá nhân',
         'unit_en': 'Individual',
@@ -31,7 +30,6 @@ void main() {
       expect(category.slug, 'top-talent');
       expect(category.description, 'Giải thưởng Top Talent vinh danh...');
       expect(category.descriptionEn, 'The Top Talent award honors...');
-      expect(category.imageUrl, '/awards/top_talent.png');
       expect(category.quantity, 10);
       expect(category.unit, 'Cá nhân');
       expect(category.unitEn, 'Individual');
@@ -48,7 +46,6 @@ void main() {
         'name': 'Signature 2025 - Creator',
         'slug': 'signature-2025-creator',
         'description': 'Giải thưởng Signature...',
-        'image_url': '/awards/signature.png',
         'quantity': 1,
         'unit': 'Cá nhân hoặc tập thể',
         'prize_value': null,
@@ -91,7 +88,6 @@ void main() {
       final json = {
         'id': 1,
         'name': 'Top Talent',
-        'image_url': '/awards/top_talent.png',
         'description': 'Some description',
         'sort_order': 1,
       };

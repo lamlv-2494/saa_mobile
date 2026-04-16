@@ -13,7 +13,6 @@ class AwardCategory with _$AwardCategory {
     required String name,
     @JsonKey(name: 'name_en') @Default('') String nameEn,
     @Default('') String slug,
-    @JsonKey(name: 'image_url') @Default('') String imageUrl,
     @Default('') String description,
     @JsonKey(name: 'description_en') @Default('') String descriptionEn,
     @Default(0) int quantity,

@@ -206,7 +206,6 @@ final _userRow = <String, dynamic>{
   'email': 'a@sun-asterisk.com',
   'avatar_url': 'https://example.com/avatar.png',
   'hero_tier': 'new_hero',
-  'hero_tier_url': 'https://example.com/hero.png',
   'team_code': 'CECV1',
   'department': {'name': 'Division A'},
 };
@@ -262,7 +261,6 @@ final _kudosRow = <String, dynamic>{
     'name': 'Nguyễn Văn A',
     'avatar_url': 'https://example.com/a.png',
     'hero_tier': 'new_hero',
-    'hero_tier_url': '',
     'department': {'name': 'CECV1'},
   },
   'recipient': {
@@ -270,7 +268,6 @@ final _kudosRow = <String, dynamic>{
     'name': 'Trần Thị B',
     'avatar_url': 'https://example.com/b.png',
     'hero_tier': 'rising_hero',
-    'hero_tier_url': '',
     'department': {'name': 'Division A'},
   },
   'hashtags': [
@@ -299,7 +296,6 @@ final _searchUserRows = <Map<String, dynamic>>[
     'email': 'a@sun-asterisk.com',
     'avatar_url': 'https://example.com/a.png',
     'hero_tier': 'new_hero',
-    'hero_tier_url': '',
     'team_code': 'CECV1',
     'department': {'name': 'Division A'},
   },

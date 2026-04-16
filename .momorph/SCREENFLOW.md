@@ -323,6 +323,153 @@ Mỗi card bao gồm:
 
 ---
 
+## Chi tiết màn hình: [iOS] Profile bản thân (hSH7L8doXB)
+
+### Mô tả
+
+Đây là màn hình tab Profile (tab 4) trong bottom navigation — nơi người dùng đã đăng nhập xem thông tin cá nhân, bộ sưu tập icon, thống kê hoạt động Kudos, và lịch sử Kudos của mình với bộ lọc dropdown (Đã gửi / Đã nhận).
+
+Cấu trúc màn hình gồm các phần chính:
+
+1. **App Header** (`mms_1_header`): Logo SAA 2025, cờ VN (ngôn ngữ), icon Search, icon Bell
+2. **Profile Info Container** (`mms_1.1_member`): Avatar tròn 64px, tên đầy đủ, mã team, hình ảnh danh hiệu (hero tier PNG via AssetMapper)
+3. **Icon Collection Section** (`mms_2_icon collection`): Nhãn "Bộ sưu tập icon của tôi" + hàng ngang các icon badge 44×44px (ẩn nếu rỗng)
+4. **Statistics Container** (`mms_D.1_Thống kê tổng quát`): Panel tối với 5 chỉ số (Kudos nhận, Kudos gửi, Hearts, Secret Box đã mở, Secret Box chưa mở) + nút "Mở Secret Box"
+5. **Kudos Section Header** (`mms_4_header`): Banner trang trí với "Sun\* Annual Awards 2025" và tiêu đề "KUDOS" vàng lớn + ảnh nền kudosKeyVisualBg
+6. **Kudos Filter Dropdown** (`mms_dropdown`): Dropdown "Đã gửi (N)" / "Đã nhận (N)" — mặc định "Đã gửi"
+7. **Kudos List** (`mms_5_kudos list`): Danh sách KudosCard cuộn vô hạn (infinite scroll) theo filter đã chọn
+8. **Bottom Navigation Bar** (`mms_6_nav bar`): 4 tab — SAA 2025, Awards, Kudos, Profile (active)
+
+### Cấu trúc màn hình (Scroll Architecture)
+
+```
+ProfileScreen (ConsumerStatefulWidget)
+└── RefreshIndicator
+    └── CustomScrollView
+        ├── SliverAppBar (transparent, ẩn, chỉ để padding đầu)
+        └── SliverToBoxAdapter
+            ├── ProfileInfoWidget          ← mms_1.1_member
+            ├── BadgeCollectionWidget      ← mms_2_icon collection (conditional — ẩn nếu rỗng)
+            ├── PersonalStatsCard          ← mms_D.1_Thống kê tổng quát
+            ├── KudosSectionHeaderWidget   ← mms_4_header (Stack + background image)
+            ├── ProfileKudosFilterDropdown ← mms_dropdown
+            └── ProfileKudosListWidget     ← mms_5_kudos list (+ CircularProgressIndicator cuối list)
+```
+
+### Bảng design items (Figma)
+
+| Mã Figma | Số thứ tự | Tên thành phần | Loại | Trạng thái |
+|----------|-----------|----------------|------|-----------|
+| `6885:10338` | 1 | App Header / Status Bar (`mms_1_header`) | navigation | completed |
+| `6885:10339` | 1.1 | Profile Info Container (`mms_1.1_member`) | info_block | completed |
+| `6885:10341` | A.2 | User Name & Badge (`mms_A.2_Name`) | label | completed |
+| `6885:10349` | 2 | Icon Collection Section (`mms_2_icon collection`) | info_block | completed |
+| `6885:10351` | B2 | Icon Badge Slot (`mms_B2_Huy hiệu`) | list_item | completed |
+| `6885:10357` | A.3 | Icon Collection Label (`mms_A.3_Title`) | label | completed |
+| `6885:10358` | 3 | Statistics Container (`mms_D.1_Thống kê tổng quát`) | info_block | draft |
+| `6885:10360` | D.1.2 | Kudos Received Stat Row | label | completed |
+| `6885:10365` | D.1.3 | Kudos Sent Stat Row | label | completed |
+| `6885:10370` | D.1.4 | Hearts Received Stat Row | label | completed |
+| `6885:10375` | D.1.5 | Content Divider | info_block | completed |
+| `6885:10376` | D.1.6 | Secret Box Opened Stat Row | label | completed |
+| `6885:10381` | D.1.7 | Secret Box Unopened Stat Row | label | completed |
+| `6885:10386` | 12 | Nút "Mở Secret Box" (Button) | button | draft |
+| `6885:10387` | 4 | Kudos Section Header (`mms_4_header`) | others | draft |
+| `6885:10388` | 4.1 | Kudos Filter Dropdown (`mms_dropdown`) | dropdown | draft |
+| `6885:10389` | 5 | Kudos List Container (`mms_5_kudos list`) | list_item | completed |
+| `6885:10390` | 5.1 | Kudos Card 1 (`mms_5.1_KUDO - Highlight`) | others | draft |
+| `6885:10391` | 5.2 | Kudos Card 2 (`mms_5.2_KUDO - Highlight`) | others | draft |
+| `6885:10392` | 5.3 | Kudos Card 3 (`mms_5.3_KUDO - Highlight`) | others | draft |
+| `6885:10394` | 6 | Bottom Navigation Bar (`mms_6_nav bar`) | navigation | completed |
+| `6891:17101` | A | Kudos Filter Dropdown Overlay (`mms_A_Dropdown-List`) | popup_dialog | completed |
+| `6891:17102` | A.1 | Dropdown Option "Đã nhận" | button | draft |
+| `6891:17103` | A.2 | Dropdown Option "Đã gửi" | button | draft |
+
+### Cấu trúc Kudos Card (mms_5.x_KUDO - Highlight)
+
+Mỗi KudosCard trong danh sách Profile bao gồm:
+
+| Mã | Thành phần | Loại | Mô tả |
+|----|-----------|------|-------|
+| B.3.1 | Avatar người gửi (`mms_B.3.1_Avatar người gửi`) | ELLIPSE | Ảnh đại diện người gửi Kudo — tap → Profile người khác |
+| B.3.2 | Thông tin người gửi (`mms_B.3.2_Thông tin người gửi`) | FRAME | Tên + huy hiệu (mã đơn vị, danh hiệu) |
+| B.3.4 | Icon mũi tên (`mms_B.3.4_Icon mũi tên`) | FRAME | Mũi tên chỉ hướng từ người gửi đến người nhận |
+| B.3.5 | Avatar người nhận (`mms_B.3.5_Avatar người nhận`) | ELLIPSE | Ảnh đại diện người nhận Kudo — tap → Profile người khác |
+| B.4 | Nội dung lời cảm ơn (`mms_B.4_Nội dung lời cảm ơn`) | FRAME | Khung chứa nội dung chi tiết |
+| B.4.1 | Thời gian đăng (`mms_B.4.1_Thời gian đăng`) | TEXT | Thời gian Kudo được đăng |
+| B.4.2 | Nội dung (`mms_B.4.2_Nội dung`) | FRAME | Lời cảm ơn/ghi nhận (có thể bị cắt ngắn) |
+| B.4.3 | Hashtag (`mms_B.4.3_Hashtag`) | FRAME | Danh sách hashtag (#Dedicated, #Inspiring, v.v.) |
+| B.4.4 | Action (`mms_B.4.4_Action`) | FRAME | Khu vực hành động: Hearts (số lượt thích + icon), Buttons (copy link, xem chi tiết) |
+
+### Các thành phần tương tác
+
+| Thành phần | Hành động | Kết quả |
+|-----------|----------|---------|
+| Icon Search (App Header) | Tap | Mở màn hình tìm kiếm Sunner (`hldqjHoSRH` / `3jgwke3E8O`) |
+| Icon Bell (App Header) | Tap | Mở popup thông báo (`_b68CBWKl5`) |
+| Avatar trên KudosCard (B.3.1 / B.3.5) | Tap | Push `/profile/:senderId` → Profile người khác (`bEpdheM0yU`) |
+| Nút "Mở Secret Box" | Tap | Push `/secret-box` → Open Secret Box (`kQk65hSYF2`) — disabled nếu unopened=0 |
+| Dropdown filter (mms_dropdown) | Tap | Mở overlay (`mms_A_Dropdown-List`), hiển thị 2 lựa chọn: "Đã nhận (N)" / "Đã gửi (N)" |
+| Chọn "Đã nhận" trong dropdown | Tap | Đóng overlay, reset về trang 1, tải lại danh sách Kudos nhận |
+| Chọn "Đã gửi" trong dropdown | Tap | Đóng overlay, reset về trang 1, tải lại danh sách Kudos gửi |
+| Tap ngoài dropdown overlay | Tap | Đóng overlay, giữ nguyên filter hiện tại |
+| "Xem chi tiết" trên KudosCard (B.4.4) | Tap | Push `/kudos/:kudosId` → View Kudo (`T0TR16k0vH` / `5C2BL6GYXL`) |
+| "Copy Link" trên KudosCard (B.4.4) | Tap | Copy link vào clipboard, hiển thị toast xác nhận |
+| Icon heart trên KudosCard (B.4.4) | Tap | Toggle like/unlike, cập nhật heart count (optimistic update) |
+| Pull-to-refresh | Kéo xuống | Reload toàn bộ: profile, badges, stats, kudos list |
+| Scroll đến cuối list | Auto | Tải thêm trang tiếp theo (append), hiện loading indicator |
+| Tab "SAA 2025" | Tap | Chuyển sang [iOS] Home (`OuH1BUTYT0`) |
+| Tab "Awards" | Tap | Chuyển sang [iOS] Award_Top talent (`c-QM3_zjkG`) |
+| Tab "Kudos" | Tap | Chuyển sang [iOS] Sun\*Kudos (`fO0Kt19sZZ`) |
+| Tab "Profile" | Tap | Trang hiện tại (active — không điều hướng) |
+
+### Điểm vào (Entry Points)
+
+| Điểm vào | Từ màn hình | Điều kiện |
+|----------|------------|-----------|
+| Tab "Profile" trong bottom nav | Bất kỳ màn hình chính nào | Đã đăng nhập |
+| Self-redirect từ Profile người khác | `bEpdheM0yU` khi `userId == currentUserId` | ViewModel phát hiện self-view |
+| Deep link `/profile` | Ngoài ứng dụng | Đã đăng nhập |
+
+### Điểm ra (Exit Points)
+
+| Điểm ra | Đến màn hình | Hành động |
+|---------|-------------|----------|
+| Icon Search | Tìm kiếm Sunner (`3jgwke3E8O`) | Tap icon search |
+| Icon Bell | Thông báo (`_b68CBWKl5`) | Tap icon bell |
+| "Mở Secret Box" | Open Secret Box (`kQk65hSYF2`) | Tap nút CTA |
+| "Xem chi tiết" Kudos | View Kudo (`T0TR16k0vH` / `5C2BL6GYXL`) | Tap action trên card |
+| Avatar trên KudosCard | Profile người khác (`bEpdheM0yU`) | Tap avatar sender/receiver |
+| Tab "SAA 2025" | Home (`OuH1BUTYT0`) | Tap bottom tab |
+| Tab "Awards" | Award_Top talent (`c-QM3_zjkG`) | Tap bottom tab |
+| Tab "Kudos" | Sun\*Kudos (`fO0Kt19sZZ`) | Tap bottom tab |
+
+### Trạng thái màn hình (States)
+
+| Trạng thái | Mô tả | UI |
+|-----------|-------|-----|
+| Loading | Đang tải dữ liệu lần đầu | `CircularProgressIndicator` toàn màn hình |
+| Error | Tải thất bại (mất mạng, API lỗi) | Text lỗi + nút Retry |
+| Data (normal) | Đã có đủ dữ liệu | Hiển thị đầy đủ các section |
+| Empty kudos | Không có kudos trong filter hiện tại | Empty state widget trong kudos list |
+| Filter: Đã gửi | Filter mặc định khi mở màn hình | Dropdown hiển thị "Đã gửi (N)" |
+| Filter: Đã nhận | Sau khi chọn filter nhận | Dropdown hiển thị "Đã nhận (N)" |
+| Loading more | Đang tải thêm kudos (infinite scroll) | `CircularProgressIndicator` cuối list |
+| Secret Box disabled | Tất cả secret box đã mở | Nút "Mở Secret Box" disabled / ẩn |
+
+### Ghi chú kỹ thuật (Profile bản thân)
+
+- **ViewModel**: `ProfileViewModel extends AsyncNotifier<ProfileState>` — không nhận tham số (khác với OtherProfileViewModel)
+- **Hero Tier**: `UserProfile.heroTier` là slug string (`'legend_hero'`, `'rising_hero'`, `'none'`) — **KHÔNG phải URL**. Render qua `AssetMapper.heroTierImage(heroTier)` → PNG asset local
+- **Filter mặc định**: `KudosFilterType.sent` (Đã gửi) khi mở màn hình
+- **Self-redirect logic**: `OtherProfileScreen` check `userId == authProvider.currentUser.id` → set `currentTabIndexProvider = 3` + `context.pop()`
+- **Statistics**: Lấy từ `ProfileRepository.getUserStats()` — trả về `kudosSentCount`, `kudosReceivedCount`, `heartsCount`, `secretBoxOpened`, `secretBoxUnopened`
+- **Pagination**: Mỗi trang 20 kudos, append khi scroll đến 80% cuối list
+- **KudosSectionHeaderWidget**: Dùng `Stack + Positioned.fill` với `Assets.images.kudosKeyVisualBg` làm background
+- **BadgeCollectionWidget** (tên nội bộ `IconCollectionSection`): Ẩn hoàn toàn nếu `badges.isEmpty`
+
+---
+
 ## Luồng Page View trong Kudos
 
 ```

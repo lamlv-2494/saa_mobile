@@ -28,7 +28,6 @@ mixin _$UserProfile {
   String? get teamCode => throw _privateConstructorUsedError;
   String? get departmentName => throw _privateConstructorUsedError;
   String get heroTier => throw _privateConstructorUsedError;
-  String? get heroTierUrl => throw _privateConstructorUsedError;
 
   /// Serializes this UserProfile to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +54,6 @@ abstract class $UserProfileCopyWith<$Res> {
     String? teamCode,
     String? departmentName,
     String heroTier,
-    String? heroTierUrl,
   });
 }
 
@@ -81,7 +79,6 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? teamCode = freezed,
     Object? departmentName = freezed,
     Object? heroTier = null,
-    Object? heroTierUrl = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -113,10 +110,6 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
                 ? _value.heroTier
                 : heroTier // ignore: cast_nullable_to_non_nullable
                       as String,
-            heroTierUrl: freezed == heroTierUrl
-                ? _value.heroTierUrl
-                : heroTierUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
           )
           as $Val,
     );
@@ -140,7 +133,6 @@ abstract class _$$UserProfileImplCopyWith<$Res>
     String? teamCode,
     String? departmentName,
     String heroTier,
-    String? heroTierUrl,
   });
 }
 
@@ -165,7 +157,6 @@ class __$$UserProfileImplCopyWithImpl<$Res>
     Object? teamCode = freezed,
     Object? departmentName = freezed,
     Object? heroTier = null,
-    Object? heroTierUrl = freezed,
   }) {
     return _then(
       _$UserProfileImpl(
@@ -197,10 +188,6 @@ class __$$UserProfileImplCopyWithImpl<$Res>
             ? _value.heroTier
             : heroTier // ignore: cast_nullable_to_non_nullable
                   as String,
-        heroTierUrl: freezed == heroTierUrl
-            ? _value.heroTierUrl
-            : heroTierUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
       ),
     );
   }
@@ -217,7 +204,6 @@ class _$UserProfileImpl implements _UserProfile {
     this.teamCode,
     this.departmentName,
     this.heroTier = 'none',
-    this.heroTierUrl,
   });
 
   factory _$UserProfileImpl.fromJson(Map<String, dynamic> json) =>
@@ -238,12 +224,10 @@ class _$UserProfileImpl implements _UserProfile {
   @override
   @JsonKey()
   final String heroTier;
-  @override
-  final String? heroTierUrl;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, email: $email, avatarUrl: $avatarUrl, teamCode: $teamCode, departmentName: $departmentName, heroTier: $heroTier, heroTierUrl: $heroTierUrl)';
+    return 'UserProfile(id: $id, name: $name, email: $email, avatarUrl: $avatarUrl, teamCode: $teamCode, departmentName: $departmentName, heroTier: $heroTier)';
   }
 
   @override
@@ -261,9 +245,7 @@ class _$UserProfileImpl implements _UserProfile {
             (identical(other.departmentName, departmentName) ||
                 other.departmentName == departmentName) &&
             (identical(other.heroTier, heroTier) ||
-                other.heroTier == heroTier) &&
-            (identical(other.heroTierUrl, heroTierUrl) ||
-                other.heroTierUrl == heroTierUrl));
+                other.heroTier == heroTier));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -277,7 +259,6 @@ class _$UserProfileImpl implements _UserProfile {
     teamCode,
     departmentName,
     heroTier,
-    heroTierUrl,
   );
 
   /// Create a copy of UserProfile
@@ -303,7 +284,6 @@ abstract class _UserProfile implements UserProfile {
     final String? teamCode,
     final String? departmentName,
     final String heroTier,
-    final String? heroTierUrl,
   }) = _$UserProfileImpl;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
@@ -323,8 +303,6 @@ abstract class _UserProfile implements UserProfile {
   String? get departmentName;
   @override
   String get heroTier;
-  @override
-  String? get heroTierUrl;
 
   /// Create a copy of UserProfile
   /// with the given fields replaced by the non-null parameter values.

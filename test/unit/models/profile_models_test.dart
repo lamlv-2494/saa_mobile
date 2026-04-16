@@ -17,7 +17,6 @@ void main() {
         'teamCode': 'TEAM-01',
         'departmentName': 'CECV1',
         'heroTier': 'rising_hero',
-        'heroTierUrl': '/hero-tiers/rising_hero.png',
       };
 
       final profile = UserProfile.fromJson(json);

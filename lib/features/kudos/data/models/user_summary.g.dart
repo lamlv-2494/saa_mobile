@@ -13,7 +13,7 @@ _$UserSummaryImpl _$$UserSummaryImplFromJson(Map<String, dynamic> json) =>
       avatar: json['avatar'] as String? ?? '',
       department: json['department'] as String? ?? '',
       badgeLevel: (json['badgeLevel'] as num?)?.toInt() ?? 0,
-      heroTierUrl: json['heroTierUrl'] as String? ?? '',
+      heroTier: json['heroTier'] as String? ?? 'none',
     );
 
 Map<String, dynamic> _$$UserSummaryImplToJson(_$UserSummaryImpl instance) =>
@@ -23,5 +23,5 @@ Map<String, dynamic> _$$UserSummaryImplToJson(_$UserSummaryImpl instance) =>
       'avatar': instance.avatar,
       'department': instance.department,
       'badgeLevel': instance.badgeLevel,
-      'heroTierUrl': instance.heroTierUrl,
+      'heroTier': instance.heroTier,
     };

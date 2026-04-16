@@ -32,8 +32,8 @@ void main() {
     testWidgets('hiển thị tên sender và receiver', (tester) async {
       final kudos = createKudos(
         id: 'k1',
-        sender: createUserSummary(name: 'Nguyễn Văn A', avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(name: 'Trần Thị B', avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(name: 'Nguyễn Văn A', avatar: ''),
+        receiver: createUserSummary(name: 'Trần Thị B', avatar: ''),
         isAnonymous: false,
       );
       when(() => mockRepo.getKudosDetail('k1')).thenAnswer((_) async => kudos);
@@ -49,8 +49,8 @@ void main() {
       final kudos = createKudos(
         id: 'k2',
         content: 'Cảm ơn bạn đã hỗ trợ tận tình!',
-        sender: createUserSummary(avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(avatar: ''),
+        receiver: createUserSummary(avatar: ''),
         isAnonymous: false,
       );
       when(() => mockRepo.getKudosDetail('k2')).thenAnswer((_) async => kudos);
@@ -68,8 +68,8 @@ void main() {
           createHashtag(id: 1, name: '#teamwork'),
           createHashtag(id: 2, name: '#dedicated'),
         ],
-        sender: createUserSummary(avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(avatar: ''),
+        receiver: createUserSummary(avatar: ''),
         isAnonymous: false,
       );
       when(() => mockRepo.getKudosDetail('k3')).thenAnswer((_) async => kudos);
@@ -85,8 +85,8 @@ void main() {
       final kudos = createKudos(
         id: 'k4',
         heartCount: 42,
-        sender: createUserSummary(avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(avatar: ''),
+        receiver: createUserSummary(avatar: ''),
         isAnonymous: false,
       );
       when(() => mockRepo.getKudosDetail('k4')).thenAnswer((_) async => kudos);
@@ -101,8 +101,8 @@ void main() {
       final kudos = createKudos(
         id: 'k5',
         awardTitle: 'Legend Hero Award',
-        sender: createUserSummary(avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(avatar: ''),
+        receiver: createUserSummary(avatar: ''),
         isAnonymous: false,
       );
       when(() => mockRepo.getKudosDetail('k5')).thenAnswer((_) async => kudos);
@@ -120,8 +120,8 @@ void main() {
         id: 'k6',
         isAnonymous: true,
         senderAlias: 'Anh Hùng Bí Ẩn',
-        sender: createUserSummary(name: 'Tên Thật', avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(name: 'Người nhận', avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(name: 'Tên Thật', avatar: ''),
+        receiver: createUserSummary(name: 'Người nhận', avatar: ''),
       );
       when(() => mockRepo.getKudosDetail('k6')).thenAnswer((_) async => kudos);
 
@@ -137,8 +137,8 @@ void main() {
         id: 'k7',
         isAnonymous: true,
         senderAlias: 'Người ẩn',
-        sender: createUserSummary(name: 'Ẩn Danh', avatar: '', heroTierUrl: ''),
-        receiver: createUserSummary(name: 'Trần Thị B', avatar: '', heroTierUrl: ''),
+        sender: createUserSummary(name: 'Ẩn Danh', avatar: ''),
+        receiver: createUserSummary(name: 'Trần Thị B', avatar: ''),
       );
       when(() => mockRepo.getKudosDetail('k7')).thenAnswer((_) async => kudos);
 

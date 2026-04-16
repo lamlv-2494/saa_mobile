@@ -14,6 +14,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsAwardsGen {
+  const $AssetsAwardsGen();
+
+  /// Directory path: assets/awards/awards
+  $AssetsAwardsAwardsGen get awards => const $AssetsAwardsAwardsGen();
+
+  /// Directory path: assets/awards/hero_tier
+  $AssetsAwardsHeroTierGen get heroTier => const $AssetsAwardsHeroTierGen();
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -234,6 +244,71 @@ class $AssetsImagesGen {
   ];
 }
 
+class $AssetsAwardsAwardsGen {
+  const $AssetsAwardsAwardsGen();
+
+  /// File path: assets/awards/awards/best_manager.png
+  AssetGenImage get bestManager =>
+      const AssetGenImage('assets/awards/awards/best_manager.png');
+
+  /// File path: assets/awards/awards/mvp.png
+  AssetGenImage get mvp => const AssetGenImage('assets/awards/awards/mvp.png');
+
+  /// File path: assets/awards/awards/signature_creator.png
+  AssetGenImage get signatureCreator =>
+      const AssetGenImage('assets/awards/awards/signature_creator.png');
+
+  /// File path: assets/awards/awards/top_project.png
+  AssetGenImage get topProject =>
+      const AssetGenImage('assets/awards/awards/top_project.png');
+
+  /// File path: assets/awards/awards/top_project_leader.png
+  AssetGenImage get topProjectLeader =>
+      const AssetGenImage('assets/awards/awards/top_project_leader.png');
+
+  /// File path: assets/awards/awards/top_talent.png
+  AssetGenImage get topTalent =>
+      const AssetGenImage('assets/awards/awards/top_talent.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    bestManager,
+    mvp,
+    signatureCreator,
+    topProject,
+    topProjectLeader,
+    topTalent,
+  ];
+}
+
+class $AssetsAwardsHeroTierGen {
+  const $AssetsAwardsHeroTierGen();
+
+  /// File path: assets/awards/hero_tier/legend_hero.png
+  AssetGenImage get legendHero =>
+      const AssetGenImage('assets/awards/hero_tier/legend_hero.png');
+
+  /// File path: assets/awards/hero_tier/new_hero.png
+  AssetGenImage get newHero =>
+      const AssetGenImage('assets/awards/hero_tier/new_hero.png');
+
+  /// File path: assets/awards/hero_tier/rising_hero.png
+  AssetGenImage get risingHero =>
+      const AssetGenImage('assets/awards/hero_tier/rising_hero.png');
+
+  /// File path: assets/awards/hero_tier/super_hero.png
+  AssetGenImage get superHero =>
+      const AssetGenImage('assets/awards/hero_tier/super_hero.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    legendHero,
+    newHero,
+    risingHero,
+    superHero,
+  ];
+}
+
 class $AssetsIconsFlagsGen {
   const $AssetsIconsFlagsGen();
 
@@ -254,6 +329,7 @@ class Assets {
   const Assets._();
 
   static const String aEnv = '.env';
+  static const $AssetsAwardsGen awards = $AssetsAwardsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 

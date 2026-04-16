@@ -31,8 +31,8 @@ class KudosRemoteDatasource {
     sender_alias,
     status,
     created_at,
-    sender:users!kudos_sender_id_fkey(id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)),
-    recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)),
+    sender:users!kudos_sender_id_fkey(id, name, avatar_url, hero_tier, department:departments(name)),
+    recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, department:departments(name)),
     hashtags:kudos_hashtags(hashtag:hashtags(id, name)),
     reactions:kudos_reactions(count),
     photos:kudos_photos(image_url, sort_order)
@@ -216,7 +216,7 @@ class KudosRemoteDatasource {
     final data = await _client
         .from('users')
         .select(
-          'id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)',
+          'id, name, avatar_url, hero_tier, department:departments(name)',
         )
         .ilike('name', '%$query%')
         .isFilter('deleted_at', null)
@@ -270,7 +270,7 @@ class KudosRemoteDatasource {
     final data = await _client
         .from('kudos')
         .select(
-          'recipient_id, created_at, award_category_name, recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name))',
+          'recipient_id, created_at, award_category_name, recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, department:departments(name))',
         )
         .eq('status', 'active')
         .isFilter('deleted_at', null)
@@ -332,7 +332,7 @@ class KudosRemoteDatasource {
     final data = await _client
         .from('users')
         .select(
-          'id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)',
+          'id, name, avatar_url, hero_tier, department:departments(name)',
         )
         .ilike('name', '%$query%')
         .isFilter('deleted_at', null)
@@ -349,7 +349,7 @@ class KudosRemoteDatasource {
     final data = await _client
         .from('users')
         .select(
-          'id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)',
+          'id, name, avatar_url, hero_tier, department:departments(name)',
         )
         .isFilter('deleted_at', null)
         .order('name');
@@ -580,7 +580,7 @@ class KudosRemoteDatasource {
       avatar: data['avatar_url'] as String? ?? '',
       department: deptName,
       badgeLevel: badgeLevel,
-      heroTierUrl: data['hero_tier_url'] as String? ?? '',
+      heroTier: heroTier,
     );
   }
 }

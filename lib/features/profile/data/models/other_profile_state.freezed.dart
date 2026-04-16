@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$OtherProfileState {
   UserProfile? get profile => throw _privateConstructorUsedError;
-  PersonalStats? get personalStats => throw _privateConstructorUsedError;
+  int get kudosSentCount => throw _privateConstructorUsedError;
+  int get kudosReceivedCount => throw _privateConstructorUsedError;
   List<Badge> get badges => throw _privateConstructorUsedError;
   List<Kudos> get kudosList => throw _privateConstructorUsedError;
   KudosFilterType get kudosFilter => throw _privateConstructorUsedError;
@@ -41,7 +42,8 @@ abstract class $OtherProfileStateCopyWith<$Res> {
   @useResult
   $Res call({
     UserProfile? profile,
-    PersonalStats? personalStats,
+    int kudosSentCount,
+    int kudosReceivedCount,
     List<Badge> badges,
     List<Kudos> kudosList,
     KudosFilterType kudosFilter,
@@ -50,7 +52,6 @@ abstract class $OtherProfileStateCopyWith<$Res> {
   });
 
   $UserProfileCopyWith<$Res>? get profile;
-  $PersonalStatsCopyWith<$Res>? get personalStats;
 }
 
 /// @nodoc
@@ -69,7 +70,8 @@ class _$OtherProfileStateCopyWithImpl<$Res, $Val extends OtherProfileState>
   @override
   $Res call({
     Object? profile = freezed,
-    Object? personalStats = freezed,
+    Object? kudosSentCount = null,
+    Object? kudosReceivedCount = null,
     Object? badges = null,
     Object? kudosList = null,
     Object? kudosFilter = null,
@@ -82,10 +84,14 @@ class _$OtherProfileStateCopyWithImpl<$Res, $Val extends OtherProfileState>
                 ? _value.profile
                 : profile // ignore: cast_nullable_to_non_nullable
                       as UserProfile?,
-            personalStats: freezed == personalStats
-                ? _value.personalStats
-                : personalStats // ignore: cast_nullable_to_non_nullable
-                      as PersonalStats?,
+            kudosSentCount: null == kudosSentCount
+                ? _value.kudosSentCount
+                : kudosSentCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            kudosReceivedCount: null == kudosReceivedCount
+                ? _value.kudosReceivedCount
+                : kudosReceivedCount // ignore: cast_nullable_to_non_nullable
+                      as int,
             badges: null == badges
                 ? _value.badges
                 : badges // ignore: cast_nullable_to_non_nullable
@@ -124,20 +130,6 @@ class _$OtherProfileStateCopyWithImpl<$Res, $Val extends OtherProfileState>
       return _then(_value.copyWith(profile: value) as $Val);
     });
   }
-
-  /// Create a copy of OtherProfileState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $PersonalStatsCopyWith<$Res>? get personalStats {
-    if (_value.personalStats == null) {
-      return null;
-    }
-
-    return $PersonalStatsCopyWith<$Res>(_value.personalStats!, (value) {
-      return _then(_value.copyWith(personalStats: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -151,7 +143,8 @@ abstract class _$$OtherProfileStateImplCopyWith<$Res>
   @useResult
   $Res call({
     UserProfile? profile,
-    PersonalStats? personalStats,
+    int kudosSentCount,
+    int kudosReceivedCount,
     List<Badge> badges,
     List<Kudos> kudosList,
     KudosFilterType kudosFilter,
@@ -161,8 +154,6 @@ abstract class _$$OtherProfileStateImplCopyWith<$Res>
 
   @override
   $UserProfileCopyWith<$Res>? get profile;
-  @override
-  $PersonalStatsCopyWith<$Res>? get personalStats;
 }
 
 /// @nodoc
@@ -180,7 +171,8 @@ class __$$OtherProfileStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? profile = freezed,
-    Object? personalStats = freezed,
+    Object? kudosSentCount = null,
+    Object? kudosReceivedCount = null,
     Object? badges = null,
     Object? kudosList = null,
     Object? kudosFilter = null,
@@ -193,10 +185,14 @@ class __$$OtherProfileStateImplCopyWithImpl<$Res>
             ? _value.profile
             : profile // ignore: cast_nullable_to_non_nullable
                   as UserProfile?,
-        personalStats: freezed == personalStats
-            ? _value.personalStats
-            : personalStats // ignore: cast_nullable_to_non_nullable
-                  as PersonalStats?,
+        kudosSentCount: null == kudosSentCount
+            ? _value.kudosSentCount
+            : kudosSentCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        kudosReceivedCount: null == kudosReceivedCount
+            ? _value.kudosReceivedCount
+            : kudosReceivedCount // ignore: cast_nullable_to_non_nullable
+                  as int,
         badges: null == badges
             ? _value._badges
             : badges // ignore: cast_nullable_to_non_nullable
@@ -227,7 +223,8 @@ class __$$OtherProfileStateImplCopyWithImpl<$Res>
 class _$OtherProfileStateImpl implements _OtherProfileState {
   const _$OtherProfileStateImpl({
     this.profile,
-    this.personalStats,
+    this.kudosSentCount = 0,
+    this.kudosReceivedCount = 0,
     final List<Badge> badges = const [],
     final List<Kudos> kudosList = const [],
     this.kudosFilter = KudosFilterType.received,
@@ -239,7 +236,11 @@ class _$OtherProfileStateImpl implements _OtherProfileState {
   @override
   final UserProfile? profile;
   @override
-  final PersonalStats? personalStats;
+  @JsonKey()
+  final int kudosSentCount;
+  @override
+  @JsonKey()
+  final int kudosReceivedCount;
   final List<Badge> _badges;
   @override
   @JsonKey()
@@ -270,7 +271,7 @@ class _$OtherProfileStateImpl implements _OtherProfileState {
 
   @override
   String toString() {
-    return 'OtherProfileState(profile: $profile, personalStats: $personalStats, badges: $badges, kudosList: $kudosList, kudosFilter: $kudosFilter, hasMoreKudos: $hasMoreKudos, isLoadingMoreKudos: $isLoadingMoreKudos)';
+    return 'OtherProfileState(profile: $profile, kudosSentCount: $kudosSentCount, kudosReceivedCount: $kudosReceivedCount, badges: $badges, kudosList: $kudosList, kudosFilter: $kudosFilter, hasMoreKudos: $hasMoreKudos, isLoadingMoreKudos: $isLoadingMoreKudos)';
   }
 
   @override
@@ -279,8 +280,10 @@ class _$OtherProfileStateImpl implements _OtherProfileState {
         (other.runtimeType == runtimeType &&
             other is _$OtherProfileStateImpl &&
             (identical(other.profile, profile) || other.profile == profile) &&
-            (identical(other.personalStats, personalStats) ||
-                other.personalStats == personalStats) &&
+            (identical(other.kudosSentCount, kudosSentCount) ||
+                other.kudosSentCount == kudosSentCount) &&
+            (identical(other.kudosReceivedCount, kudosReceivedCount) ||
+                other.kudosReceivedCount == kudosReceivedCount) &&
             const DeepCollectionEquality().equals(other._badges, _badges) &&
             const DeepCollectionEquality().equals(
               other._kudosList,
@@ -298,7 +301,8 @@ class _$OtherProfileStateImpl implements _OtherProfileState {
   int get hashCode => Object.hash(
     runtimeType,
     profile,
-    personalStats,
+    kudosSentCount,
+    kudosReceivedCount,
     const DeepCollectionEquality().hash(_badges),
     const DeepCollectionEquality().hash(_kudosList),
     kudosFilter,
@@ -321,7 +325,8 @@ class _$OtherProfileStateImpl implements _OtherProfileState {
 abstract class _OtherProfileState implements OtherProfileState {
   const factory _OtherProfileState({
     final UserProfile? profile,
-    final PersonalStats? personalStats,
+    final int kudosSentCount,
+    final int kudosReceivedCount,
     final List<Badge> badges,
     final List<Kudos> kudosList,
     final KudosFilterType kudosFilter,
@@ -332,7 +337,9 @@ abstract class _OtherProfileState implements OtherProfileState {
   @override
   UserProfile? get profile;
   @override
-  PersonalStats? get personalStats;
+  int get kudosSentCount;
+  @override
+  int get kudosReceivedCount;
   @override
   List<Badge> get badges;
   @override

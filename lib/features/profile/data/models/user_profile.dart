@@ -13,7 +13,6 @@ class UserProfile with _$UserProfile {
     String? teamCode,
     String? departmentName,
     @Default('none') String heroTier,
-    String? heroTierUrl,
   }) = _UserProfile;
 
   factory UserProfile.fromJson(Map<String, dynamic> json) =>

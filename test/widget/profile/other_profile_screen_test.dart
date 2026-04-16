@@ -117,7 +117,7 @@ void main() {
       expect(find.byType(SendKudosButtonWidget), findsOneWidget);
     });
 
-    testWidgets('KHÔNG hiển thị KudosSectionHeaderWidget', (tester) async {
+    testWidgets('hiển thị KudosSectionHeaderWidget với KUDOS header', (tester) async {
       await tester.pumpWidget(
         _buildScreen(
           testUserId,
@@ -126,7 +126,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(KudosSectionHeaderWidget), findsNothing);
+      expect(find.byType(KudosSectionHeaderWidget), findsOneWidget);
     });
 
     testWidgets('KHÔNG hiển thị PersonalStatsCard', (tester) async {
@@ -141,7 +141,7 @@ void main() {
       expect(find.byType(PersonalStatsCard), findsNothing);
     });
 
-    testWidgets('hiển thị back button', (tester) async {
+    testWidgets('hiển thị SliverAppBar transparent với SVG back icon', (tester) async {
       await tester.pumpWidget(
         _buildScreen(
           testUserId,
@@ -150,7 +150,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(BackButton), findsOneWidget);
+      // SliverAppBar phải có backgroundColor transparent (không dùng Material BackButton)
+      expect(find.byType(SliverAppBar), findsOneWidget);
+      expect(find.byType(BackButton), findsNothing);
     });
   });
 

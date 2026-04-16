@@ -12,7 +12,7 @@ void main() {
     return const MaterialApp(
       home: Scaffold(
         body: AwardBadgeImage(
-          imageUrl: '/storage/v1/object/public/badges/test.png',
+          slug: 'top-talent',
           semanticLabel: 'Huy hiệu giải Top Talent',
         ),
       ),

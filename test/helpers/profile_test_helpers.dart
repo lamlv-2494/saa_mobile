@@ -10,7 +10,6 @@ UserProfile createUserProfile({
   String? teamCode = 'CECV1',
   String? departmentName = 'Division A',
   String heroTier = 'new_hero',
-  String? heroTierUrl = 'https://example.com/hero.png',
 }) =>
     UserProfile(
       id: id,
@@ -20,7 +19,6 @@ UserProfile createUserProfile({
       teamCode: teamCode,
       departmentName: departmentName,
       heroTier: heroTier,
-      heroTierUrl: heroTierUrl,
     );
 
 IconBadge createIconBadge({

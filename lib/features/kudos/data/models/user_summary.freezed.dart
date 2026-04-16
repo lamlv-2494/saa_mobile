@@ -26,7 +26,7 @@ mixin _$UserSummary {
   String get avatar => throw _privateConstructorUsedError;
   String get department => throw _privateConstructorUsedError;
   int get badgeLevel => throw _privateConstructorUsedError;
-  String get heroTierUrl => throw _privateConstructorUsedError;
+  String get heroTier => throw _privateConstructorUsedError;
 
   /// Serializes this UserSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $UserSummaryCopyWith<$Res> {
     String avatar,
     String department,
     int badgeLevel,
-    String heroTierUrl,
+    String heroTier,
   });
 }
 
@@ -75,7 +75,7 @@ class _$UserSummaryCopyWithImpl<$Res, $Val extends UserSummary>
     Object? avatar = null,
     Object? department = null,
     Object? badgeLevel = null,
-    Object? heroTierUrl = null,
+    Object? heroTier = null,
   }) {
     return _then(
       _value.copyWith(
@@ -99,9 +99,9 @@ class _$UserSummaryCopyWithImpl<$Res, $Val extends UserSummary>
                 ? _value.badgeLevel
                 : badgeLevel // ignore: cast_nullable_to_non_nullable
                       as int,
-            heroTierUrl: null == heroTierUrl
-                ? _value.heroTierUrl
-                : heroTierUrl // ignore: cast_nullable_to_non_nullable
+            heroTier: null == heroTier
+                ? _value.heroTier
+                : heroTier // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -124,7 +124,7 @@ abstract class _$$UserSummaryImplCopyWith<$Res>
     String avatar,
     String department,
     int badgeLevel,
-    String heroTierUrl,
+    String heroTier,
   });
 }
 
@@ -147,7 +147,7 @@ class __$$UserSummaryImplCopyWithImpl<$Res>
     Object? avatar = null,
     Object? department = null,
     Object? badgeLevel = null,
-    Object? heroTierUrl = null,
+    Object? heroTier = null,
   }) {
     return _then(
       _$UserSummaryImpl(
@@ -171,9 +171,9 @@ class __$$UserSummaryImplCopyWithImpl<$Res>
             ? _value.badgeLevel
             : badgeLevel // ignore: cast_nullable_to_non_nullable
                   as int,
-        heroTierUrl: null == heroTierUrl
-            ? _value.heroTierUrl
-            : heroTierUrl // ignore: cast_nullable_to_non_nullable
+        heroTier: null == heroTier
+            ? _value.heroTier
+            : heroTier // ignore: cast_nullable_to_non_nullable
                   as String,
       ),
     );
@@ -189,7 +189,7 @@ class _$UserSummaryImpl implements _UserSummary {
     this.avatar = '',
     this.department = '',
     this.badgeLevel = 0,
-    this.heroTierUrl = '',
+    this.heroTier = 'none',
   });
 
   factory _$UserSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -210,11 +210,11 @@ class _$UserSummaryImpl implements _UserSummary {
   final int badgeLevel;
   @override
   @JsonKey()
-  final String heroTierUrl;
+  final String heroTier;
 
   @override
   String toString() {
-    return 'UserSummary(id: $id, name: $name, avatar: $avatar, department: $department, badgeLevel: $badgeLevel, heroTierUrl: $heroTierUrl)';
+    return 'UserSummary(id: $id, name: $name, avatar: $avatar, department: $department, badgeLevel: $badgeLevel, heroTier: $heroTier)';
   }
 
   @override
@@ -229,8 +229,8 @@ class _$UserSummaryImpl implements _UserSummary {
                 other.department == department) &&
             (identical(other.badgeLevel, badgeLevel) ||
                 other.badgeLevel == badgeLevel) &&
-            (identical(other.heroTierUrl, heroTierUrl) ||
-                other.heroTierUrl == heroTierUrl));
+            (identical(other.heroTier, heroTier) ||
+                other.heroTier == heroTier));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -242,7 +242,7 @@ class _$UserSummaryImpl implements _UserSummary {
     avatar,
     department,
     badgeLevel,
-    heroTierUrl,
+    heroTier,
   );
 
   /// Create a copy of UserSummary
@@ -266,7 +266,7 @@ abstract class _UserSummary implements UserSummary {
     final String avatar,
     final String department,
     final int badgeLevel,
-    final String heroTierUrl,
+    final String heroTier,
   }) = _$UserSummaryImpl;
 
   factory _UserSummary.fromJson(Map<String, dynamic> json) =
@@ -283,7 +283,7 @@ abstract class _UserSummary implements UserSummary {
   @override
   int get badgeLevel;
   @override
-  String get heroTierUrl;
+  String get heroTier;
 
   /// Create a copy of UserSummary
   /// with the given fields replaced by the non-null parameter values.

@@ -15,7 +15,6 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
       teamCode: json['teamCode'] as String?,
       departmentName: json['departmentName'] as String?,
       heroTier: json['heroTier'] as String? ?? 'none',
-      heroTierUrl: json['heroTierUrl'] as String?,
     );
 
 Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
@@ -27,5 +26,4 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
       'teamCode': instance.teamCode,
       'departmentName': instance.departmentName,
       'heroTier': instance.heroTier,
-      'heroTierUrl': instance.heroTierUrl,
     };

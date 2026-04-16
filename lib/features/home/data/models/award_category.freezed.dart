@@ -26,8 +26,6 @@ mixin _$AwardCategory {
   @JsonKey(name: 'name_en')
   String get nameEn => throw _privateConstructorUsedError;
   String get slug => throw _privateConstructorUsedError;
-  @JsonKey(name: 'image_url')
-  String get imageUrl => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   @JsonKey(name: 'description_en')
   String get descriptionEn => throw _privateConstructorUsedError;
@@ -68,7 +66,6 @@ abstract class $AwardCategoryCopyWith<$Res> {
     String name,
     @JsonKey(name: 'name_en') String nameEn,
     String slug,
-    @JsonKey(name: 'image_url') String imageUrl,
     String description,
     @JsonKey(name: 'description_en') String descriptionEn,
     int quantity,
@@ -101,7 +98,6 @@ class _$AwardCategoryCopyWithImpl<$Res, $Val extends AwardCategory>
     Object? name = null,
     Object? nameEn = null,
     Object? slug = null,
-    Object? imageUrl = null,
     Object? description = null,
     Object? descriptionEn = null,
     Object? quantity = null,
@@ -130,10 +126,6 @@ class _$AwardCategoryCopyWithImpl<$Res, $Val extends AwardCategory>
             slug: null == slug
                 ? _value.slug
                 : slug // ignore: cast_nullable_to_non_nullable
-                      as String,
-            imageUrl: null == imageUrl
-                ? _value.imageUrl
-                : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String,
             description: null == description
                 ? _value.description
@@ -195,7 +187,6 @@ abstract class _$$AwardCategoryImplCopyWith<$Res>
     String name,
     @JsonKey(name: 'name_en') String nameEn,
     String slug,
-    @JsonKey(name: 'image_url') String imageUrl,
     String description,
     @JsonKey(name: 'description_en') String descriptionEn,
     int quantity,
@@ -227,7 +218,6 @@ class __$$AwardCategoryImplCopyWithImpl<$Res>
     Object? name = null,
     Object? nameEn = null,
     Object? slug = null,
-    Object? imageUrl = null,
     Object? description = null,
     Object? descriptionEn = null,
     Object? quantity = null,
@@ -256,10 +246,6 @@ class __$$AwardCategoryImplCopyWithImpl<$Res>
         slug: null == slug
             ? _value.slug
             : slug // ignore: cast_nullable_to_non_nullable
-                  as String,
-        imageUrl: null == imageUrl
-            ? _value.imageUrl
-            : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String,
         description: null == description
             ? _value.description
@@ -314,7 +300,6 @@ class _$AwardCategoryImpl implements _AwardCategory {
     required this.name,
     @JsonKey(name: 'name_en') this.nameEn = '',
     this.slug = '',
-    @JsonKey(name: 'image_url') this.imageUrl = '',
     this.description = '',
     @JsonKey(name: 'description_en') this.descriptionEn = '',
     this.quantity = 0,
@@ -341,9 +326,6 @@ class _$AwardCategoryImpl implements _AwardCategory {
   @override
   @JsonKey()
   final String slug;
-  @override
-  @JsonKey(name: 'image_url')
-  final String imageUrl;
   @override
   @JsonKey()
   final String description;
@@ -382,7 +364,7 @@ class _$AwardCategoryImpl implements _AwardCategory {
 
   @override
   String toString() {
-    return 'AwardCategory(id: $id, name: $name, nameEn: $nameEn, slug: $slug, imageUrl: $imageUrl, description: $description, descriptionEn: $descriptionEn, quantity: $quantity, unit: $unit, unitEn: $unitEn, prizeValue: $prizeValue, prizeNote: $prizeNote, prizeNoteEn: $prizeNoteEn, sortOrder: $sortOrder, awardPrizes: $awardPrizes)';
+    return 'AwardCategory(id: $id, name: $name, nameEn: $nameEn, slug: $slug, description: $description, descriptionEn: $descriptionEn, quantity: $quantity, unit: $unit, unitEn: $unitEn, prizeValue: $prizeValue, prizeNote: $prizeNote, prizeNoteEn: $prizeNoteEn, sortOrder: $sortOrder, awardPrizes: $awardPrizes)';
   }
 
   @override
@@ -394,8 +376,6 @@ class _$AwardCategoryImpl implements _AwardCategory {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nameEn, nameEn) || other.nameEn == nameEn) &&
             (identical(other.slug, slug) || other.slug == slug) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.descriptionEn, descriptionEn) ||
@@ -426,7 +406,6 @@ class _$AwardCategoryImpl implements _AwardCategory {
     name,
     nameEn,
     slug,
-    imageUrl,
     description,
     descriptionEn,
     quantity,
@@ -459,7 +438,6 @@ abstract class _AwardCategory implements AwardCategory {
     required final String name,
     @JsonKey(name: 'name_en') final String nameEn,
     final String slug,
-    @JsonKey(name: 'image_url') final String imageUrl,
     final String description,
     @JsonKey(name: 'description_en') final String descriptionEn,
     final int quantity,
@@ -484,9 +462,6 @@ abstract class _AwardCategory implements AwardCategory {
   String get nameEn;
   @override
   String get slug;
-  @override
-  @JsonKey(name: 'image_url')
-  String get imageUrl;
   @override
   String get description;
   @override

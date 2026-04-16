@@ -49,6 +49,8 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/flags/
+    - assets/awards/awards/
+    - assets/awards/hero_tier/
 
   fonts:
     - family: DigitalNumbers

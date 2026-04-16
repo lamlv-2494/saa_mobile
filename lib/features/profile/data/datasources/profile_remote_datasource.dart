@@ -23,7 +23,6 @@ class ProfileRemoteDatasource {
     email,
     avatar_url,
     hero_tier,
-    hero_tier_url,
     team_code,
     department:departments(name)
   ''';
@@ -36,8 +35,8 @@ class ProfileRemoteDatasource {
     is_anonymous,
     status,
     created_at,
-    sender:users!kudos_sender_id_fkey(id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)),
-    recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, hero_tier_url, department:departments(name)),
+    sender:users!kudos_sender_id_fkey(id, name, avatar_url, hero_tier, department:departments(name)),
+    recipient:users!kudos_recipient_id_fkey(id, name, avatar_url, hero_tier, department:departments(name)),
     hashtags:kudos_hashtags(hashtag:hashtags(id, name)),
     reactions:kudos_reactions(count),
     photos:kudos_photos(image_url, sort_order)
@@ -228,7 +227,6 @@ class ProfileRemoteDatasource {
       teamCode: data['team_code'] as String?,
       departmentName: deptName.isEmpty ? null : deptName,
       heroTier: data['hero_tier'] as String? ?? 'none',
-      heroTierUrl: data['hero_tier_url'] as String?,
     );
   }
 
@@ -305,7 +303,7 @@ class ProfileRemoteDatasource {
       avatar: data['avatar_url'] as String? ?? '',
       department: deptName,
       badgeLevel: badgeLevel,
-      heroTierUrl: data['hero_tier_url'] as String? ?? '',
+      heroTier: heroTier,
     );
   }
 }

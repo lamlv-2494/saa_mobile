@@ -140,56 +140,6 @@ void main() {
     });
   });
 
-  group('KudosCard - hero tier image', () {
-    testWidgets('render hero tier image khi user có heroTierUrl',
-        (tester) async {
-      const sender = UserSummary(
-        id: 'sender-1',
-        name: 'Người gửi',
-        avatar: '',
-        department: 'CECV1',
-        heroTierUrl: 'https://example.com/rising_hero.png',
-      );
-      const receiver = UserSummary(
-        id: 'receiver-1',
-        name: 'Người nhận',
-        avatar: '',
-        department: 'CECV1',
-        heroTierUrl: 'https://example.com/legend_hero.png',
-      );
-      final kudos = createKudos(sender: sender, receiver: receiver);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SingleChildScrollView(
-              child: KudosCard(
-                variant: KudosCardVariant.feed,
-                kudos: kudos,
-                timeText: '1 ngày trước',
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      // Tìm Image widget cho hero tier (2 user = 2 images)
-      final images = find.byType(Image);
-      expect(images, findsNWidgets(2));
-    });
-
-    testWidgets('không render hero tier image khi heroTierUrl rỗng',
-        (tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(variant: KudosCardVariant.feed),
-      );
-      await tester.pump();
-
-      // Không có Image widget vì heroTierUrl rỗng
-      expect(find.byType(Image), findsNothing);
-    });
-  });
-
   group('KudosCard - callbacks', () {
     testWidgets('gọi onHeartTap khi tap heart', (tester) async {
       var heartTapped = false;

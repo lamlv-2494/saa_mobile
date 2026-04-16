@@ -26,7 +26,7 @@ void main() {
       await tester.pumpWidget(buildTestWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('/'), findsOneWidget);
+      // Hai nút bấm có Semantics label đúng
       expect(
         find.byWidgetPredicate(
           (w) => w is Semantics && w.properties.label == 'Write a kudos',
@@ -36,6 +36,13 @@ void main() {
       expect(
         find.byWidgetPredicate(
           (w) => w is Semantics && w.properties.label == 'View Kudos',
+        ),
+        findsOneWidget,
+      );
+      // Divider là Container 1px
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is Container && w.constraints?.maxWidth == 1,
         ),
         findsOneWidget,
       );

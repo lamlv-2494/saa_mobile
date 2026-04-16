@@ -11,7 +11,7 @@ class UserSummary with _$UserSummary {
     @Default('') String avatar,
     @Default('') String department,
     @Default(0) int badgeLevel,
-    @Default('') String heroTierUrl,
+    @Default('none') String heroTier,
   }) = _UserSummary;
 
   factory UserSummary.fromJson(Map<String, dynamic> json) =>
