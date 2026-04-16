@@ -42,34 +42,34 @@
 
 ### UserProfile model
 
-- [ ] T006 [P] Viet test cho `UserProfile` model (serialization, equality, copyWith) | `test/unit/models/user_profile_test.dart`
-- [ ] T007 [P] Tao `UserProfile` model (freezed + json_serializable): id, name, avatar, team, badgeTitle, heroTierUrl — mo rong tu UserSummary voi them thong tin | `lib/features/profile/data/models/user_profile.dart`
+- [x] T006 [P] Viet test cho `UserProfile` model (serialization, equality, copyWith) | `test/unit/models/user_profile_test.dart`
+- [x] T007 [P] Tao `UserProfile` model (freezed + json_serializable): id, name, avatar, team, badgeTitle, heroTierUrl — mo rong tu UserSummary voi them thong tin | `lib/features/profile/data/models/user_profile.dart`
 
 ### IconBadge model
 
-- [ ] T008 [P] Viet test cho `IconBadge` model (serialization, equality) | `test/unit/models/icon_badge_test.dart`
-- [ ] T009 [P] Tao `IconBadge` model (freezed + json_serializable): id, name, imageUrl, earnedAt | `lib/features/profile/data/models/icon_badge.dart`
+- [x] T008 [P] Viet test cho `IconBadge` model (serialization, equality) | `test/unit/models/icon_badge_test.dart`
+- [x] T009 [P] Tao `IconBadge` model (freezed + json_serializable): id, name, imageUrl, earnedAt | `lib/features/profile/data/models/icon_badge.dart`
 
 ### Badge model
 
-- [ ] T010 [P] Viet test cho `Badge` model (serialization, equality) | `test/unit/models/badge_test.dart`
-- [ ] T011 [P] Tao `Badge` model (freezed + json_serializable): id, name, imageUrl, type | `lib/features/profile/data/models/badge.dart`
+- [x] T010 [P] Viet test cho `Badge` model (serialization, equality) | `test/unit/models/badge_test.dart`
+- [x] T011 [P] Tao `Badge` model (freezed + json_serializable): id, name, imageUrl, type | `lib/features/profile/data/models/badge.dart`
 
 ### KudosFilterType enum
 
-- [ ] T012 [P] Tao `KudosFilterType` enum: `received`, `sent` | `lib/features/profile/data/models/kudos_filter_type.dart`
+- [x] T012 [P] Tao `KudosFilterType` enum: `received`, `sent` | `lib/features/profile/data/models/kudos_filter_type.dart`
 
 ### ProfileState model
 
-- [ ] T013 Viet test cho `ProfileState` model (default values, copyWith) | `test/unit/models/profile_state_test.dart`
-- [ ] T014 Tao `ProfileState` model (freezed): userProfile, iconCollection (List<IconBadge>), personalStats (PersonalStats — reuse tu kudos), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/profile_state.dart`
+- [x] T013 Viet test cho `ProfileState` model (default values, copyWith) | `test/unit/models/profile_state_test.dart`
+- [x] T014 Tao `ProfileState` model (freezed): userProfile, iconCollection (List<IconBadge>), personalStats (PersonalStats — reuse tu kudos), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/profile_state.dart`
 
 ### OtherProfileState model
 
-- [ ] T015 Viet test cho `OtherProfileState` model (default values, copyWith) | `test/unit/models/other_profile_state_test.dart`
-- [ ] T016 Tao `OtherProfileState` model (freezed): userProfile, badgeCollection (List<Badge>), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/other_profile_state.dart`
+- [x] T015 Viet test cho `OtherProfileState` model (default values, copyWith) | `test/unit/models/other_profile_state_test.dart`
+- [x] T016 Tao `OtherProfileState` model (freezed): userProfile, badgeCollection (List<Badge>), kudosList (List<Kudos> — reuse tu kudos), kudosFilter (KudosFilterType), kudosReceivedCount, kudosSentCount, hasMoreKudos | `lib/features/profile/data/models/other_profile_state.dart`
 
-- [ ] T017 Chay `dart run build_runner build` de generate `.freezed.dart` + `.g.dart` cho tat ca models | `lib/features/profile/data/models/`
+- [x] T017 Chay `dart run build_runner build` de generate `.freezed.dart` + `.g.dart` cho tat ca models | `lib/features/profile/data/models/`
 
 ### Test helpers
 
@@ -95,13 +95,13 @@
 
 ### ViewModel — Profile ban than
 
-- [ ] T023 Viet test cho `ProfileViewModel` — test build(), changeFilter(), loadMoreKudos(), toggleHeart() (optimistic update + rollback), refresh() | `test/unit/viewmodels/profile_viewmodel_test.dart`
-- [ ] T024 Tao `ProfileViewModel extends AsyncNotifier<ProfileState>` — build() parallel fetch profile + icons + stats + kudos list (default: sent) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId) (optimistic update + delegate KudosRepository), refresh() | `lib/features/profile/presentation/viewmodels/profile_viewmodel.dart`
+- [x] T023 Viet test cho `ProfileViewModel` — test build(), changeFilter(), loadMoreKudos(), toggleHeart() (optimistic update + rollback), refresh() | `test/unit/viewmodels/profile_viewmodel_test.dart`
+- [x] T024 Tao `ProfileViewModel extends AsyncNotifier<ProfileState>` — build() parallel fetch profile + icons + stats + kudos list (default: sent) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId) (optimistic update + delegate KudosRepository), refresh() | `lib/features/profile/presentation/viewmodels/profile_viewmodel.dart`
 
 ### ViewModel — Profile nguoi khac
 
-- [ ] T025 Viet test cho `OtherProfileViewModel` — test build(userId), changeFilter(), loadMoreKudos(), toggleHeart(), refresh() | `test/unit/viewmodels/other_profile_viewmodel_test.dart`
-- [ ] T026 Tao `OtherProfileViewModel extends FamilyAsyncNotifier<OtherProfileState, String>` — build(userId) parallel fetch profile + badges + kudos list (default: received) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId), refresh() | `lib/features/profile/presentation/viewmodels/other_profile_viewmodel.dart`
+- [x] T025 Viet test cho `OtherProfileViewModel` — test build(userId), changeFilter(), loadMoreKudos(), toggleHeart(), refresh() | `test/unit/viewmodels/other_profile_viewmodel_test.dart`
+- [x] T026 Tao `OtherProfileViewModel extends FamilyAsyncNotifier<OtherProfileState, String>` — build(userId) parallel fetch profile + badges + kudos list (default: received) + counts. changeFilter(KudosFilterType), loadMoreKudos(), toggleHeart(kudosId), refresh() | `lib/features/profile/presentation/viewmodels/other_profile_viewmodel.dart`
 
 **Checkpoint**: Data layer hoan chinh. `flutter test test/unit/` pass 100%. Co the bat dau UI.
 
@@ -115,37 +115,37 @@
 
 ### Shared Widgets (dung chung cho ca 2 man hinh)
 
-- [ ] T027 [P] Viet test cho `ProfileInfoWidget` (hien thi avatar, ten, team, badge; fallback avatar khi khong co anh) | `test/widget/profile/profile_info_widget_test.dart`
-- [ ] T028 [P] [US1] Tao `ProfileInfoWidget` (StatelessWidget) — Column center: avatar (CircleAvatar 64px, border trang 0.865px, fallback chu cai dau), ten (Montserrat 16px Bold, trang), team code (12px Medium, #999), badge title (12px Medium, #FFEA9E). Nhan `UserProfile` | `lib/features/profile/presentation/widgets/profile_info_widget.dart`
+- [x] T027 [P] Viet test cho `ProfileInfoWidget` (hien thi avatar, ten, team, badge; fallback avatar khi khong co anh) | `test/widget/profile/profile_info_widget_test.dart`
+- [x] T028 [P] [US1] Tao `ProfileInfoWidget` (StatelessWidget) — Column center: avatar (CircleAvatar 64px, border trang 0.865px, fallback chu cai dau), ten (Montserrat 16px Bold, trang), team code (12px Medium, #999), badge title (12px Medium, #FFEA9E). Nhan `UserProfile` | `lib/features/profile/presentation/widgets/profile_info_widget.dart`
 
-- [ ] T029 [P] Viet test cho `KudosSectionHeaderWidget` (hien thi banner va tieu de "KUDOS") | `test/widget/profile/kudos_section_header_widget_test.dart`
-- [ ] T030 [P] [US4] Tao `KudosSectionHeaderWidget` (StatelessWidget) — banner trang tri + subtitle "Sun* Annual Awards 2025" (12px Regular, trang) + title "KUDOS" (22px Medium, #FFEA9E). Dung i18n keys | `lib/features/profile/presentation/widgets/kudos_section_header_widget.dart`
+- [x] T029 [P] Viet test cho `KudosSectionHeaderWidget` (hien thi banner va tieu de "KUDOS") | `test/widget/profile/kudos_section_header_widget_test.dart`
+- [x] T030 [P] [US4] Tao `KudosSectionHeaderWidget` (StatelessWidget) — banner trang tri + subtitle "Sun* Annual Awards 2025" (12px Regular, trang) + title "KUDOS" (22px Medium, #FFEA9E). Dung i18n keys | `lib/features/profile/presentation/widgets/kudos_section_header_widget.dart`
 
-- [ ] T031 [P] Viet test cho `ProfileKudosFilterDropdown` (tap mo overlay, chon filter, hien thi count) | `test/widget/profile/profile_kudos_filter_dropdown_test.dart`
-- [ ] T032 [P] [US4] Tao `ProfileKudosFilterDropdown` (StatelessWidget) — dropdown button "Da gui (N)" / "Da nhan (N)" (bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E, icon chevron_down SVG). Tap -> overlay 2 pill options tren nen toi (#00101A, border: #998C5F). Nhan currentFilter, sentCount, receivedCount, onChanged. Animation open/close 200ms ease-out | `lib/features/profile/presentation/widgets/profile_kudos_filter_dropdown.dart`
+- [x] T031 [P] Viet test cho `ProfileKudosFilterDropdown` (tap mo overlay, chon filter, hien thi count) | `test/widget/profile/profile_kudos_filter_dropdown_test.dart`
+- [x] T032 [P] [US4] Tao `ProfileKudosFilterDropdown` (StatelessWidget) — dropdown button "Da gui (N)" / "Da nhan (N)" (bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E, icon chevron_down SVG). Tap -> overlay 2 pill options tren nen toi (#00101A, border: #998C5F). Nhan currentFilter, sentCount, receivedCount, onChanged. Animation open/close 200ms ease-out | `lib/features/profile/presentation/widgets/profile_kudos_filter_dropdown.dart`
 
-- [ ] T033 [P] Viet test cho `ProfileKudosListWidget` (hien thi list kudos cards, empty state, loading indicator) | `test/widget/profile/profile_kudos_list_widget_test.dart`
-- [ ] T034 [P] [US4] Tao `ProfileKudosListWidget` (StatelessWidget) — danh sach kudos cards REUSE `KudosCard` tu `lib/features/kudos/presentation/widgets/kudos_card.dart`. Nhan List<Kudos>, isLoading, isEmpty. Empty state: "Chua co Kudos nao." (i18n). Loading indicator o cuoi danh sach | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T033 [P] Viet test cho `ProfileKudosListWidget` (hien thi list kudos cards, empty state, loading indicator) | `test/widget/profile/profile_kudos_list_widget_test.dart`
+- [x] T034 [P] [US4] Tao `ProfileKudosListWidget` (StatelessWidget) — danh sach kudos cards REUSE `KudosCard` tu `lib/features/kudos/presentation/widgets/kudos_card.dart`. Nhan List<Kudos>, isLoading, isEmpty. Empty state: "Chua co Kudos nao." (i18n). Loading indicator o cuoi danh sach | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### Widgets chi cho Profile ban than
 
-- [ ] T035 [P] Viet test cho `IconCollectionWidget` (hien thi hang icon badges, empty state an section) | `test/widget/profile/icon_collection_widget_test.dart`
-- [ ] T036 [P] [US2] Tao `IconCollectionWidget` (StatelessWidget) — Column: label "Bo suu tap icon cua toi" (14px Medium, #FFEA9E) + Row (gap: 8px) cac icon badges (44x44, circle, dark bg #1A1A2E). Chi hien thi icon, khong co ten. Nhan List<IconBadge>. Empty: an section | `lib/features/profile/presentation/widgets/icon_collection_widget.dart`
+- [x] T035 [P] Viet test cho `IconCollectionWidget` (hien thi hang icon badges, empty state an section) | `test/widget/profile/icon_collection_widget_test.dart`
+- [x] T036 [P] [US2] Tao `IconCollectionWidget` (StatelessWidget) — Column: label "Bo suu tap icon cua toi" (14px Medium, #FFEA9E) + Row (gap: 8px) cac icon badges (44x44, circle, dark bg #1A1A2E). Chi hien thi icon, khong co ten. Nhan List<IconBadge>. Empty: an section | `lib/features/profile/presentation/widgets/icon_collection_widget.dart`
 
-- [ ] T037 [P] Viet test cho `StatRowWidget` (hien thi label va value) | `test/widget/profile/stat_row_widget_test.dart`
-- [ ] T038 [P] [US3] Tao `StatRowWidget` (StatelessWidget) — Row space-between: label (12px Regular, trang) + value (14px Bold, #FFEA9E). Nhan label va value (String/int) | `lib/features/profile/presentation/widgets/stat_row_widget.dart`
+- [x] T037 [P] Viet test cho `StatRowWidget` (hien thi label va value) | `test/widget/profile/stat_row_widget_test.dart`
+- [x] T038 [P] [US3] Tao `StatRowWidget` (StatelessWidget) — Row space-between: label (12px Regular, trang) + value (14px Bold, #FFEA9E). Nhan label va value (String/int) | `lib/features/profile/presentation/widgets/stat_row_widget.dart`
 
-- [ ] T039 Viet test cho `StatisticsContainerWidget` (hien thi 5 stat rows, divider, button Mo Secret Box, empty state gia tri 0, button disabled khi unopened = 0) | `test/widget/profile/statistics_container_widget_test.dart`
-- [ ] T040 [US3] Tao `StatisticsContainerWidget` (StatelessWidget) — dark panel (bg: #00070C, border: 0.794px #998C5F, radius: 8px, padding: 12px, margin: 20px horizontal). Chua 5 StatRowWidget (kudos nhan, kudos gui, hearts nhan, divider #2E3940, secret box da mo, secret box chua mo) + Button "Mo Secret Box" (reuse OutlineButtonWidget, bg: primary-10, border: #998C5F, font: 14px Medium, #FFEA9E). Button disabled khi unopenedSecretBoxes = 0. Nhan PersonalStats | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
+- [x] T039 Viet test cho `StatisticsContainerWidget` (hien thi 5 stat rows, divider, button Mo Secret Box, empty state gia tri 0, button disabled khi unopened = 0) | `test/widget/profile/statistics_container_widget_test.dart`
+- [x] T040 [US3] Tao `StatisticsContainerWidget` (StatelessWidget) — dark panel (bg: #00070C, border: 0.794px #998C5F, radius: 8px, padding: 12px, margin: 20px horizontal). Chua 5 StatRowWidget (kudos nhan, kudos gui, hearts nhan, divider #2E3940, secret box da mo, secret box chua mo) + Button "Mo Secret Box" (reuse OutlineButtonWidget, bg: primary-10, border: #998C5F, font: 14px Medium, #FFEA9E). Button disabled khi unopenedSecretBoxes = 0. Nhan PersonalStats | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
 
 ### Man hinh Profile ban than
 
-- [ ] T041 Viet test cho `ProfileScreen` (verify sections render dung thu tu, pull-to-refresh goi refresh, infinite scroll goi loadMoreKudos, filter change goi changeFilter) | `test/widget/profile/profile_screen_test.dart`
-- [ ] T042 [US1+US2+US3+US4+US6] Tao `ProfileScreen` (ConsumerWidget) — Scaffold(bg: #00101A) + RefreshIndicator (pull-to-refresh -> viewModel.refresh()) + CustomScrollView: ProfileInfoWidget + IconCollectionWidget + StatisticsContainerWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList, reuse KudosCard). ScrollController cho infinite scroll (loadMoreKudos khi scroll den cuoi). Loading: shimmer placeholders. Error: thong bao loi + nut retry | `lib/features/profile/presentation/screens/profile_screen.dart`
+- [x] T041 Viet test cho `ProfileScreen` (verify sections render dung thu tu, pull-to-refresh goi refresh, infinite scroll goi loadMoreKudos, filter change goi changeFilter) | `test/widget/profile/profile_screen_test.dart`
+- [x] T042 [US1+US2+US3+US4+US6] Tao `ProfileScreen` (ConsumerWidget) — Scaffold(bg: #00101A) + RefreshIndicator (pull-to-refresh -> viewModel.refresh()) + CustomScrollView: ProfileInfoWidget + IconCollectionWidget + StatisticsContainerWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList, reuse KudosCard). ScrollController cho infinite scroll (loadMoreKudos khi scroll den cuoi). Loading: shimmer placeholders. Error: thong bao loi + nut retry | `lib/features/profile/presentation/screens/profile_screen.dart`
 
 ### Tich hop MainScaffold
 
-- [ ] T043 [US6] Thay `_PlaceholderTab(title: 'Profile')` tai index 3 trong `MainScaffold` bang `ProfileScreen()`. Xoa class `_PlaceholderTab` neu khong con su dung | `lib/app/main_scaffold.dart`
+- [x] T043 [US6] Thay `_PlaceholderTab(title: 'Profile')` tai index 3 trong `MainScaffold` bang `ProfileScreen()`. Xoa class `_PlaceholderTab` neu khong con su dung | `lib/app/main_scaffold.dart`
 
 **Checkpoint**: Profile ban than hien thi day du. Tab Profile active. Pull-to-refresh + infinite scroll + filter hoat dong. `flutter test` pass.
 
@@ -157,16 +157,16 @@
 
 ### Widgets chi cho Profile nguoi khac
 
-- [ ] T044 [P] Viet test cho `BadgeCollectionWidget` (hien thi Wrap layout badges voi icon + ten, empty state an section) | `test/widget/profile/badge_collection_widget_test.dart`
-- [ ] T045 [P] [US3-other] Tao `BadgeCollectionWidget` (StatelessWidget) — Wrap layout (gap: 12px), moi badge la Column: icon (44x44, circle, dark bg) + ten (10px Regular, trang). Nhan List<Badge>. Empty: an section | `lib/features/profile/presentation/widgets/badge_collection_widget.dart`
+- [x] T044 [P] Viet test cho `BadgeCollectionWidget` (hien thi Wrap layout badges voi icon + ten, empty state an section) | `test/widget/profile/badge_collection_widget_test.dart`
+- [x] T045 [P] [US3-other] Tao `BadgeCollectionWidget` (StatelessWidget) — Wrap layout (gap: 12px), moi badge la Column: icon (44x44, circle, dark bg) + ten (10px Regular, trang). Nhan List<Badge>. Empty: an section | `lib/features/profile/presentation/widgets/badge_collection_widget.dart`
 
-- [ ] T046 [P] Viet test cho `SendKudosButtonWidget` (hien thi CTA, tap callback navigate) | `test/widget/profile/send_kudos_button_widget_test.dart`
-- [ ] T047 [P] [US2-other] Tao `SendKudosButtonWidget` (StatelessWidget) — CTA button "Gui loi cam on" (full width, bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E). Co icon edit SVG. Tap -> navigate sang man hinh gui kudos (screenId: `PV7jBVZU1N`) voi nguoi nhan pre-fill. Nhan userId va userName | `lib/features/profile/presentation/widgets/send_kudos_button_widget.dart`
+- [x] T046 [P] Viet test cho `SendKudosButtonWidget` (hien thi CTA, tap callback navigate) | `test/widget/profile/send_kudos_button_widget_test.dart`
+- [x] T047 [P] [US2-other] Tao `SendKudosButtonWidget` (StatelessWidget) — CTA button "Gui loi cam on" (full width, bg: primary-10, border: #998C5F, radius: 4px, font: 14px Medium, #FFEA9E). Co icon edit SVG. Tap -> navigate sang man hinh gui kudos (screenId: `PV7jBVZU1N`) voi nguoi nhan pre-fill. Nhan userId va userName | `lib/features/profile/presentation/widgets/send_kudos_button_widget.dart`
 
 ### Man hinh Profile nguoi khac
 
-- [ ] T048 Viet test cho `OtherProfileScreen` (verify sections render, khong co stats panel, co CTA button, back button, self-redirect khi userId = currentUser, error state user not found) | `test/widget/profile/other_profile_screen_test.dart`
-- [ ] T049 [US1-8-other] Tao `OtherProfileScreen` (ConsumerWidget) nhan `userId` tu route param — AppBar transparent voi nut back + Scaffold(bg: #00101A) + RefreshIndicator + CustomScrollView: ProfileInfoWidget + BadgeCollectionWidget + SendKudosButtonWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList). ScrollController cho infinite scroll. Self-redirect: neu userId == currentUserId -> set currentTabIndexProvider = 3 va context.pop(). Error: "Khong tim thay nguoi dung" (i18n) voi nut quay lai. Bottom nav: tat ca tabs inactive | `lib/features/profile/presentation/screens/other_profile_screen.dart`
+- [x] T048 Viet test cho `OtherProfileScreen` (verify sections render, khong co stats panel, co CTA button, back button, self-redirect khi userId = currentUser, error state user not found) | `test/widget/profile/other_profile_screen_test.dart`
+- [x] T049 [US1-8-other] Tao `OtherProfileScreen` (ConsumerWidget) nhan `userId` tu route param — AppBar transparent voi nut back + Scaffold(bg: #00101A) + RefreshIndicator + CustomScrollView: ProfileInfoWidget + BadgeCollectionWidget + SendKudosButtonWidget + KudosSectionHeaderWidget + ProfileKudosFilterDropdown + ProfileKudosListWidget (SliverList). ScrollController cho infinite scroll. Self-redirect: neu userId == currentUserId -> set currentTabIndexProvider = 3 va context.pop(). Error: "Khong tim thay nguoi dung" (i18n) voi nut quay lai. Bottom nav: tat ca tabs inactive | `lib/features/profile/presentation/screens/other_profile_screen.dart`
 
 ### Tich hop Router
 
@@ -182,27 +182,27 @@
 
 ### Heart toggle
 
-- [ ] T051 [US5] Tich hop HeartButton (REUSE tu `lib/features/kudos/presentation/widgets/heart_button.dart`) vao ProfileKudosListWidget — onToggle -> viewModel.toggleHeart(kudosId). Optimistic update state -> sync server qua KudosRepository.toggleHeart() | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T051 [US5] Tich hop HeartButton (REUSE tu `lib/features/kudos/presentation/widgets/heart_button.dart`) vao ProfileKudosListWidget — onToggle -> viewModel.toggleHeart(kudosId). Optimistic update state -> sync server qua KudosRepository.toggleHeart() | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### Copy link
 
-- [ ] T052 [P] [US5] Tich hop copy link vao ProfileKudosListWidget — tap icon copy -> Clipboard.setData(kudos.shareUrl) + ScaffoldMessenger.showSnackBar("Da sao chep lien ket", duration: 2s). Dung i18n key | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T052 [P] [US5] Tich hop copy link vao ProfileKudosListWidget — tap icon copy -> Clipboard.setData(kudos.shareUrl) + ScaffoldMessenger.showSnackBar("Da sao chep lien ket", duration: 2s). Dung i18n key | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### Avatar tap -> Profile navigation
 
-- [ ] T053 [P] [US5] Tich hop avatar tap tren kudos card trong ProfileKudosListWidget — GestureDetector tren avatar -> context.push('/profile/$userId'). Neu userId = currentUser -> redirect sang tab 4 | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T053 [P] [US5] Tich hop avatar tap tren kudos card trong ProfileKudosListWidget — GestureDetector tren avatar -> context.push('/profile/$userId'). Neu userId = currentUser -> redirect sang tab 4 | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### "Xem chi tiet" navigation
 
-- [ ] T054 [P] [US5] Tich hop "Xem chi tiet" tap tren kudos card -> navigate sang man hinh chi tiet kudos (placeholder route neu chua build) | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T054 [P] [US5] Tich hop "Xem chi tiet" tap tren kudos card -> navigate sang man hinh chi tiet kudos (placeholder route neu chua build) | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### Spam label
 
-- [ ] T055 [P] [US5] Hien thi orange pill tag "Spam" (#FF8C00, radius: 100px) tren kudos card khi isSpam = true. Kiem tra Kudos model da co field `isSpam` chua — them neu can | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
+- [x] T055 [P] [US5] Hien thi orange pill tag "Spam" (#FF8C00, radius: 100px) tren kudos card khi isSpam = true. Kiem tra Kudos model da co field `isSpam` chua — them neu can | `lib/features/profile/presentation/widgets/profile_kudos_list_widget.dart`
 
 ### "Mo Secret Box" navigation
 
-- [ ] T056 [US3] Tich hop nut "Mo Secret Box" trong StatisticsContainerWidget — tap -> navigate sang man hinh Open Secret Box (screenId: `kQk65hSYF2`). Placeholder route neu chua build. Button disabled khi unopenedSecretBoxes = 0 | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
+- [x] T056 [US3] Tich hop nut "Mo Secret Box" trong StatisticsContainerWidget — tap -> navigate sang man hinh Open Secret Box (screenId: `kQk65hSYF2`). Placeholder route neu chua build. Button disabled khi unopenedSecretBoxes = 0 | `lib/features/profile/presentation/widgets/statistics_container_widget.dart`
 
 **Checkpoint**: Heart like/unlike + copy link + avatar nav + xem chi tiet + spam label + Mo Secret Box — tat ca hoat dong. `flutter test` pass.
 
@@ -214,25 +214,25 @@
 
 ### Accessibility
 
-- [ ] T057 [P] Them `Semantics` widgets cho tat ca interactive elements theo bang VoiceOver trong spec: Avatar "Anh dai dien cua {ten}", Badge "{danh hieu}", Stat Row "{label}: {count}", Button "Mo Secret Box" "Mo Secret Box. Ban co {count} hop chua mo", Heart "{count} luot thich. {Da thich / Chua thich}", Copy Link "Sao chep lien ket", "Xem chi tiet" "Xem chi tiet kudos", Back button "Quay lai", CTA "Gui loi cam on cho {ten}", Nav tabs "{Tab name}. Tab {index} tren 4" | `lib/features/profile/presentation/widgets/*.dart`
+- [x] T057 [P] Them `Semantics` widgets cho tat ca interactive elements theo bang VoiceOver trong spec: Avatar "Anh dai dien cua {ten}", Badge "{danh hieu}", Stat Row "{label}: {count}", Button "Mo Secret Box" "Mo Secret Box. Ban co {count} hop chua mo", Heart "{count} luot thich. {Da thich / Chua thich}", Copy Link "Sao chep lien ket", "Xem chi tiet" "Xem chi tiet kudos", Back button "Quay lai", CTA "Gui loi cam on cho {ten}", Nav tabs "{Tab name}. Tab {index} tren 4" | `lib/features/profile/presentation/widgets/*.dart`
 
 ### Animations
 
-- [ ] T058 [P] Fine-tune animations: dropdown overlay open/close (200ms ease-out), heart scale (150ms ease-in-out), push/pop transition (300ms ease-in-out) | `lib/features/profile/presentation/widgets/*.dart`
+- [x] T058 [P] Fine-tune animations: dropdown overlay open/close (200ms ease-out), heart scale (150ms ease-in-out), push/pop transition (300ms ease-in-out) | `lib/features/profile/presentation/widgets/*.dart`
 
 ### Error boundary & Auth
 
-- [ ] T059 [P] Xu ly 401 error -> verify auth redirect flow hoat dong khi token expired (tich hop voi existing auth redirect trong router.dart) | `lib/features/profile/data/datasources/profile_remote_datasource.dart`
+- [x] T059 [P] Xu ly 401 error -> verify auth redirect flow hoat dong khi token expired (tich hop voi existing auth redirect trong router.dart) | `lib/features/profile/data/datasources/profile_remote_datasource.dart`
 
 ### Deep link
 
-- [ ] T060 [P] Kiem tra deep link: `/profile` -> mo tab Profile ban than, `/profile/:userId` -> mo Profile nguoi khac. Dam bao routing hoat dong dung | `lib/app/router.dart`
+- [x] T060 [P] Kiem tra deep link: `/profile` -> mo tab Profile ban than, `/profile/:userId` -> mo Profile nguoi khac. Dam bao routing hoat dong dung | `lib/app/router.dart`
 
 ### Performance & Quality
 
-- [ ] T061 Performance audit tren device that — profile screen load < 2 giay, filter switch < 1 giay, infinite scroll smooth, avatar loading | Device testing
-- [ ] T062 Chay `flutter analyze` + `dart format` — dam bao 0 warnings, 0 lint errors | Toan bo project
-- [ ] T063 Chay toan bo test suite: `flutter test` — dam bao tat ca tests pass, coverage >= 80% cho ViewModel + Repository | `test/`
+- [x] T061 Performance audit tren device that — profile screen load < 2 giay, filter switch < 1 giay, infinite scroll smooth, avatar loading | Device testing
+- [x] T062 Chay `flutter analyze` + `dart format` — dam bao 0 warnings, 0 lint errors | Toan bo project
+- [x] T063 Chay toan bo test suite: `flutter test` — dam bao tat ca tests pass, coverage >= 80% cho ViewModel + Repository | `test/`
 
 **Checkpoint**: Feature hoan chinh. Tat ca tests pass. Lint clean. Accessibility OK. Performance OK tren device that.
 

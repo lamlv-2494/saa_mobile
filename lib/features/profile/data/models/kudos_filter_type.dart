@@ -1,4 +1,1 @@
-enum KudosFilterType {
-  received,
-  sent,
-}
+enum KudosFilterType { received, sent }

@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 368 (184 per locale)
+/// Strings: 370 (185 per locale)
 ///
-/// Built on 2026-04-15 at 10:16 UTC
+/// Built on 2026-04-15 at 11:12 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -372,6 +372,7 @@ class _StringsProfileEn {
 	String get loadingMore => 'Loading more...';
 	String get kudosTitle => 'KUDOS';
 	String get saaAwards => 'Sun* Annual Awards 2025';
+	String get spam => 'Spam';
 }
 
 // Path: sendKudos
@@ -682,6 +683,7 @@ class _StringsProfileVi implements _StringsProfileEn {
 	@override String get loadingMore => 'Đang tải thêm...';
 	@override String get kudosTitle => 'KUDOS';
 	@override String get saaAwards => 'Sun* Annual Awards 2025';
+	@override String get spam => 'Spam';
 }
 
 // Path: sendKudos
@@ -883,6 +885,7 @@ extension on Translations {
 			case 'profile.loadingMore': return 'Loading more...';
 			case 'profile.kudosTitle': return 'KUDOS';
 			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
+			case 'profile.spam': return 'Spam';
 			case 'sendKudos.title': return 'New Kudo';
 			case 'sendKudos.headerSubtitle': return 'Send your appreciation and recognition to your teammate';
 			case 'sendKudos.recipientLabel': return 'Recipient *';
@@ -1075,6 +1078,7 @@ extension on _StringsVi {
 			case 'profile.loadingMore': return 'Đang tải thêm...';
 			case 'profile.kudosTitle': return 'KUDOS';
 			case 'profile.saaAwards': return 'Sun* Annual Awards 2025';
+			case 'profile.spam': return 'Spam';
 			case 'sendKudos.title': return 'New Kudo';
 			case 'sendKudos.headerSubtitle': return 'Gửi lời cám ơn và ghi nhận đến đồng đội';
 			case 'sendKudos.recipientLabel': return 'Người nhận *';

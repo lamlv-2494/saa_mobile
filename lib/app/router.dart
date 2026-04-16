@@ -7,6 +7,7 @@ import 'package:saa_mobile/features/auth/presentation/viewmodels/auth_viewmodel.
 import 'package:saa_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:saa_mobile/features/kudos/presentation/screens/kudos_detail_screen.dart';
 import 'package:saa_mobile/features/kudos/presentation/screens/send_kudos_screen.dart';
+import 'package:saa_mobile/features/profile/presentation/screens/other_profile_screen.dart';
 
 GoRouter createRouter(Ref ref) {
   final authState = ref.watch(authViewModelProvider);
@@ -42,8 +43,8 @@ GoRouter createRouter(Ref ref) {
       ),
       GoRoute(
         path: '/profile/:userId',
-        builder: (_, state) => Placeholder(
-          child: Text('Profile: ${state.pathParameters['userId']}'),
+        builder: (_, state) => OtherProfileScreen(
+          userId: state.pathParameters['userId']!,
         ),
       ),
     ],

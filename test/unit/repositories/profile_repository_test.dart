@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
-import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
 import 'package:saa_mobile/features/profile/data/models/badge.dart';
 import 'package:saa_mobile/features/profile/data/models/icon_badge.dart';
 import 'package:saa_mobile/features/profile/data/models/user_profile.dart';

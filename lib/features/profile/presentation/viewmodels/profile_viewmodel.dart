@@ -99,16 +99,18 @@ class ProfileViewModel extends AsyncNotifier<ProfileState> {
     final currentState = state.valueOrNull;
     if (currentState == null) return;
 
-    final kudosIndex =
-        currentState.kudosList.indexWhere((k) => k.id == kudosId);
+    final kudosIndex = currentState.kudosList.indexWhere(
+      (k) => k.id == kudosId,
+    );
     if (kudosIndex < 0) return;
 
     final targetKudos = currentState.kudosList[kudosIndex];
     if (!targetKudos.canLike) return;
 
     final isLiked = targetKudos.isLikedByMe;
-    final newHeartCount =
-        isLiked ? targetKudos.heartCount - 1 : targetKudos.heartCount + 1;
+    final newHeartCount = isLiked
+        ? targetKudos.heartCount - 1
+        : targetKudos.heartCount + 1;
     final updatedKudos = targetKudos.copyWith(
       isLikedByMe: !isLiked,
       heartCount: newHeartCount,
@@ -157,6 +159,4 @@ class ProfileViewModel extends AsyncNotifier<ProfileState> {
 }
 
 final profileViewModelProvider =
-    AsyncNotifierProvider<ProfileViewModel, ProfileState>(
-  ProfileViewModel.new,
-);
+    AsyncNotifierProvider<ProfileViewModel, ProfileState>(ProfileViewModel.new);

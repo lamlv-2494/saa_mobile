@@ -13,7 +13,7 @@ import 'package:saa_mobile/features/kudos/presentation/widgets/all_kudos_section
 import 'package:saa_mobile/features/kudos/presentation/widgets/highlight_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_card.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/kudos_hero_banner_widget.dart';
-import 'package:saa_mobile/features/kudos/presentation/widgets/personal_stats_card.dart';
+import 'package:saa_mobile/shared/widgets/personal_stats_card.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/spotlight_section_widget.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/top_gift_recipients_card.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';

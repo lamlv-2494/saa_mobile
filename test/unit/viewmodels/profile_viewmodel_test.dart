@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/repositories/kudos_repository.dart';
 import 'package:saa_mobile/features/profile/data/models/kudos_filter_type.dart';
-import 'package:saa_mobile/features/profile/data/models/profile_state.dart';
 import 'package:saa_mobile/features/profile/data/repositories/profile_repository.dart';
 import 'package:saa_mobile/features/profile/presentation/viewmodels/profile_viewmodel.dart';
 

@@ -25,6 +25,7 @@ class OtherProfileViewModel
 
     final profileFuture = _profileRepo.getUserProfile(_userId);
     final badgesFuture = _profileRepo.getUserBadges(_userId);
+    final statsFuture = _profileRepo.getUserStats(_userId);
     final kudosFuture = _profileRepo.getKudosHistory(
       userId: _userId,
       filter: 'received',
@@ -34,10 +35,12 @@ class OtherProfileViewModel
 
     final profile = await profileFuture;
     final badges = await badgesFuture;
+    final stats = await statsFuture;
     final kudosList = await kudosFuture;
 
     return OtherProfileState(
       profile: profile,
+      personalStats: stats,
       badges: badges,
       kudosList: kudosList,
       kudosFilter: KudosFilterType.received,
@@ -99,16 +102,18 @@ class OtherProfileViewModel
     final currentState = state.valueOrNull;
     if (currentState == null) return;
 
-    final kudosIndex =
-        currentState.kudosList.indexWhere((k) => k.id == kudosId);
+    final kudosIndex = currentState.kudosList.indexWhere(
+      (k) => k.id == kudosId,
+    );
     if (kudosIndex < 0) return;
 
     final targetKudos = currentState.kudosList[kudosIndex];
     if (!targetKudos.canLike) return;
 
     final isLiked = targetKudos.isLikedByMe;
-    final newHeartCount =
-        isLiked ? targetKudos.heartCount - 1 : targetKudos.heartCount + 1;
+    final newHeartCount = isLiked
+        ? targetKudos.heartCount - 1
+        : targetKudos.heartCount + 1;
     final updatedKudos = targetKudos.copyWith(
       isLikedByMe: !isLiked,
       heartCount: newHeartCount,
@@ -156,7 +161,9 @@ class OtherProfileViewModel
   }
 }
 
-final otherProfileViewModelProvider = AsyncNotifierProvider.family<
-    OtherProfileViewModel, OtherProfileState, String>(
-  OtherProfileViewModel.new,
-);
+final otherProfileViewModelProvider =
+    AsyncNotifierProvider.family<
+      OtherProfileViewModel,
+      OtherProfileState,
+      String
+    >(OtherProfileViewModel.new);

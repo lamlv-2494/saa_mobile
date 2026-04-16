@@ -45,7 +45,7 @@ class SectionHeaderWidget extends StatelessWidget {
                 color: AppColors.textAccent,
               ),
             ),
-            if (trailing != null) trailing!,
+            ?trailing,
           ],
         ),
       ],

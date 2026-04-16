@@ -52,6 +52,14 @@ class ProfileRepository {
     }
   }
 
+  Future<PersonalStats> getUserStats(String userId) async {
+    try {
+      return await _datasource.fetchUserStats(userId);
+    } catch (e) {
+      return const PersonalStats();
+    }
+  }
+
   Future<List<Kudos>> getKudosHistory({
     required String userId,
     required String filter,

@@ -46,6 +46,7 @@ Kudos createKudos({
   String? awardTitle,
   String? senderAlias,
   List<String> imageUrls = const [],
+  bool isSpam = false,
 }) =>
     Kudos(
       id: id,
@@ -64,6 +65,7 @@ Kudos createKudos({
       awardTitle: awardTitle,
       senderAlias: senderAlias,
       imageUrls: imageUrls,
+      isSpam: isSpam,
     );
 
 PersonalStats createPersonalStats({

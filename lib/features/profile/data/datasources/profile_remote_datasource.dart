@@ -132,6 +132,24 @@ class ProfileRemoteDatasource {
     );
   }
 
+  // ─── 5b. Thống kê người dùng khác ───
+
+  Future<PersonalStats> fetchUserStats(String userId) async {
+    final data = await _client
+        .from('user_stats')
+        .select()
+        .eq('user_id', int.parse(userId))
+        .maybeSingle();
+
+    if (data == null) return const PersonalStats();
+
+    return PersonalStats(
+      kudosReceived: data['kudos_received_count'] as int? ?? 0,
+      kudosSent: data['kudos_sent_count'] as int? ?? 0,
+      heartsReceived: data['hearts_received_count'] as int? ?? 0,
+    );
+  }
+
   // ─── 6. Lịch sử kudos (phân trang + filter sent/received) ───
 
   Future<List<Kudos>> fetchKudosHistory({
@@ -230,12 +248,15 @@ class ProfileRemoteDatasource {
         .whereType<Hashtag>()
         .toList();
 
-    final imageUrls = (photos
-          ..sort((a, b) => ((a['sort_order'] as int?) ?? 0)
-              .compareTo((b['sort_order'] as int?) ?? 0)))
-        .map((p) => p['image_url'] as String? ?? '')
-        .where((url) => url.isNotEmpty)
-        .toList();
+    final imageUrls =
+        (photos..sort(
+              (a, b) => ((a['sort_order'] as int?) ?? 0).compareTo(
+                (b['sort_order'] as int?) ?? 0,
+              ),
+            ))
+            .map((p) => p['image_url'] as String? ?? '')
+            .where((url) => url.isNotEmpty)
+            .toList();
 
     return Kudos(
       id: '${data['id']}',
@@ -250,7 +271,8 @@ class ProfileRemoteDatasource {
       heartCount: reactions.isNotEmpty
           ? (reactions.first['count'] as int? ?? 0)
           : 0,
-      createdAt: DateTime.tryParse(data['created_at'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(data['created_at'] as String? ?? '') ??
           DateTime.now(),
       isAnonymous: data['is_anonymous'] as bool? ?? false,
       shareUrl: 'saa://kudos/${data['id']}',
@@ -288,7 +310,8 @@ class ProfileRemoteDatasource {
   }
 }
 
-final profileRemoteDatasourceProvider =
-    Provider<ProfileRemoteDatasource>((ref) {
+final profileRemoteDatasourceProvider = Provider<ProfileRemoteDatasource>((
+  ref,
+) {
   return ProfileRemoteDatasource(Supabase.instance.client);
 });

@@ -24,6 +24,7 @@ class Kudos with _$Kudos {
     String? awardTitle,
     String? senderAlias,
     @Default([]) List<String> imageUrls,
+    @Default(false) bool isSpam,
   }) = _Kudos;
 
   factory Kudos.fromJson(Map<String, dynamic> json) => _$KudosFromJson(json);
