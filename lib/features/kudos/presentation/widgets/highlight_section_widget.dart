@@ -39,8 +39,7 @@ class HighlightSectionWidget extends StatefulWidget {
   final void Function(String userId)? onAvatarTap;
 
   @override
-  State<HighlightSectionWidget> createState() =>
-      _HighlightSectionWidgetState();
+  State<HighlightSectionWidget> createState() => _HighlightSectionWidgetState();
 }
 
 class _HighlightSectionWidgetState extends State<HighlightSectionWidget> {
@@ -105,19 +104,17 @@ class _HighlightSectionWidgetState extends State<HighlightSectionWidget> {
   }
 
   MenuStyle get _menuStyle => MenuStyle(
-        backgroundColor: const WidgetStatePropertyAll(AppColors.bgDark),
-        surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Color(0xFF998C5F)),
-          ),
-        ),
-        maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 300)),
-        padding: const WidgetStatePropertyAll(
-          EdgeInsets.symmetric(vertical: 8),
-        ),
-      );
+    backgroundColor: const WidgetStatePropertyAll(AppColors.bgDark),
+    surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+    shape: WidgetStatePropertyAll(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(color: Color(0xFF998C5F)),
+      ),
+    ),
+    maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 300)),
+    padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 8)),
+  );
 
   List<Widget> _buildHashtagMenuItems() {
     final items = <Widget>[];
@@ -220,18 +217,18 @@ class _HighlightSectionWidgetState extends State<HighlightSectionWidget> {
   }
 
   ButtonStyle _itemStyle(bool isSelected) => ButtonStyle(
-        padding: const WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        foregroundColor: WidgetStatePropertyAll(
-          isSelected ? AppColors.textAccent : AppColors.textWhite,
-        ),
-      );
+    padding: const WidgetStatePropertyAll(
+      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    ),
+    foregroundColor: WidgetStatePropertyAll(
+      isSelected ? AppColors.textAccent : AppColors.textWhite,
+    ),
+  );
 
   ButtonStyle get _clearItemStyle => const ButtonStyle(
-        padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        foregroundColor: WidgetStatePropertyAll(AppColors.textAccent),
-      );
+    padding: WidgetStatePropertyAll(
+      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    ),
+    foregroundColor: WidgetStatePropertyAll(AppColors.textAccent),
+  );
 }

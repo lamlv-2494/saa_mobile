@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:saa_mobile/features/home/data/models/award_category.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/award_card_widget.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 
 void main() {
   setUpAll(() async {
@@ -55,15 +56,14 @@ void main() {
       expect(descText.overflow, TextOverflow.ellipsis);
     });
 
-    testWidgets('calls onDetailsTap when "Chi tiết" is tapped',
+    testWidgets('calls onDetailsTap when details button is tapped',
         (tester) async {
       bool tapped = false;
       await tester.pumpWidget(
         buildTestWidget(onDetailsTap: () => tapped = true),
       );
 
-      // slang defaults to EN in test — button text is "Details"
-      await tester.tap(find.text('Details'));
+      await tester.tap(find.text(t.home.details));
       expect(tapped, true);
     });
   });

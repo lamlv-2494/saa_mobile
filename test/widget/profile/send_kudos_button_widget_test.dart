@@ -24,7 +24,7 @@ void main() {
       await tester.pumpWidget(_buildWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Send thanks'), findsOneWidget);
+      expect(find.text(t.profile.sendThanks), findsOneWidget);
     });
 
     testWidgets('hiển thị GestureDetector', (tester) async {
@@ -39,7 +39,7 @@ void main() {
       await tester.pumpWidget(_buildWidget(onTap: () => tapped = true));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Send thanks'));
+      await tester.tap(find.text(t.profile.sendThanks));
       await tester.pumpAndSettle();
 
       expect(tapped, isTrue);

@@ -43,16 +43,15 @@ void main() {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      expect(find.text('New Kudo'), findsOneWidget);
+      expect(find.text(t.sendKudos.title), findsOneWidget);
     });
 
     testWidgets('hiển thị header subtitle', (tester) async {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // English default locale: "Send your appreciation and recognition to your teammate"
       expect(
-        find.text('Send your appreciation and recognition to your teammate'),
+        find.text(t.sendKudos.headerSubtitle),
         findsOneWidget,
       );
     });
@@ -61,8 +60,7 @@ void main() {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // English default locale: "Send"
-      expect(find.text('Send'), findsOneWidget);
+      expect(find.text(t.sendKudos.sendButton), findsOneWidget);
     });
 
     testWidgets('send button disabled khi form rỗng', (tester) async {
@@ -72,7 +70,7 @@ void main() {
       // Khi form rỗng, GestureDetector bọc send button không có onTap
       final gestureDetectors = tester.widgetList<GestureDetector>(
         find.ancestor(
-          of: find.text('Send'),
+          of: find.text(t.sendKudos.sendButton),
           matching: find.byType(GestureDetector),
         ),
       );
@@ -104,33 +102,29 @@ void main() {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // English: "Recipient *" — mandatory field marker
-      expect(find.text('Recipient *'), findsOneWidget);
+      expect(find.text(t.sendKudos.recipientLabel), findsOneWidget);
     });
 
     testWidgets('label Title có dấu *', (tester) async {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // English: "Title *" — mandatory field marker
-      expect(find.text('Title *'), findsOneWidget);
+      expect(find.text(t.sendKudos.titleLabel), findsOneWidget);
     });
 
     testWidgets('label Hashtag có dấu *', (tester) async {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // "Hashtag *" — same in EN/VI
-      expect(find.text('Hashtag *'), findsOneWidget);
+      expect(find.text(t.sendKudos.hashtagLabel), findsOneWidget);
     });
 
     testWidgets('label Attach image không có dấu *', (tester) async {
       await tester.pumpWidget(_buildScreen());
       await tester.pumpAndSettle();
 
-      // English: "Attach image" — optional field, no asterisk
-      expect(find.text('Attach image'), findsOneWidget);
-      expect(find.text('Attach image *'), findsNothing);
+      expect(find.text(t.sendKudos.imageAttach), findsOneWidget);
+      expect(find.text('${t.sendKudos.imageAttach} *'), findsNothing);
     });
   });
 }

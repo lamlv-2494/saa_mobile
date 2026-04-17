@@ -127,55 +127,67 @@ class KudosContentCard extends StatelessWidget {
               onToggle: onHeartTap,
             ),
             const Spacer(),
-            
-            GestureDetector(
-              onTap: () => _copyLink(context),
-              child: Row(
-                children: [
-                  Semantics(
-                    button: true,
-                    label: t.kudos.copyLinkAccessibility,
-                    child: Text(
-                      t.kudos.copyLink,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.bgDark.withAlpha(178),
+            Flexible(
+              child: GestureDetector(
+                onTap: () => _copyLink(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Semantics(
+                        button: true,
+                        label: t.kudos.copyLinkAccessibility,
+                        child: Text(
+                          t.kudos.copyLink,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.bgDark.withAlpha(178),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Assets.icons.icLink.svg(
-                    width: 12,
-                    height: 12,
-                    color: AppColors.bgDark.withAlpha(178),
-                  ),],
+                    const SizedBox(width: 4),
+                    Assets.icons.icLink.svg(
+                      width: 12,
+                      height: 12,
+                      color: AppColors.bgDark.withAlpha(178),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(width: 8),
-            GestureDetector(
-              onTap: onViewDetail,
-              child: Row(
-                children: [
-                  Semantics(
-                    link: true,
-                    label: t.kudos.viewDetailAccessibility,
-                    child: Text(
-                      t.kudos.viewDetail,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.bgDark.withAlpha(178),
+            Flexible(
+              child: GestureDetector(
+                onTap: onViewDetail,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Semantics(
+                        link: true,
+                        label: t.kudos.viewDetailAccessibility,
+                        child: Text(
+                          t.kudos.viewDetail,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.bgDark.withAlpha(178),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Assets.icons.icArrowOpen.svg(
-                    width: 16,
-                    height: 16,
-                    color: AppColors.bgDark.withAlpha(178),
-                  ),
-                ],
+                    const SizedBox(width: 4),
+                    Assets.icons.icArrowOpen.svg(
+                      width: 16,
+                      height: 16,
+                      color: AppColors.bgDark.withAlpha(178),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

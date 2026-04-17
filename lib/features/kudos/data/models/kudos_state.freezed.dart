@@ -22,7 +22,7 @@ mixin _$KudosState {
   PersonalStats? get personalStats => throw _privateConstructorUsedError;
   List<GiftRecipientRanking> get topGiftRecipients =>
       throw _privateConstructorUsedError;
-  SpotlightNetwork? get spotlightData => throw _privateConstructorUsedError;
+  SpotlightData? get spotlightData => throw _privateConstructorUsedError;
   Hashtag? get selectedHashtag => throw _privateConstructorUsedError;
   Department? get selectedDepartment => throw _privateConstructorUsedError;
   int get currentHighlightPage => throw _privateConstructorUsedError;
@@ -53,7 +53,7 @@ abstract class $KudosStateCopyWith<$Res> {
     List<Kudos> allKudos,
     PersonalStats? personalStats,
     List<GiftRecipientRanking> topGiftRecipients,
-    SpotlightNetwork? spotlightData,
+    SpotlightData? spotlightData,
     Hashtag? selectedHashtag,
     Department? selectedDepartment,
     int currentHighlightPage,
@@ -66,7 +66,7 @@ abstract class $KudosStateCopyWith<$Res> {
   });
 
   $PersonalStatsCopyWith<$Res>? get personalStats;
-  $SpotlightNetworkCopyWith<$Res>? get spotlightData;
+  $SpotlightDataCopyWith<$Res>? get spotlightData;
   $HashtagCopyWith<$Res>? get selectedHashtag;
   $DepartmentCopyWith<$Res>? get selectedDepartment;
 }
@@ -122,7 +122,7 @@ class _$KudosStateCopyWithImpl<$Res, $Val extends KudosState>
             spotlightData: freezed == spotlightData
                 ? _value.spotlightData
                 : spotlightData // ignore: cast_nullable_to_non_nullable
-                      as SpotlightNetwork?,
+                      as SpotlightData?,
             selectedHashtag: freezed == selectedHashtag
                 ? _value.selectedHashtag
                 : selectedHashtag // ignore: cast_nullable_to_non_nullable
@@ -182,12 +182,12 @@ class _$KudosStateCopyWithImpl<$Res, $Val extends KudosState>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $SpotlightNetworkCopyWith<$Res>? get spotlightData {
+  $SpotlightDataCopyWith<$Res>? get spotlightData {
     if (_value.spotlightData == null) {
       return null;
     }
 
-    return $SpotlightNetworkCopyWith<$Res>(_value.spotlightData!, (value) {
+    return $SpotlightDataCopyWith<$Res>(_value.spotlightData!, (value) {
       return _then(_value.copyWith(spotlightData: value) as $Val);
     });
   }
@@ -235,7 +235,7 @@ abstract class _$$KudosStateImplCopyWith<$Res>
     List<Kudos> allKudos,
     PersonalStats? personalStats,
     List<GiftRecipientRanking> topGiftRecipients,
-    SpotlightNetwork? spotlightData,
+    SpotlightData? spotlightData,
     Hashtag? selectedHashtag,
     Department? selectedDepartment,
     int currentHighlightPage,
@@ -250,7 +250,7 @@ abstract class _$$KudosStateImplCopyWith<$Res>
   @override
   $PersonalStatsCopyWith<$Res>? get personalStats;
   @override
-  $SpotlightNetworkCopyWith<$Res>? get spotlightData;
+  $SpotlightDataCopyWith<$Res>? get spotlightData;
   @override
   $HashtagCopyWith<$Res>? get selectedHashtag;
   @override
@@ -307,7 +307,7 @@ class __$$KudosStateImplCopyWithImpl<$Res>
         spotlightData: freezed == spotlightData
             ? _value.spotlightData
             : spotlightData // ignore: cast_nullable_to_non_nullable
-                  as SpotlightNetwork?,
+                  as SpotlightData?,
         selectedHashtag: freezed == selectedHashtag
             ? _value.selectedHashtag
             : selectedHashtag // ignore: cast_nullable_to_non_nullable
@@ -405,7 +405,7 @@ class _$KudosStateImpl implements _KudosState {
   }
 
   @override
-  final SpotlightNetwork? spotlightData;
+  final SpotlightData? spotlightData;
   @override
   final Hashtag? selectedHashtag;
   @override
@@ -538,7 +538,7 @@ abstract class _KudosState implements KudosState {
     final List<Kudos> allKudos,
     final PersonalStats? personalStats,
     final List<GiftRecipientRanking> topGiftRecipients,
-    final SpotlightNetwork? spotlightData,
+    final SpotlightData? spotlightData,
     final Hashtag? selectedHashtag,
     final Department? selectedDepartment,
     final int currentHighlightPage,
@@ -559,7 +559,7 @@ abstract class _KudosState implements KudosState {
   @override
   List<GiftRecipientRanking> get topGiftRecipients;
   @override
-  SpotlightNetwork? get spotlightData;
+  SpotlightData? get spotlightData;
   @override
   Hashtag? get selectedHashtag;
   @override

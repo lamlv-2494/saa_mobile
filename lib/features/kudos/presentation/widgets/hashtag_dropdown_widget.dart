@@ -45,8 +45,10 @@ class HashtagDropdownWidgetState extends ConsumerState<HashtagDropdownWidget> {
       menuChildren: available.isEmpty
           ? [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Text(
                   t.sendKudos.hashtagEmpty,
                   style: GoogleFonts.montserrat(
@@ -59,7 +61,8 @@ class HashtagDropdownWidgetState extends ConsumerState<HashtagDropdownWidget> {
           : available.map((tag) {
               final isSelected = selected.any((s) => s.id == tag.id);
               final isDisabled =
-                  !isSelected && selected.length >= SendKudosViewModel.maxHashtags;
+                  !isSelected &&
+                  selected.length >= SendKudosViewModel.maxHashtags;
 
               return MenuItemButton(
                 onPressed: isDisabled
@@ -81,8 +84,8 @@ class HashtagDropdownWidgetState extends ConsumerState<HashtagDropdownWidget> {
                     isDisabled
                         ? AppColors.textSecondary.withValues(alpha: 0.4)
                         : isSelected
-                            ? AppColors.textAccent
-                            : Colors.white,
+                        ? AppColors.textAccent
+                        : Colors.white,
                   ),
                 ),
                 trailingIcon: isSelected
@@ -100,8 +103,8 @@ class HashtagDropdownWidgetState extends ConsumerState<HashtagDropdownWidget> {
                     color: isDisabled
                         ? AppColors.textSecondary.withValues(alpha: 0.4)
                         : isSelected
-                            ? AppColors.textAccent
-                            : Colors.white,
+                        ? AppColors.textAccent
+                        : Colors.white,
                   ),
                 ),
               );
@@ -115,4 +118,3 @@ class HashtagDropdownWidgetState extends ConsumerState<HashtagDropdownWidget> {
     _menuController.open();
   }
 }
-

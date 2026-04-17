@@ -6,8 +6,9 @@ import 'package:saa_mobile/features/kudos/data/models/gift_recipient_ranking.dar
 import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
+import 'package:saa_mobile/features/kudos/data/models/secret_box.dart';
 import 'package:saa_mobile/features/kudos/data/models/send_kudos_state.dart';
-import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
+import 'package:saa_mobile/features/kudos/data/models/spotlight_data.dart';
 import 'package:saa_mobile/features/kudos/data/models/user_summary.dart';
 
 class KudosRepository {
@@ -72,7 +73,7 @@ class KudosRepository {
     }
   }
 
-  Future<SpotlightNetwork> getSpotlight() async {
+  Future<SpotlightData> getSpotlight() async {
     try {
       return await _datasource.fetchSpotlight();
     } catch (e) {
@@ -200,6 +201,22 @@ class KudosRepository {
       await _datasource.deleteSendKudosDraft();
     } catch (e) {
       throw Exception('Không thể xóa nháp kudos: $e');
+    }
+  }
+
+  Future<SecretBox?> getNextSecretBox() async {
+    try {
+      return await _datasource.getNextSecretBox();
+    } catch (e) {
+      throw Exception('Không thể lấy hộp bí mật: $e');
+    }
+  }
+
+  Future<SecretBox> openSecretBox(String boxId) async {
+    try {
+      return await _datasource.openSecretBox(boxId);
+    } catch (e) {
+      throw Exception('Không thể mở hộp bí mật: $e');
     }
   }
 

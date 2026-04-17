@@ -8,7 +8,7 @@ import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos_state.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
-import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
+import 'package:saa_mobile/features/kudos/data/models/spotlight_data.dart';
 import 'package:saa_mobile/features/kudos/data/repositories/kudos_repository.dart';
 
 class KudosViewModel extends AsyncNotifier<KudosState> {
@@ -40,7 +40,7 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
       allKudos: allKudos,
       personalStats: results[2] as PersonalStats?,
       topGiftRecipients: results[3] as List<GiftRecipientRanking>? ?? [],
-      spotlightData: results[4] as SpotlightNetwork?,
+      spotlightData: results[4] as SpotlightData?,
       availableHashtags: results[5] as List<Hashtag>? ?? [],
       availableDepartments: results[6] as List<Department>? ?? [],
       hasMoreKudos: allKudos.length >= _pageLimit,
@@ -104,9 +104,10 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
     if (targetKudos == null || !targetKudos.canLike) return;
 
     final isLiked = targetKudos.isLikedByMe;
+    final delta = currentState.personalStats?.isBonusActive == true ? 2 : 1;
     final newHeartCount = isLiked
-        ? targetKudos.heartCount - 1
-        : targetKudos.heartCount + 1;
+        ? targetKudos.heartCount - delta
+        : targetKudos.heartCount + delta;
     final updatedKudos = targetKudos.copyWith(
       isLikedByMe: !isLiked,
       heartCount: newHeartCount,
@@ -238,10 +239,7 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
 
     _allKudosPage = 1;
     try {
-      final kudos = await _repository.getKudos(
-        page: 1,
-        limit: _pageLimit,
-      );
+      final kudos = await _repository.getKudos(page: 1, limit: _pageLimit);
       state = AsyncValue.data(
         currentState.copyWith(
           allKudosPageList: kudos,
@@ -259,9 +257,7 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
       return;
     }
 
-    state = AsyncValue.data(
-      currentState.copyWith(isLoadingMoreAllKudos: true),
-    );
+    state = AsyncValue.data(currentState.copyWith(isLoadingMoreAllKudos: true));
 
     _allKudosPage++;
     try {
@@ -293,10 +289,7 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
 
     _allKudosPage = 1;
     try {
-      final kudos = await _repository.getKudos(
-        page: 1,
-        limit: _pageLimit,
-      );
+      final kudos = await _repository.getKudos(page: 1, limit: _pageLimit);
       state = AsyncValue.data(
         currentState.copyWith(
           allKudosPageList: kudos,
@@ -304,6 +297,47 @@ class KudosViewModel extends AsyncNotifier<KudosState> {
         ),
       );
     } catch (_) {}
+  }
+
+  // === Secret Box Flow ===
+
+  bool _isOpeningBox = false;
+
+  /// Mở hộp bí mật tiếp theo của user hiện tại.
+  /// Guard chống double-tap (_isOpeningBox).
+  /// Trả về [SecretBox] đã mở để caller navigate, hoặc null nếu không còn hộp.
+  Future<void> openNextSecretBox() async {
+    if (_isOpeningBox) return;
+    _isOpeningBox = true;
+    try {
+      // Step 1: lấy hộp chưa mở tiếp theo
+      final nextBox = await _repository.getNextSecretBox();
+      if (nextBox == null) return;
+
+      // Step 2: mở hộp
+      await _repository.openSecretBox(nextBox.id);
+
+      // Step 3: cập nhật stats cục bộ (optimistic)
+      final current = state.valueOrNull;
+      if (current?.personalStats != null) {
+        final stats = current!.personalStats!;
+        state = AsyncValue.data(
+          current.copyWith(
+            personalStats: stats.copyWith(
+              secretBoxesOpened: stats.secretBoxesOpened + 1,
+              secretBoxesUnopened: (stats.secretBoxesUnopened - 1).clamp(
+                0,
+                9999,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (_) {
+      // Không update state khi lỗi — giữ nguyên để user thấy trạng thái đúng
+    } finally {
+      _isOpeningBox = false;
+    }
   }
 
   KudosState _updateKudosInState(

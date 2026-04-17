@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:saa_mobile/shared/widgets/home_header_widget.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 
 class MockSharedPrefs extends Mock implements SharedPreferences {}
 
@@ -90,7 +91,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final searchButton = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == 'Search',
+        (w) => w is Semantics && w.properties.label == t.accessibility.searchButton,
       );
       await tester.tap(searchButton);
       expect(tapped, true);
@@ -105,7 +106,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final bellButton = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == 'Notifications',
+        (w) => w is Semantics && w.properties.label == t.accessibility.notificationButton,
       );
       await tester.tap(bellButton);
       expect(tapped, true);

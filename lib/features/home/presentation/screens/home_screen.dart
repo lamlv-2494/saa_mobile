@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:saa_mobile/app/theme/app_colors.dart';
@@ -166,10 +167,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           bottom: 16,
           child: KudosFabWidget(
             onWriteKudosTap: () {
-              // TODO: context.push('/kudos/send')
+              context.push('/send-kudos');
             },
             onViewKudosTap: () {
-              // TODO: context.push('/kudos')
+              ref.read(currentTabIndexProvider.notifier).state = 2;
             },
           ),
         ),

@@ -61,7 +61,7 @@ class _HighlightCarouselWidgetState extends State<HighlightCarouselWidget> {
     final day = createdAt.day.toString().padLeft(2, '0');
     final month = createdAt.month.toString().padLeft(2, '0');
     final year = createdAt.year;
-    
+
     return '$hour:$minute - $day/$month/$year';
   }
 

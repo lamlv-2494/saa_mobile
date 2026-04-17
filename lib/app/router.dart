@@ -31,20 +31,22 @@ GoRouter createRouter(Ref ref) {
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, _) => const MainScaffold()),
-      GoRoute(
-        path: '/send-kudos',
-        builder: (_, _) => const SendKudosScreen(),
-      ),
+      GoRoute(path: '/send-kudos', builder: (_, _) => const SendKudosScreen()),
       GoRoute(
         path: '/kudos/:kudosId',
-        builder: (_, state) => KudosDetailScreen(
-          kudosId: state.pathParameters['kudosId']!,
-        ),
+        builder: (_, state) =>
+            KudosDetailScreen(kudosId: state.pathParameters['kudosId']!),
       ),
       GoRoute(
         path: '/profile/:userId',
-        builder: (_, state) => OtherProfileScreen(
-          userId: state.pathParameters['userId']!,
+        builder: (_, state) =>
+            OtherProfileScreen(userId: state.pathParameters['userId']!),
+      ),
+      // Placeholder: Open Secret Box screen (screenId: kQk65hSYF2 — pending)
+      GoRoute(
+        path: '/secret-box',
+        builder: (_, _) => const Scaffold(
+          body: Center(child: Text('Secret Box — Coming Soon')),
         ),
       ),
     ],

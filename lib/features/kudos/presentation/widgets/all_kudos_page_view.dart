@@ -222,7 +222,6 @@ class _AllKudosPageViewState extends State<AllKudosPageView> {
                     ),
                   ),
                 )
-
               // ─── Empty state ───
               else if (widget.kudosList.isEmpty && !widget.isLoadingMore)
                 SliverFillRemaining(
@@ -240,14 +239,14 @@ class _AllKudosPageViewState extends State<AllKudosPageView> {
                     ),
                   ),
                 )
-
               // ─── Kudos list with load-more indicator ───
               else ...[
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList.separated(
                     itemCount: widget.kudosList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final kudos = widget.kudosList[index];
                       return Semantics(
@@ -281,19 +280,19 @@ class _AllKudosPageViewState extends State<AllKudosPageView> {
                             ),
                           )
                         : (widget.hasLoadError
-                            ? Center(
-                                child: TextButton(
-                                  onPressed: widget.onRetry,
-                                  child: Text(
-                                    t.kudos.allKudosRetry,
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 14,
-                                      color: AppColors.textAccent,
+                              ? Center(
+                                  child: TextButton(
+                                    onPressed: widget.onRetry,
+                                    child: Text(
+                                      t.kudos.allKudosRetry,
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 14,
+                                        color: AppColors.textAccent,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            : const SizedBox.shrink()),
+                                )
+                              : const SizedBox.shrink()),
                   ),
                 ),
               ],

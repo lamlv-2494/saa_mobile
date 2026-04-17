@@ -61,7 +61,7 @@ void main() {
   }
 
   group('ProfileViewModel.build', () {
-    test('fetch profile, stats, iconBadges, kudos (page 1, filter: received)',
+    test('fetch profile, stats, iconBadges, kudos (page 1, filter: sent)',
         () async {
       // Arrange
       final profile = createUserProfile(name: 'Trần Văn B');
@@ -78,7 +78,7 @@ void main() {
       when(
         () => mockProfileRepo.getKudosHistory(
           userId: profile.id,
-          filter: 'received',
+          filter: 'sent',
           page: 1,
           limit: 20,
         ),
@@ -98,7 +98,7 @@ void main() {
       expect(state.personalStats, stats);
       expect(state.iconBadges, iconBadges);
       expect(state.kudosList, kudos);
-      expect(state.kudosFilter, KudosFilterType.received);
+      expect(state.kudosFilter, KudosFilterType.sent);
       expect(state.hasMoreKudos, false); // 2 < 20
     });
 
@@ -251,7 +251,7 @@ void main() {
       when(
         () => mockProfileRepo.getKudosHistory(
           userId: any(named: 'userId'),
-          filter: 'received',
+          filter: 'sent',
           page: 2,
           limit: 20,
         ),
@@ -310,7 +310,7 @@ void main() {
       when(
         () => mockProfileRepo.getKudosHistory(
           userId: any(named: 'userId'),
-          filter: 'received',
+          filter: 'sent',
           page: 2,
           limit: 20,
         ),

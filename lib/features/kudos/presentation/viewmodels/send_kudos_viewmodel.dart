@@ -34,10 +34,7 @@ class SendKudosViewModel extends AsyncNotifier<SendKudosState> {
       _currentUserId = results[2] as String?;
     } catch (_) {}
 
-    return SendKudosState(
-      availableHashtags: hashtags,
-      allUsers: users,
-    );
+    return SendKudosState(availableHashtags: hashtags, allUsers: users);
   }
 
   // ─────────────────────────────────────────────────────────────

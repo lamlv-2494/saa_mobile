@@ -11,6 +11,7 @@ import 'package:saa_mobile/features/home/data/models/kudos_info.dart';
 import 'package:saa_mobile/features/home/data/repositories/home_repository.dart';
 import 'package:saa_mobile/features/home/presentation/screens/home_screen.dart';
 import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 
 import '../../helpers/home_mocks.dart';
 
@@ -125,13 +126,13 @@ void main() {
       );
       expect(
         find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == 'Write a kudos',
+          (w) => w is Semantics && w.properties.label == t.accessibility.fabWriteKudos,
         ),
         findsOneWidget,
       );
       expect(
         find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == 'View Kudos',
+          (w) => w is Semantics && w.properties.label == t.accessibility.fabViewKudos,
         ),
         findsOneWidget,
       );

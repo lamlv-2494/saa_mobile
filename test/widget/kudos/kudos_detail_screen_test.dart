@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:saa_mobile/features/kudos/data/repositories/kudos_repository.dart';
 import 'package:saa_mobile/features/kudos/presentation/screens/kudos_detail_screen.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 import '../../helpers/kudos_test_helpers.dart';
 
 class MockKudosRepository extends Mock implements KudosRepository {}
@@ -157,7 +158,7 @@ void main() {
       await tester.pumpWidget(_buildScreen('k9', mockRepo));
       await tester.pumpAndSettle();
 
-      expect(find.text('Retry'), findsOneWidget);
+      expect(find.text(t.kudos.retry), findsOneWidget);
     });
   });
 }

@@ -10,11 +10,7 @@ import 'package:saa_mobile/i18n/strings.g.dart';
 /// Widget hiển thị thông tin sender.
 /// Conditional rendering: anonymous → avatar mặc định, alias, no badge, no tap.
 class SenderInfoWidget extends StatelessWidget {
-  const SenderInfoWidget({
-    super.key,
-    required this.kudos,
-    this.onTapProfile,
-  });
+  const SenderInfoWidget({super.key, required this.kudos, this.onTapProfile});
 
   final Kudos kudos;
   final VoidCallback? onTapProfile;
@@ -79,8 +75,9 @@ class SenderInfoWidget extends StatelessWidget {
             child: CircleAvatar(
               radius: 12,
               backgroundColor: AppColors.textSecondary.withAlpha(77),
-              backgroundImage:
-                  sender.avatar.isNotEmpty ? NetworkImage(sender.avatar) : null,
+              backgroundImage: sender.avatar.isNotEmpty
+                  ? NetworkImage(sender.avatar)
+                  : null,
               child: sender.avatar.isEmpty
                   ? Text(
                       sender.name.isNotEmpty
@@ -128,8 +125,9 @@ class SenderInfoWidget extends StatelessWidget {
               if (AssetMapper.heroTierImage(sender.heroTier) != null) ...[
                 if (sender.department.isNotEmpty)
                   Assets.icons.icDot.svg(width: 6, height: 6),
-                AssetMapper.heroTierImage(sender.heroTier)!
-                    .image(width: 12, height: 12),
+                AssetMapper.heroTierImage(
+                  sender.heroTier,
+                )!.image(width: 12, height: 12),
               ],
             ],
           ),
@@ -139,8 +137,7 @@ class SenderInfoWidget extends StatelessWidget {
   }
 
   Widget _buildAnonymous() {
-    final displayName =
-        kudos.senderAlias ?? t.kudos.anonymousSender;
+    final displayName = kudos.senderAlias ?? t.kudos.anonymousSender;
     final departmentText = t.kudos.anonymousSender;
 
     return Semantics(

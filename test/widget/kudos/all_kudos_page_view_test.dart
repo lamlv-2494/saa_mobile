@@ -63,7 +63,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('ALL KUDOS'), findsOneWidget);
+      expect(find.text(t.kudos.allKudosTitle), findsOneWidget);
     });
 
     testWidgets('hiển thị navbar title "All Kudos"', (tester) async {
@@ -72,7 +72,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('All Kudos'), findsOneWidget);
+      expect(find.text(t.kudos.allKudosNavbarTitle), findsOneWidget);
     });
 
     testWidgets('hiển thị KudosCard cho mỗi kudos trong list', (tester) async {
@@ -115,7 +115,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('No kudos yet'), findsOneWidget);
+      expect(find.text(t.kudos.allKudosEmpty), findsOneWidget);
       expect(find.byType(KudosCard), findsNothing);
     });
 
@@ -156,7 +156,7 @@ void main() {
       await tester.pump();
 
       expect(
-        find.text('Failed to load kudos. Please try again.'),
+        find.text(t.kudos.allKudosLoadError),
         findsOneWidget,
       );
     });
@@ -172,8 +172,8 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Retry'), findsOneWidget);
-      await tester.tap(find.text('Retry'));
+      expect(find.text(t.kudos.allKudosRetry), findsOneWidget);
+      await tester.tap(find.text(t.kudos.allKudosRetry));
       expect(retryCalled, isTrue);
     });
   });

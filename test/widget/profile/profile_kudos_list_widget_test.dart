@@ -44,7 +44,7 @@ void main() {
       await tester.pumpWidget(_buildWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('No Kudos yet.'), findsOneWidget);
+      expect(find.text(t.profile.noKudosHistory), findsOneWidget);
     });
 
     testWidgets('không hiển thị KudosCard khi rỗng', (tester) async {
@@ -67,7 +67,7 @@ void main() {
       await tester.pumpWidget(_buildWidget(kudosCount: 2));
       await tester.pumpAndSettle();
 
-      expect(find.text('No Kudos yet.'), findsNothing);
+      expect(find.text(t.profile.noKudosHistory), findsNothing);
     });
   });
 

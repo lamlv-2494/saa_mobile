@@ -4,7 +4,7 @@ import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos_state.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
-import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
+import 'package:saa_mobile/features/kudos/data/models/spotlight_data.dart';
 import 'package:saa_mobile/features/kudos/data/models/user_summary.dart';
 
 UserSummary createUserSummary({
@@ -87,22 +87,23 @@ PersonalStats createPersonalStats({
       isBonusActive: isBonusActive,
     );
 
-SpotlightNetwork createSpotlightNetwork({
-  List<SpotlightNode>? nodes,
-  List<SpotlightEdge>? edges,
+SpotlightData createSpotlightData({
+  List<SpotlightEntry>? entries,
   int totalKudos = 388,
+  List<SpotlightActivity>? recentActivity,
 }) =>
-    SpotlightNetwork(
-      nodes: nodes ??
+    SpotlightData(
+      entries: entries ??
           [
-            const SpotlightNode(
-                userId: 'u1', name: 'User A', x: 100, y: 100),
-            const SpotlightNode(
-                userId: 'u2', name: 'User B', x: 200, y: 150),
+            const SpotlightEntry(userId: 'u1', name: 'User A', x: 100, y: 50),
+            const SpotlightEntry(userId: 'u2', name: 'User B', x: 300, y: 80),
           ],
-      edges: edges ??
-          [const SpotlightEdge(fromUserId: 'u1', toUserId: 'u2', weight: 3)],
       totalKudos: totalKudos,
+      recentActivity: recentActivity ??
+          [
+            const SpotlightActivity(
+                timestamp: '10:00am', receiverName: 'User A'),
+          ],
     );
 
 GiftRecipientRanking createGiftRecipientRanking({
@@ -148,7 +149,7 @@ KudosState createKudosState({
   List<Kudos>? allKudos,
   PersonalStats? personalStats,
   List<GiftRecipientRanking>? topGiftRecipients,
-  SpotlightNetwork? spotlightData,
+  SpotlightData? spotlightData,
   Hashtag? selectedHashtag,
   Department? selectedDepartment,
   int currentHighlightPage = 0,
@@ -164,7 +165,7 @@ KudosState createKudosState({
       allKudos: allKudos ?? createKudosFeedList(),
       personalStats: personalStats ?? createPersonalStats(),
       topGiftRecipients: topGiftRecipients ?? createTop10List(),
-      spotlightData: spotlightData ?? createSpotlightNetwork(),
+      spotlightData: spotlightData ?? createSpotlightData(),
       selectedHashtag: selectedHashtag,
       selectedDepartment: selectedDepartment,
       currentHighlightPage: currentHighlightPage,

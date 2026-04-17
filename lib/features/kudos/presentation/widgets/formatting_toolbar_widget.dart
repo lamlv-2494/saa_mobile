@@ -4,10 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 /// Formatting toolbar with Bold, Italic, Strikethrough, Ordered List,
 /// Link, and Quote buttons.
 class FormattingToolbarWidget extends StatelessWidget {
-  const FormattingToolbarWidget({
-    super.key,
-    required this.controller,
-  });
+  const FormattingToolbarWidget({super.key, required this.controller});
 
   final TextEditingController controller;
 
@@ -17,7 +14,8 @@ class FormattingToolbarWidget extends StatelessWidget {
     if (!selection.isValid) return;
 
     final selectedText = selection.textInside(text);
-    final newText = selection.textBefore(text) +
+    final newText =
+        selection.textBefore(text) +
         prefix +
         selectedText +
         suffix +
@@ -26,7 +24,11 @@ class FormattingToolbarWidget extends StatelessWidget {
     controller.value = TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(
-        offset: selection.baseOffset + prefix.length + selectedText.length + suffix.length,
+        offset:
+            selection.baseOffset +
+            prefix.length +
+            selectedText.length +
+            suffix.length,
       ),
     );
   }
@@ -60,20 +62,14 @@ class FormattingToolbarWidget extends StatelessWidget {
             onTap: () => _applyFormat('~~', '~~'),
           ),
           const SizedBox(width: 8),
-          _ToolbarButton(
-            label: '1.',
-            onTap: () => _applyFormat('\n1. ', ''),
-          ),
+          _ToolbarButton(label: '1.', onTap: () => _applyFormat('\n1. ', '')),
           const SizedBox(width: 8),
           _ToolbarIconButton(
             iconData: Icons.link,
             onTap: () => _applyFormat('[', '](url)'),
           ),
           const SizedBox(width: 8),
-          _ToolbarButton(
-            label: '❝',
-            onTap: () => _applyFormat('> ', ''),
-          ),
+          _ToolbarButton(label: '❝', onTap: () => _applyFormat('> ', '')),
         ],
       ),
     );
@@ -109,8 +105,9 @@ class _ToolbarButton extends StatelessWidget {
               fontSize: 14,
               fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
               fontStyle: italic ? FontStyle.italic : FontStyle.normal,
-              decoration:
-                  strikethrough ? TextDecoration.lineThrough : TextDecoration.none,
+              decoration: strikethrough
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none,
               color: const Color(0x99FFFFFF),
             ),
           ),

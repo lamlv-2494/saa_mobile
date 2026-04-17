@@ -9,8 +9,9 @@ import 'package:saa_mobile/features/kudos/data/models/gift_recipient_ranking.dar
 import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
+import 'package:saa_mobile/features/kudos/data/models/secret_box.dart';
 import 'package:saa_mobile/features/kudos/data/models/send_kudos_state.dart';
-import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
+import 'package:saa_mobile/features/kudos/data/models/spotlight_data.dart';
 import 'package:saa_mobile/features/kudos/data/models/user_summary.dart';
 
 /// PostgREST datasource — query Supabase tables trực tiếp.
@@ -151,63 +152,83 @@ class KudosRemoteDatasource {
         .eq('user_id', userId);
   }
 
-  // ─── 6. Spotlight Network ───
+  // ─── 6. Spotlight Canvas ───
 
-  Future<SpotlightNetwork> fetchSpotlight() async {
-    // Lấy tất cả kudos active → build network graph client-side
+  Future<SpotlightData> fetchSpotlight() async {
+    // Lấy 50 kudos gần nhất với sender + recipient name
     final kudosData = await _client
         .from('kudos')
-        .select('sender_id, recipient_id')
+        .select(
+          'sender_id, recipient_id, created_at, '
+          'sender:users!kudos_sender_id_fkey(id, name), '
+          'recipient:users!kudos_recipient_id_fkey(id, name)',
+        )
         .eq('status', 'active')
-        .isFilter('deleted_at', null);
+        .isFilter('deleted_at', null)
+        .order('created_at', ascending: false)
+        .limit(50);
 
-    final usersData = await _client
-        .from('users')
-        .select('id, name, avatar_url')
-        .isFilter('deleted_at', null);
+    final rng = math.Random();
+    final seenSenderIds = <String>{};
+    final entries = <SpotlightEntry>[];
 
-    final totalCount = (kudosData as List).length;
+    // Lấy tối đa 10 activity gần nhất (receiver name + timestamp)
+    final activities = <SpotlightActivity>[];
 
-    // Build nodes from users who sent or received kudos
-    final involvedUserIds = <int>{};
-    final edgeMap = <String, int>{};
-    for (final k in kudosData) {
-      final sid = k['sender_id'] as int;
-      final rid = k['recipient_id'] as int;
-      involvedUserIds.addAll([sid, rid]);
-      final key = '$sid->$rid';
-      edgeMap[key] = (edgeMap[key] ?? 0) + 1;
+    for (final k in (kudosData as List)) {
+      final senderMap = k['sender'] as Map<String, dynamic>?;
+      final recipientMap = k['recipient'] as Map<String, dynamic>?;
+      final senderId = (k['sender_id'] ?? senderMap?['id'])?.toString() ?? '';
+      final senderName = senderMap?['name'] as String? ?? '';
+      final receiverName = recipientMap?['name'] as String? ?? '';
+      final createdAt = k['created_at'] as String? ?? '';
+
+      // Deduplicate senders → floating name entries
+      if (senderId.isNotEmpty && !seenSenderIds.contains(senderId)) {
+        seenSenderIds.add(senderId);
+        entries.add(SpotlightEntry(
+          userId: senderId,
+          name: senderName,
+          x: rng.nextDouble() * 660,
+          y: rng.nextDouble() * 110,
+        ));
+      }
+
+      // Collect recent activity (receiver name + formatted time)
+      if (activities.length < 10 && receiverName.isNotEmpty) {
+        activities.add(SpotlightActivity(
+          timestamp: _formatActivityTime(createdAt),
+          receiverName: receiverName,
+        ));
+      }
     }
 
-    final nodes = <SpotlightNode>[];
-    var i = 0;
-    for (final u in (usersData as List)) {
-      final uid = u['id'] as int;
-      if (!involvedUserIds.contains(uid)) continue;
-      // Simple circular layout
-      final angle = (i / involvedUserIds.length) * math.pi * 2;
-      nodes.add(
-        SpotlightNode(
-          userId: uid.toString(),
-          name: u['name'] as String? ?? '',
-          avatar: u['avatar_url'] as String? ?? '',
-          x: 168 + 120 * math.cos(angle),
-          y: 80 + 60 * math.sin(angle),
-        ),
-      );
-      i++;
+    // Total kudos count
+    final countResult = await _client
+        .from('kudos')
+        .select('id')
+        .eq('status', 'active')
+        .isFilter('deleted_at', null)
+        .count(CountOption.exact);
+
+    return SpotlightData(
+      entries: entries,
+      totalKudos: countResult.count,
+      recentActivity: activities,
+    );
+  }
+
+  String _formatActivityTime(String isoString) {
+    if (isoString.isEmpty) return '';
+    try {
+      final dt = DateTime.parse(isoString).toLocal();
+      final hour12 = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final suffix = dt.hour < 12 ? 'am' : 'pm';
+      return '$hour12:$minute$suffix';
+    } catch (_) {
+      return '';
     }
-
-    final edges = edgeMap.entries.map((e) {
-      final parts = e.key.split('->');
-      return SpotlightEdge(
-        fromUserId: parts[0],
-        toUserId: parts[1],
-        weight: e.value,
-      );
-    }).toList();
-
-    return SpotlightNetwork(nodes: nodes, edges: edges, totalKudos: totalCount);
   }
 
   // ─── 7. Search Spotlight ───
@@ -215,9 +236,7 @@ class KudosRemoteDatasource {
   Future<List<UserSummary>> searchSpotlight(String query) async {
     final data = await _client
         .from('users')
-        .select(
-          'id, name, avatar_url, hero_tier, department:departments(name)',
-        )
+        .select('id, name, avatar_url, hero_tier, department:departments(name)')
         .ilike('name', '%$query%')
         .isFilter('deleted_at', null)
         .limit(20);
@@ -331,9 +350,7 @@ class KudosRemoteDatasource {
   Future<List<UserSummary>> searchUsers(String query) async {
     final data = await _client
         .from('users')
-        .select(
-          'id, name, avatar_url, hero_tier, department:departments(name)',
-        )
+        .select('id, name, avatar_url, hero_tier, department:departments(name)')
         .ilike('name', '%$query%')
         .isFilter('deleted_at', null)
         .limit(20);
@@ -348,9 +365,7 @@ class KudosRemoteDatasource {
   Future<List<UserSummary>> fetchAllUsers() async {
     final data = await _client
         .from('users')
-        .select(
-          'id, name, avatar_url, hero_tier, department:departments(name)',
-        )
+        .select('id, name, avatar_url, hero_tier, department:departments(name)')
         .isFilter('deleted_at', null)
         .order('name');
 
@@ -478,6 +493,47 @@ class KudosRemoteDatasource {
     await _client.from('kudos_drafts').delete().eq('sender_id', senderId);
   }
 
+  // ─── 17. Secret Box: Get Next Unopened ───
+
+  /// Trả về hộp bí mật chưa mở tiếp theo của user hiện tại.
+  /// Trả null nếu không còn hộp nào chưa mở (204 No Content).
+  Future<SecretBox?> getNextSecretBox() async {
+    final userId = await _tryGetCurrentUserId();
+    if (userId == null) return null;
+
+    final data = await _client
+        .from('secret_boxes')
+        .select()
+        .eq('user_id', userId)
+        .eq('is_opened', false)
+        .order('created_at')
+        .limit(1)
+        .maybeSingle();
+
+    if (data == null) return null;
+    return _mapSecretBox(data);
+  }
+
+  // ─── 18. Secret Box: Open ───
+
+  /// Mở hộp bí mật theo boxId. Throw nếu đã mở (idempotent safe — caller xử lý).
+  Future<SecretBox> openSecretBox(String boxId) async {
+    final userId = await _getCurrentUserId();
+
+    final data = await _client
+        .from('secret_boxes')
+        .update({
+          'is_opened': true,
+          'opened_at': DateTime.now().toIso8601String(),
+        })
+        .eq('id', int.parse(boxId))
+        .eq('user_id', userId)
+        .select()
+        .single();
+
+    return _mapSecretBox(data);
+  }
+
   // ─── Helpers ───
 
   Future<int> _getCurrentUserId() async {
@@ -553,6 +609,22 @@ class KudosRemoteDatasource {
       shareUrl: 'saa://kudos/${data['id']}',
       awardTitle: data['award_title'] as String?,
       imageUrls: imageUrls,
+    );
+  }
+
+  SecretBox _mapSecretBox(Map<String, dynamic> data) {
+    return SecretBox(
+      id: '${data['id']}',
+      userId: '${data['user_id']}',
+      isOpened: data['is_opened'] as bool? ?? false,
+      openedAt: data['opened_at'] != null
+          ? DateTime.tryParse(data['opened_at'] as String)
+          : null,
+      rewardType: data['reward_type'] as String?,
+      rewardValue: data['reward_value'] as String?,
+      createdAt: data['created_at'] != null
+          ? DateTime.tryParse(data['created_at'] as String)
+          : null,
     );
   }
 

@@ -75,6 +75,7 @@
         "top10Title": "10 SUNNER NHẬN QUÀ MỚI NHẤT",
         "searchSunner": "Tìm kiếm sunner",
         "totalKudos": "{count} KUDOS",
+        "liveFeedEntry": "{timestamp} {name} đã nhận được một Kudos mới",
         "pageIndicator": "{current}/{total}",
         "sent": "sent",
         "timeAgo": "{time} trước",

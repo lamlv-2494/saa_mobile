@@ -48,7 +48,7 @@ void main() {
       await tester.pumpWidget(_buildWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Open secret box'), findsOneWidget);
+      expect(find.text(t.kudos.openSecretBox), findsOneWidget);
     });
 
     testWidgets('hiển thị divider', (tester) async {
@@ -70,7 +70,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Open secret box'));
+      await tester.tap(find.text(t.kudos.openSecretBox));
       await tester.pumpAndSettle();
 
       expect(tapped, isTrue);
@@ -86,7 +86,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Open secret box'));
+      await tester.tap(find.text(t.kudos.openSecretBox));
       await tester.pumpAndSettle();
 
       expect(tapped, isFalse);

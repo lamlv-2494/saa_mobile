@@ -138,7 +138,7 @@ void main() {
       await tester.pumpWidget(_buildScreen(_makeState(kudosList: [])));
       await tester.pumpAndSettle();
 
-      expect(find.text('No Kudos yet.'), findsOneWidget);
+      expect(find.text(t.profile.noKudosHistory), findsOneWidget);
     });
   });
 
@@ -155,7 +155,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Something went wrong. Tap to retry.'), findsOneWidget);
+      expect(find.text(t.profile.loadError), findsOneWidget);
     });
   });
 }

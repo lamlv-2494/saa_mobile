@@ -85,8 +85,9 @@ class ReceiverInfoWidget extends StatelessWidget {
               if (AssetMapper.heroTierImage(receiver.heroTier) != null) ...[
                 if (receiver.department.isNotEmpty)
                   Assets.icons.icDot.svg(width: 6, height: 6),
-                AssetMapper.heroTierImage(receiver.heroTier)!
-                    .image(width: 12, height: 12),
+                AssetMapper.heroTierImage(
+                  receiver.heroTier,
+                )!.image(width: 12, height: 12),
               ],
             ],
           ),

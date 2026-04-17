@@ -26,10 +26,7 @@ class KudosDetailViewModel extends FamilyAsyncNotifier<Kudos?, String> {
 
     // Optimistic update
     state = AsyncValue.data(
-      currentKudos.copyWith(
-        isLikedByMe: !isLiked,
-        heartCount: newHeartCount,
-      ),
+      currentKudos.copyWith(isLikedByMe: !isLiked, heartCount: newHeartCount),
     );
 
     try {
@@ -51,5 +48,7 @@ class KudosDetailViewModel extends FamilyAsyncNotifier<Kudos?, String> {
   }
 }
 
-final kudosDetailViewModelProvider = AsyncNotifierProvider.family<
-    KudosDetailViewModel, Kudos?, String>(KudosDetailViewModel.new);
+final kudosDetailViewModelProvider =
+    AsyncNotifierProvider.family<KudosDetailViewModel, Kudos?, String>(
+      KudosDetailViewModel.new,
+    );

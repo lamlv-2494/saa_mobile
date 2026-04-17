@@ -33,7 +33,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Received (5)'), findsOneWidget);
+      expect(find.text('${t.profile.filterReceived} (5)'), findsOneWidget);
     });
 
     testWidgets('hiển thị label filter hiện tại (sent)', (tester) async {
@@ -42,7 +42,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Sent (10)'), findsOneWidget);
+      expect(find.text('${t.profile.filterSent} (10)'), findsOneWidget);
     });
 
     testWidgets('không hiển thị overlay khi chưa tap', (tester) async {
@@ -50,7 +50,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Chỉ có 1 text (button label), overlay chưa mở
-      expect(find.text('Received (5)'), findsOneWidget);
+      expect(find.text('${t.profile.filterReceived} (5)'), findsOneWidget);
     });
   });
 
@@ -61,12 +61,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Received (5)'));
+      await tester.tap(find.text('${t.profile.filterReceived} (5)'));
       await tester.pumpAndSettle();
 
       // Overlay hiển thị cả 2 options
-      expect(find.text('Received (5)'), findsNWidgets(2));
-      expect(find.text('Sent (10)'), findsOneWidget);
+      expect(find.text('${t.profile.filterReceived} (5)'), findsNWidgets(2));
+      expect(find.text('${t.profile.filterSent} (10)'), findsOneWidget);
     });
 
     testWidgets('gọi onChanged khi chọn filter khác', (tester) async {
@@ -82,11 +82,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Mở overlay
-      await tester.tap(find.text('Received (5)'));
+      await tester.tap(find.text('${t.profile.filterReceived} (5)'));
       await tester.pumpAndSettle();
 
       // Chọn "Sent"
-      await tester.tap(find.text('Sent (10)'));
+      await tester.tap(find.text('${t.profile.filterSent} (10)'));
       await tester.pumpAndSettle();
 
       expect(selected, KudosFilterType.sent);

@@ -8,10 +8,7 @@ import 'package:saa_mobile/features/kudos/presentation/viewmodels/send_kudos_vie
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class RecipientPopupMenuWidget extends ConsumerWidget {
-  const RecipientPopupMenuWidget({
-    super.key,
-    required this.hasError,
-  });
+  const RecipientPopupMenuWidget({super.key, required this.hasError});
 
   final bool hasError;
 
@@ -33,16 +30,13 @@ class RecipientPopupMenuWidget extends ConsumerWidget {
     final allUsers = state?.allUsers ?? [];
     final selectedId = state?.recipientId;
 
-    final borderColor =
-        hasError ? AppColors.errorRed : const Color(0xFF998C5F);
+    final borderColor = hasError ? AppColors.errorRed : const Color(0xFF998C5F);
 
     return PopupMenuButton<UserSummary>(
       onSelected: (user) {
-        ref.read(sendKudosViewModelProvider.notifier).selectRecipient(
-              id: user.id,
-              name: user.name,
-              avatar: user.avatar,
-            );
+        ref
+            .read(sendKudosViewModelProvider.notifier)
+            .selectRecipient(id: user.id, name: user.name, avatar: user.avatar);
       },
       constraints: const BoxConstraints(maxHeight: 300, maxWidth: 335),
       color: const Color(0xFF0A1A24),
@@ -127,14 +121,11 @@ class RecipientPopupMenuWidget extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(
-                hasRecipient
-                    ? displayText
-                    : t.sendKudos.recipientPlaceholder,
+                hasRecipient ? displayText : t.sendKudos.recipientPlaceholder,
                 style: GoogleFonts.montserrat(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color:
-                      hasRecipient ? Colors.white : AppColors.textSecondary,
+                  color: hasRecipient ? Colors.white : AppColors.textSecondary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

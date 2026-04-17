@@ -5,7 +5,7 @@ import 'package:saa_mobile/features/kudos/data/models/gift_recipient_ranking.dar
 import 'package:saa_mobile/features/kudos/data/models/hashtag.dart';
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/data/models/personal_stats.dart';
-import 'package:saa_mobile/features/kudos/data/models/spotlight_network.dart';
+import 'package:saa_mobile/features/kudos/data/models/spotlight_data.dart';
 
 part 'kudos_state.freezed.dart';
 
@@ -16,7 +16,7 @@ class KudosState with _$KudosState {
     @Default([]) List<Kudos> allKudos,
     PersonalStats? personalStats,
     @Default([]) List<GiftRecipientRanking> topGiftRecipients,
-    SpotlightNetwork? spotlightData,
+    SpotlightData? spotlightData,
     Hashtag? selectedHashtag,
     Department? selectedDepartment,
     @Default(0) int currentHighlightPage,

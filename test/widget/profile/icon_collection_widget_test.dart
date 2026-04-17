@@ -35,7 +35,7 @@ void main() {
       await tester.pumpWidget(_buildWidget(3));
       await tester.pumpAndSettle();
 
-      expect(find.text('My icon collection'), findsOneWidget);
+      expect(find.text(t.profile.myIconCollection), findsOneWidget);
     });
 
     testWidgets('hiển thị đúng số lượng icon slots', (tester) async {

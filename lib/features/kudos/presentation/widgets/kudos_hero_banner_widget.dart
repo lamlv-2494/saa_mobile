@@ -28,10 +28,7 @@ class KudosHeroBannerWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Assets.images.kudosLogo.image(
-            width: 221,
-            height: 39,
-          ),
+          Assets.images.kudosLogo.image(width: 221, height: 39),
         ],
       ),
     );

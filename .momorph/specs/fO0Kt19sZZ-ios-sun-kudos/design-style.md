@@ -4,6 +4,7 @@
 **Frame Name**: `[iOS] Sun*Kudos`
 **Figma File Key**: `9ypp4enmFmdK3YAFJLIu6C`
 **Ngày trích xuất**: 2026-04-13
+**Ngày cập nhật**: 2026-04-16
 
 ---
 
@@ -43,7 +44,7 @@
 | --text-button | Montserrat | 14px | 500 | 20px | 0px |
 | --text-status-bar | SF Pro Text | 15px | 600 | 20px | -0.5px |
 | --text-language | Montserrat | 14px | 500 | 20px | 0px |
-| --text-network-name | Montserrat | ~2px | 700 | ~1.84px | 0.06px |
+| --text-spotlight-name | Montserrat | 8px (default) / 10px (highlighted) | 700 | auto | 0.06px |
 
 ### Spacing
 
@@ -171,9 +172,11 @@
 │                                                                                              │
 │  ┌─ B.6+B.7. Spotlight Board (336x236, gap: 24px) ─────────────────────────────────────┐   │
 │  │  "Sun* Annual Awards 2025" → divider → "SPOTLIGHT BOARD" (22px/500, #FFEA9E)         │   │
-│  │  ┌─ B.7. Network Chart (border: 0.29px #998C5F) ───────────────────────────────────┐│   │
-│  │  │  [Pan-zoom Network Graph]                                                        ││   │
-│  │  │  [🔍 Tìm kiếm sunner] (top-left)              [388 KUDOS] (bottom-left)         ││   │
+│  │  ┌─ B.7. Floating Names Canvas (border: 0.29px #998C5F, height: 159px) ─────────────┐│   │
+│  │  │  [🔍 Tìm kiếm sunner] (top-left)                                                 ││   │
+│  │  │  Nguyễn Văn A    Trần Thị B   Lê C ...  (floating Text labels)                  ││   │
+│  │  │     Huỳnh D        Phạm E   Võ F                                                 ││   │
+│  │  │  [388 KUDOS] (bottom-left)                                                       ││   │
 │  │  └──────────────────────────────────────────────────────────────────────────────────┘│   │
 │  └──────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                              │
@@ -194,8 +197,8 @@
 │  │  │                                                                                │  │   │
 │  │  │  ┌─ D.3. 10 Sunner nhận quà mới nhất ──────────────────────────────────────────┐    │  │   │
 │  │  │  │  "TOP 10 SUNNER NHẬN QUÀ MỚI NHẤT" (title)                            │    │  │   │
-│  │  │  │  1. [Avatar] Tên Sunner - Phòng ban .............. [Count]              │    │  │   │
-│  │  │  │  2. [Avatar] Tên Sunner - Phòng ban .............. [Count]              │    │  │   │
+│  │  │  │  1. [Avatar] Tên Sunner - Phòng ban  "Nhận được 1 áo phông SAA"         │    │  │   │
+│  │  │  │  2. [Avatar] Tên Sunner - Phòng ban  "Nhận được 1 mũ SAA"              │    │  │   │
 │  │  │  │  ... (10 rows)                                                          │    │  │   │
 │  │  │  └──────────────────────────────────────────────────────────────────────── │    │  │   │
 │  │  │                                                                                │  │   │
@@ -419,6 +422,20 @@
 | height | 24px |
 | gap | ~11px |
 
+**Carousel Card States (TC_FUN_038):**
+| Trạng thái | Mô tả | Visual |
+|-----------|-------|--------|
+| Active (center) | Thẻ đang được chọn, ở giữa carousel | Hiển thị đầy đủ, rõ nét, không fade |
+| Side (trái/phải) | Thẻ kề bên, visible một phần qua gradient overlay | Mờ dần qua gradient `rgba(0,16,26,0.50)` → `rgba(0,16,26,1)` |
+
+**Content Truncation Rules:**
+| Context | Max Lines | Test Case |
+|---------|-----------|-----------|
+| Message text trong Highlight card | 3 dòng | TC_GUI_005 |
+| Sender name trong Highlight card | 1 dòng + "..." | TC_GUI_005 |
+| Message text trong All Kudos feed | 5 dòng | TC_GUI_003 |
+| Hashtag tags | 1 dòng | TC_GUI_004 |
+
 ---
 
 ### B.5. Slide Indicator
@@ -444,7 +461,7 @@
 
 ---
 
-### B.7. Spotlight Section (Network Chart)
+### B.7. Spotlight Section (Floating Names Canvas)
 
 | Thuộc tính | Giá trị | Flutter |
 |-----------|---------|--------|
@@ -452,6 +469,48 @@
 | height | 159px | `height: 159` |
 | border | 0.29px solid `#998C5F` | `Border.all(width: 0.29, color: Color(0xFF998C5F))` |
 | overflow | hidden | `ClipRRect` |
+| background | `#00101A` (dark) | `Color(0xFF00101A)` |
+
+**Rendering Logic:**
+
+```
+ClipRRect(borderRadius: 8)
+└── Container(height: 159, color: #00101A)
+    └── Stack(fit: StackFit.expand)
+        │
+        ├── [Layer 1] InteractiveViewer (panEnabled, scaleEnabled)
+        │   └── SizedBox(width: 700, height: 130)  ← canvas pan area (tên names)
+        │       └── Stack
+        │           └── [for each SpotlightEntry]
+        │               Positioned(left: entry.x, top: entry.y,
+        │                 child: Text(entry.name,
+        │                   style: TextStyle(
+        │                     color: highlightedId == entry.userId ? #FFEA9E : white(alpha 178),
+        │                     fontSize: highlightedId == entry.userId ? 10px : 8px,
+        │                     fontWeight: w700,
+        │                   )
+        │                 )
+        │               )
+        │
+        ├── [Layer 2] Positioned(top: 8, left: 7) → B.7.3 Search Input (fixed, không pan)
+        │
+        ├── [Layer 3] Positioned(top: 11, left: 18) → B.7.1 KUDOS Count (fixed, không pan)
+        │
+        └── [Layer 4] Positioned(top: 124, left: 14) → Live Activity Feed (fixed)
+            └── Column(
+                  for each activity in recentActivity:
+                    Text("${activity.timestamp} ${activity.receiverName} đã nhận được một Kudos mới",
+                      style: TextStyle(fontSize: 4.06px, fontWeight: 700, color: white, opacity: 0.3))
+                )
+```
+
+> **Ghi chú thiết kế**: Search Input (B.7.3), KUDOS Count (B.7.1), và Live Feed đều là **fixed overlays** trong outer Stack — KHÔNG nằm bên trong `InteractiveViewer`, nên chúng không pan/zoom theo canvas. Chỉ các name labels mới nằm trong InteractiveViewer. Highlight state (`_highlightedUserId`) là local widget state, KHÔNG trong model.
+
+**Name Label (mỗi SpotlightEntry)** — highlight dựa trên `_highlightedUserId` widget state:
+| Trạng thái | fontSize | fontWeight | color | Điều kiện |
+|-----------|---------|---------|-------|----------|
+| Default | 8px | 700 | `rgba(255,255,255, 0.70)` | `_highlightedUserId != entry.userId` |
+| Highlighted | 10px | 700 | `#FFEA9E` | `_highlightedUserId == entry.userId` |
 
 **Search Input** (B.7.3):
 | Thuộc tính | Giá trị |
@@ -462,15 +521,31 @@
 | border | 0.198px solid `#998C5F` |
 | background | `rgba(255, 234, 158, 0.10)` |
 | padding | 4.75px 3.17px |
+| action | Tap → navigate screenId: `3jgwke3E8O` |
 
-**Kudos Count Label** (B.7.1):
+**Kudos Count Label** (B.7.1 — fixed overlay, top-left area):
 | Thuộc tính | Giá trị |
 |-----------|---------|
 | **Node ID** | `6885:9219` |
-| text | "388 KUDOS" |
-| fontSize | ~10.44px |
+| text | `"${spotlight.totalKudos} KUDOS"` (dynamic từ Supabase) |
+| fontSize | 10.44px (`10.4452543258667px` exact) |
 | fontWeight | 400 |
 | color | white |
+| position | top: ~11px, left: ~18px (absolute trong B.7 container, cạnh search input) |
+
+**Live Activity Feed** (fixed overlay trong B.7, tại top: 124px, left: 14px):
+| Thuộc tính | Giá trị |
+|-----------|---------|
+| **Node ID** | `6885:9101` (child TEXT nodes) |
+| text format | `"{timestamp} {receiverName} đã nhận được một Kudos mới"` |
+| timestamp format | `"HH:MMam/pm"` (ví dụ: "08:30PM") |
+| source | `spotlight.recentActivity` (List\<SpotlightActivity\>) — 10 items gần nhất |
+| layout | `Column` các `Text` rows |
+| fontSize | `4.062px` (Figma scale) — tương đương ~8px sau scale |
+| fontWeight | 700 |
+| opacity | 0.3 (30%) |
+| color | white |
+| position trong canvas | top: ~124px, left: ~14px (absolute trong B.7 container) |
 
 ---
 
@@ -579,12 +654,24 @@ Mỗi kudos card trong feed All Kudos gồm 2 phần: header (sender → receive
 | layout | Row, space-between |
 | height | ~32px |
 | gap | 8px |
+| tap action | Bấm → navigate Profile người khác (screenId: `bEpdheM0yU`) |
 
 - **Rank number**: 14px/700, `#FFEA9E`
-- **Avatar**: hình tròn, ~24-32px
+- **Avatar**: hình tròn, ~24-32px, `ClipOval`
 - **Name**: 14px/400, white
 - **Department**: 12px/400, `#999999`
-- **Gift icon**: icon card_giftcard, 16px, `#FFEA9E`
+- **rewardName**: 12px/400, `#FFEA9E` — mô tả phần quà (ví dụ: "Nhận được 1 áo phông SAA"), nguồn: `GiftRecipientRanking.rewardName` = `award_category_name` từ Supabase
+
+**Star Badge (Hero Tier) — hiển thị trên avatar người nhận:**
+| `users.hero_tier` | `badgeLevel` | Hiển thị | Màu |
+|-------------------|-------------|----------|-----|
+| `none` | 0 | Không badge | - |
+| `new_hero` | 1 | 1 badge star | `#FFEA9E` |
+| `rising_hero` | 2 | 2 badge stars | `#FFEA9E` |
+| `super_hero` | 3 | 3 badge stars | `#FFEA9E` |
+| `legend_hero` | 4 | 4 badge stars | `#FFEA9E` |
+
+> Mapping thực hiện trong `_mapUserSummary()` tại `KudosRemoteDatasource`.
 
 ---
 
@@ -623,12 +710,12 @@ Mỗi kudos card trong feed All Kudos gồm 2 phần: header (sender → receive
 | label | "Mở hộp bí mật", 14px/500, white | — |
 | icon | gift box icon, 24x24 | — |
 
-**States:**
-| Trạng thái | Thay đổi |
-|-----------|----------|
-| Default | background: `rgba(255, 234, 158, 0.10)`, border: `#998C5F` |
-| Pressed/Tap | background: `rgba(255, 234, 158, 0.15)` |
-| Disabled (no unopened boxes) | opacity: 0.5 hoặc ẩn button |
+**States (TC_FUN_039):**
+| Trạng thái | Thay đổi | Điều kiện |
+|-----------|----------|-----------|
+| Default | background: `rgba(255, 234, 158, 0.10)`, border: `#998C5F` | `secret_boxes_unopened > 0` |
+| Pressed/Tap | background: `rgba(255, 234, 158, 0.15)` | Đang bấm |
+| Disabled | opacity: 0.5, không bấm được | `secret_boxes_unopened = 0` |
 
 ---
 
@@ -717,9 +804,10 @@ Screen (bg: #00101A, w: 375, h: 2601, scroll)
 │
 ├── B.6+B.7. Spotlight (336x236, gap: 24)
 │   ├── Header (same pattern as B.1)
-│   └── Network Chart (h: 159, border: 0.29px #998C5F)
-│       ├── Search Input (64x11, border: #998C5F)
-│       └── "388 KUDOS" (10.44px/400, white)
+│   └── Floating Names Canvas (h: 159, border: 0.29px #998C5F, bg: #00101A)
+│       ├── InteractiveViewer → Stack(700x400) of Positioned(Text) name labels
+│       ├── Positioned(top-left): Search Input (64x11, border: #998C5F)
+│       └── Positioned(top: 11, left: 18): "388 KUDOS" (10.44px/400, white, fixed overlay)
 │
 ├── C. All Kudos (336x1393, gap: 24)
 │   ├── Header (same pattern)
@@ -732,7 +820,7 @@ Screen (bg: #00101A, w: 375, h: 2601, scroll)
 │       │
 │       ├── D.3. 10 Sunner nhận quà mới nhất
 │       │   ├── Title
-│       │   └── Rows (avatar + name + department + count)
+│       │   └── Rows (rank + avatar + name + department + rewardName) [tap → profile bEpdheM0yU]
 │       │
 │       └── C.3. Kudos Cards (multiple, infinite scroll)
 │           ├── Sender → Receiver Header
@@ -798,7 +886,7 @@ Screen (bg: #00101A, w: 375, h: 2601, scroll)
 | Carousel Card | translateX | 300ms | ease-in-out | Swipe / bấm arrow |
 | Gradient Overlay | opacity | 200ms | ease-out | Khi carousel slide |
 | Heart Icon | scale | 200ms | spring | Bấm like |
-| Network Chart | transform | continuous | linear | Pan/zoom gesture |
+| Spotlight Canvas | transform | continuous | linear | Pan/zoom gesture (InteractiveViewer) |
 | Dropdown | height, opacity | 200ms | ease-out | Bấm dropdown |
 | CTA Button | opacity | 150ms | ease-in-out | Tap |
 
@@ -819,12 +907,12 @@ Screen (bg: #00101A, w: 375, h: 2601, scroll)
 | Highlight Carousel | `6885:9090` | `PageView` + gradient overlay | 5 cards max |
 | Highlight Card | `6885:9091` | `HighlightKudosCard` widget | bg: `#FFF8E1` |
 | Slide Indicator | `6885:9098` | Custom `PageIndicator` widget | "2/5" format |
-| Spotlight Chart | `6885:9101` | `InteractiveViewer` + custom painter | pan/zoom |
+| Spotlight Board | `6885:9101` | `InteractiveViewer` + `Stack` of `Positioned(Text(...))` | floating name labels; KHÔNG dùng CustomPaint circles/edges |
 | All Kudos Feed | `6885:9220` | `SliverList` | lazy loading |
 | Kudos Card (C.3) | - | `KudosFeedCard` widget | Header (sender→receiver) + Content card |
 | Content Card (C.3.5) | - | `KudosContentCard` widget | bg: `#FFF8E1`, reusable cho cả Highlight và Feed |
 | Stats Block (D.1) | `6885:9223` | `PersonalStatsCard` widget | bg: `#00070C` |
-| 10 Sunner nhận quà mới nhất (D.3) | - | `TopGiftRecipientsCard` widget | 10 rows, sort by recency |
+| 10 Sunner nhận quà mới nhất (D.3) | - | `TopGiftRecipientsCard` widget | 10 rows, sort by recency; mỗi row tap → Profile người khác (bEpdheM0yU); hiển thị rewardName thay cho timestamp |
 | "Xem tất cả" Link (C.2) | - | `TextButton` / `GestureDetector` | color: `#FFEA9E`, align right |
 | "Mở hộp bí mật" Button (D.2) | - | Reuse `FilterDropdownButton` style | same CTA pattern |
 | Heart Toggle | - | Custom `HeartButton` widget | outlined ↔ filled, optimistic update |
@@ -835,10 +923,12 @@ Screen (bg: #00101A, w: 375, h: 2601, scroll)
 ## Ghi chú
 
 - Tất cả màu sắc PHẢI sử dụng theme tokens để hỗ trợ future theming.
-- Font Montserrat PHẢI được load qua `google_fonts` package hoặc local assets.
-- Tất cả icons PHẢI dùng Icon Component hoặc SVG assets qua `flutter_gen`.
+- Font Montserrat PHẢI được load qua `google_fonts` package.
+- Tất cả icons PHẢI dùng SVG assets qua `flutter_gen` (`Assets.icons.icXxx.svg(...)`).
 - Dark theme là mặc định — không có light theme variant trong thiết kế.
-- Section header pattern (subtitle + divider + title) lặp lại 3 lần → nên tạo reusable widget.
+- Section header pattern (subtitle + divider + title) lặp lại 3 lần → widget `SectionHeaderWidget` đã tồn tại trong `shared/widgets/`.
 - Highlight card background (`#FFF8E1`) là light color trên dark background → tạo visual contrast.
-- Network chart trong Spotlight sử dụng miniature text (~2px) → cần scale khi implement.
+- **Spotlight**: Khi `spotlight.entries.isEmpty` → hiển thị empty container 159px với text "Chưa có dữ liệu.". Khi có data → `InteractiveViewer` + `Stack` of `Positioned(Text(...))` với tên người gửi kudos gần đây. KHÔNG dùng `CustomPaint` circles/edges. KHÔNG dùng `Image.asset`.
+- **Hero tier badge**: Đọc từ `users.hero_tier` (DB enum), map sang `badgeLevel` 0-4 trong `_mapUserSummary()`.
+- **Kudos ẩn danh**: Khi `isAnonymous = true`, ẩn thông tin sender (avatar + tên), hiển thị `senderAlias` (nếu người gửi đặt nickname, field `kudos.sender_alias` VARCHAR max 50 chars) hoặc "Người gửi ẩn danh" nếu `senderAlias == null`.
 - Color contrast PHẢI đáp ứng WCAG AA (4.5:1 cho text thường).

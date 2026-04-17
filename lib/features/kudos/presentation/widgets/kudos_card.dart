@@ -172,10 +172,7 @@ class _SenderReceiverRow extends StatelessWidget {
         Column(
           children: [
             if (isAnon)
-              _AnonymousAvatar(
-                name: senderDisplayName,
-                radius: 16,
-              )
+              _AnonymousAvatar(name: senderDisplayName, radius: 16)
             else
               GestureDetector(
                 onTap: () => onAvatarTap?.call(kudos.sender.id),
@@ -321,10 +318,7 @@ class _UserAvatar extends StatelessWidget {
 
 /// Avatar ẩn danh — dùng asset riêng, border dày hơn, không badge, không tap.
 class _AnonymousAvatar extends StatelessWidget {
-  const _AnonymousAvatar({
-    required this.name,
-    required this.radius,
-  });
+  const _AnonymousAvatar({required this.name, required this.radius});
 
   final String name;
   final double radius;

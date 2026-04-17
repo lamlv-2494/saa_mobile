@@ -33,14 +33,14 @@ class _ErrorBannerWidgetState extends State<ErrorBannerWidget>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _shakeAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0, end: -5), weight: 25),
-      TweenSequenceItem(tween: Tween(begin: -5, end: 5), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 5, end: 0), weight: 25),
-    ]).animate(CurvedAnimation(
-      parent: _shakeController,
-      curve: Curves.easeInOut,
-    ));
+    _shakeAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 0, end: -5), weight: 25),
+          TweenSequenceItem(tween: Tween(begin: -5, end: 5), weight: 50),
+          TweenSequenceItem(tween: Tween(begin: 5, end: 0), weight: 25),
+        ]).animate(
+          CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut),
+        );
   }
 
   @override

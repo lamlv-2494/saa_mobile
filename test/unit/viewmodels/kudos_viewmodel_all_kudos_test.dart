@@ -33,7 +33,7 @@ void stubBuildDependencies(
   when(() => mockRepo.getTopRecipients())
       .thenAnswer((_) async => createTop10List());
   when(() => mockRepo.getSpotlight())
-      .thenAnswer((_) async => createSpotlightNetwork());
+      .thenAnswer((_) async => createSpotlightData());
   when(() => mockRepo.getHashtags()).thenAnswer((_) async => []);
   when(() => mockRepo.getDepartments()).thenAnswer((_) async => []);
 }

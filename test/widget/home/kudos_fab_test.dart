@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:saa_mobile/features/home/presentation/widgets/kudos_fab_widget.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 
 void main() {
   Widget buildTestWidget({
@@ -29,13 +30,13 @@ void main() {
       // Hai nút bấm có Semantics label đúng
       expect(
         find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == 'Write a kudos',
+          (w) => w is Semantics && w.properties.label == t.accessibility.fabWriteKudos,
         ),
         findsOneWidget,
       );
       expect(
         find.byWidgetPredicate(
-          (w) => w is Semantics && w.properties.label == 'View Kudos',
+          (w) => w is Semantics && w.properties.label == t.accessibility.fabViewKudos,
         ),
         findsOneWidget,
       );
@@ -58,7 +59,7 @@ void main() {
 
       // Tap the first Semantics (write kudos)
       final writeButton = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == 'Write a kudos',
+        (w) => w is Semantics && w.properties.label == t.accessibility.fabWriteKudos,
       );
       await tester.tap(writeButton);
       await tester.pump(const Duration(milliseconds: 350));
@@ -74,7 +75,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final viewButton = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == 'View Kudos',
+        (w) => w is Semantics && w.properties.label == t.accessibility.fabViewKudos,
       );
       await tester.tap(viewButton);
       await tester.pump(const Duration(milliseconds: 350));
@@ -89,7 +90,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final writeButton = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.label == 'Write a kudos',
+        (w) => w is Semantics && w.properties.label == t.accessibility.fabWriteKudos,
       );
 
       await tester.tap(writeButton);

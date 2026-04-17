@@ -8,10 +8,7 @@ import 'package:saa_mobile/features/kudos/presentation/viewmodels/send_kudos_vie
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class RecipientDropdownMenuWidget extends ConsumerWidget {
-  const RecipientDropdownMenuWidget({
-    super.key,
-    required this.hasError,
-  });
+  const RecipientDropdownMenuWidget({super.key, required this.hasError});
 
   final bool hasError;
 
@@ -34,8 +31,7 @@ class RecipientDropdownMenuWidget extends ConsumerWidget {
         ? allUsers.where((u) => u.id == selectedId).firstOrNull
         : null;
 
-    final borderColor =
-        hasError ? AppColors.errorRed : const Color(0xFF998C5F);
+    final borderColor = hasError ? AppColors.errorRed : const Color(0xFF998C5F);
 
     return DropdownMenu<UserSummary>(
       expandedInsets: EdgeInsets.zero,
@@ -45,7 +41,9 @@ class RecipientDropdownMenuWidget extends ConsumerWidget {
       enableSearch: false,
       onSelected: (user) {
         if (user != null) {
-          ref.read(sendKudosViewModelProvider.notifier).selectRecipient(
+          ref
+              .read(sendKudosViewModelProvider.notifier)
+              .selectRecipient(
                 id: user.id,
                 name: user.name,
                 avatar: user.avatar,
@@ -146,8 +144,9 @@ class RecipientDropdownMenuWidget extends ConsumerWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  minimumSize:
-                      const WidgetStatePropertyAll(Size(double.infinity, 56)),
+                  minimumSize: const WidgetStatePropertyAll(
+                    Size(double.infinity, 56),
+                  ),
                   padding: const WidgetStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 12),
                   ),

@@ -75,6 +75,7 @@
         "top10Title": "10 SUNNERS WITH LATEST GIFTS",
         "searchSunner": "Search sunner",
         "totalKudos": "{count} KUDOS",
+        "liveFeedEntry": "{timestamp} {name} has received a new Kudos",
         "pageIndicator": "{current}/{total}",
         "sent": "sent",
         "timeAgo": "{time} ago",

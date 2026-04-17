@@ -31,10 +31,7 @@ class HashtagChipGroupWidget extends StatelessWidget {
       runSpacing: 8,
       children: [
         ...selectedHashtags.map(
-          (tag) => _HashtagChip(
-            label: tag.name,
-            onRemove: () => onRemove(tag),
-          ),
+          (tag) => _HashtagChip(label: tag.name, onRemove: () => onRemove(tag)),
         ),
         if (canAdd)
           _AddHashtagButton(
@@ -44,8 +41,10 @@ class HashtagChipGroupWidget extends StatelessWidget {
           ),
         if (!canAdd)
           _HintText(
-            text: t.sendKudos.hashtagMaxReached
-                .replaceAll('{max}', '$maxHashtags'),
+            text: t.sendKudos.hashtagMaxReached.replaceAll(
+              '{max}',
+              '$maxHashtags',
+            ),
           ),
       ],
     );

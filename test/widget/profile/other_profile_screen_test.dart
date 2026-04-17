@@ -163,7 +163,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('User not found.'), findsOneWidget);
+      expect(find.text(t.profile.userNotFound), findsOneWidget);
     });
   });
 }

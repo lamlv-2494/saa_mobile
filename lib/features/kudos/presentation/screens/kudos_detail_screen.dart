@@ -30,8 +30,7 @@ class KudosDetailScreen extends ConsumerWidget {
           icon: Assets.icons.icChevronLeft.svg(
             width: 24,
             height: 24,
-            colorFilter:
-                const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
           onPressed: () => context.pop(),
         ),
@@ -138,8 +137,7 @@ class KudosDetailScreen extends ConsumerWidget {
               Container(height: 1, color: AppColors.awardImgBorder),
               const SizedBox(height: 8),
               _buildTimestamp(kudos),
-              if (kudos.awardTitle != null &&
-                  kudos.awardTitle!.isNotEmpty) ...[
+              if (kudos.awardTitle != null && kudos.awardTitle!.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 _buildAwardTitle(kudos),
               ],
@@ -183,8 +181,7 @@ class KudosDetailScreen extends ConsumerWidget {
         Expanded(
           child: ReceiverInfoWidget(
             receiver: kudos.receiver,
-            onTapProfile: () =>
-                context.push('/profile/${kudos.receiver.id}'),
+            onTapProfile: () => context.push('/profile/${kudos.receiver.id}'),
           ),
         ),
       ],
@@ -227,10 +224,7 @@ class KudosDetailScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color.fromRGBO(255, 234, 158, 0.40),
         borderRadius: BorderRadius.circular(5.554),
-        border: Border.all(
-          color: AppColors.awardImgBorder,
-          width: 0.463,
-        ),
+        border: Border.all(color: AppColors.awardImgBorder, width: 0.463),
       ),
       child: Text(
         kudos.content.isNotEmpty ? kudos.content : t.kudos.noContent,
@@ -298,8 +292,7 @@ class KudosDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildActions(BuildContext context, WidgetRef ref, Kudos kudos) {
-    final notifier =
-        ref.read(kudosDetailViewModelProvider(kudosId).notifier);
+    final notifier = ref.read(kudosDetailViewModelProvider(kudosId).notifier);
 
     return Row(
       children: [

@@ -344,3 +344,106 @@ Các thay đổi được thực hiện SAU khi hoàn thành 75 tasks gốc, tro
 - [x] P024 PersonalStatsCard fire icon: SVG monochrome → PNG multi-color gradient | `personal_stats_card.dart`, `assets/images/kudos_fire.png`
 - [x] P025 Theme colors: thêm `textRed`, `awardMessageContent` + assets `ic_dot.svg`, `ic_media.svg`, `ic_link.svg` | `app_colors.dart`, `assets/icons/`
 - [x] P026 Seed data: cập nhật badges image_url, users hero_tier_url, kudos award_title | `seed.sql`
+
+---
+
+## Công việc còn lại (Cập nhật 2026-04-16)
+
+*Phát hiện trong quá trình review spec + plan. Cần hoàn thành trước khi coi feature là DONE.*
+
+> **Thứ tự ưu tiên**: Bug #1 (CRITICAL) → Fix #2 (x2 bonus, làm trước Secret Box) → Feature #2 (Secret Box) → Verify #3
+
+---
+
+## Phase 11: Bug #1 — Fix Spotlight Board [CRITICAL — TR-002] (US4)
+
+**Mục tiêu**: `SpotlightSectionWidget` đang render `Image.asset` thay vì `CustomPaint(SpotlightChartPainter)`. `SpotlightChartPainter` đã tồn tại nhưng chưa được dùng.
+
+**Kiểm thử độc lập**: `nodes.isNotEmpty` → `InteractiveViewer` + `CustomPaint` hiển thị, KHÔNG có `Image.asset`. `nodes.isEmpty` → empty state text, KHÔNG có `CustomPaint`.
+
+- [x] - [x] T101 Viết test cho `SpotlightSectionWidget`: (1) `nodes.isEmpty` → empty state text visible, `CustomPaint` absent; (2) `nodes.isNotEmpty` → `InteractiveViewer` + `CustomPaint` present, `Image.asset` absent; (3) `highlightUserId` được truyền đúng vào `SpotlightChartPainter`; (4) search button `onTap` callback được invoke | `test/widget/kudos/spotlight_section_widget_test.dart`
+- [x] - [x] T102 [US4] Fix `spotlight_section_widget.dart` line 64 — thay `Image.asset(Assets.images.kudosSpotlight.path, ...)` bằng: `network == null || network.nodes.isEmpty` → `SizedBox(height: 159, child: Center(child: Text(t.kudos.emptySpotlight)))`; else → `ClipRRect(child: SizedBox(height: 159, child: InteractiveViewer(panEnabled: true, scaleEnabled: true, child: Stack([CustomPaint(painter: SpotlightChartPainter(network: network, highlightUserId: _highlightUserId), size: const Size(335, 159)), Positioned search overlay B.7.3, Positioned kudos count label B.7.1]))))`. Giữ `_highlightUserId` là local state | `lib/features/kudos/presentation/widgets/spotlight_section_widget.dart`
+- [x] - [x] T103 [P] Grep `kudosSpotlight` toàn codebase — nếu không còn file nào khác dùng, xóa reference khỏi `pubspec.yaml` và file ảnh | `pubspec.yaml`, `assets/images/`
+- [x] - [x] T104 Chạy `flutter test test/widget/kudos/spotlight_section_widget_test.dart` — verify 4 tests PASS | Test runner
+- [x] - [x] T105 Verify `spotlight_section_widget.dart` build() ≤ 80 dòng — nếu vượt, tách widget con `_SpotlightChart` | `lib/features/kudos/presentation/widgets/spotlight_section_widget.dart`
+
+**Checkpoint**: Spotlight Board render network chart thật. `Image.asset` đã bị xóa. 4 tests pass.
+
+---
+
+## Phase 12: Fix #2 — x2 Fire Bonus Optimistic Heart Update (US6)
+
+**Mục tiêu**: `toggleHeart()` hiện tại cộng/trừ 1 cho `heartCount` nhưng server cộng 2 khi `isBonusActive = true` (REACT_LIKE_02). Fix trước khi implement Secret Box.
+
+**Kiểm thử độc lập**: `isBonusActive = true` → like thêm 2 vào `heartCount`; unlike trừ 2. `isBonusActive = false` → cộng/trừ 1 như cũ.
+
+- [x] T111 [US6] Viết test bổ sung cho `KudosViewModel.toggleHeart()` — case `isBonusActive = true`: like → `heartCount + 2`; unlike → `heartCount - 2`. Case `isBonusActive = false`: like → `heartCount + 1`; unlike → `heartCount - 1` | `test/unit/viewmodels/kudos_viewmodel_test.dart`
+- [x] T112 [US6] Fix `kudos_viewmodel.dart` method `toggleHeart()` — thêm `final delta = state.valueOrNull?.personalStats?.isBonusActive == true ? 2 : 1;` trước optimistic update. Thay literal `+1`/`-1` bằng `+delta`/`-delta` trong cả optimistic update và rollback | `lib/features/kudos/presentation/viewmodels/kudos_viewmodel.dart`
+- [x] T113 Chạy `flutter test test/unit/viewmodels/kudos_viewmodel_test.dart` — verify tất cả tests PASS (kể cả tests cũ) | Test runner
+
+**Checkpoint**: `toggleHeart()` đúng với cả bonus và non-bonus case. Không có regression.
+
+---
+
+## Phase 13: Feature #2 — Secret Box Flow [US6 Scenario 3 — FR-014]
+
+**Mục tiêu**: Implement luồng 2-call để mở hộp bí mật. Datasource hiện có comment `// Secret Box (chưa implement)`.
+
+**Kiểm thử độc lập**: Bấm "Mở hộp bí mật" → app gọi `GET /next` → nếu có boxId gọi `POST /open` → stats cập nhật → navigate tới màn hình `kQk65hSYF2`. Button disabled khi `secretBoxesUnopened = 0`.
+
+- [x] T121 Viết unit test cho `KudosRemoteDatasource.getNextSecretBox()` — (1) trả `SecretBox` khi có hộp chưa mở; (2) trả `null` khi server 204 No Content (không còn hộp) | `test/unit/datasources/kudos_remote_datasource_test.dart`
+- [x] T122 Viết unit test cho `KudosRemoteDatasource.openSecretBox(boxId)` — (1) success → `SecretBox` với `is_opened=true`; (2) throws khi server 400 `BOX_ALREADY_OPENED` | `test/unit/datasources/kudos_remote_datasource_test.dart`
+- [x] T123 [US6] Implement `KudosRemoteDatasource.getNextSecretBox()` — PostgREST: `SELECT * FROM secret_boxes WHERE user_id=me AND is_opened=false ORDER BY created_at ASC LIMIT 1`. Trả `null` nếu kết quả rỗng | `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`
+- [x] T124 [US6] Implement `KudosRemoteDatasource.openSecretBox(String boxId)` — PostgREST: `UPDATE secret_boxes SET is_opened=true, opened_at=now() WHERE id=boxId AND user_id=me`. Handle `400 BOX_ALREADY_OPENED` gracefully (không crash) | `lib/features/kudos/data/datasources/kudos_remote_datasource.dart`
+- [x] T125 [P] [US6] Thêm `getNextSecretBox()` + `openSecretBox(boxId)` vào `KudosRepository` — wrap với try/catch, error mapping | `lib/features/kudos/data/repositories/kudos_repository.dart`
+- [x] T126 Viết unit test cho `KudosViewModel.openNextSecretBox()` — 5 cases: (1) getNext non-null + open success → `secretBoxesOpened+1`, `secretBoxesUnopened-1`; (2) getNext null → không gọi `openSecretBox`, state không đổi; (3) double-tap → `_isOpeningBox` guard chỉ cho 1 lần call; (4) `openSecretBox` throw → state không thay đổi, `_isOpeningBox` reset về `false`; (5) widget test: `secretBoxesUnopened=0` → button disabled | `test/unit/viewmodels/kudos_viewmodel_test.dart`, `test/widget/kudos/personal_stats_card_test.dart`
+- [x] T127 [US6] Implement `KudosViewModel.openNextSecretBox()` — với `bool _isOpeningBox = false` guard; Step 1: `getNextSecretBox()` → null → return early; Step 2: `openSecretBox(nextBox.id)`; Step 3: optimistic stats update (`opened+1`, `unopened-1`); Step 4: expose kết quả qua `ref.listen`-able state (e.g. `openedBoxResult`). `finally` reset `_isOpeningBox = false` | `lib/features/kudos/presentation/viewmodels/kudos_viewmodel.dart`
+- [x] T128 Kiểm tra `router.dart` — verify route `/secret-box/:boxId` (screenId `kQk65hSYF2`) đã tồn tại; nếu chưa, thêm route placeholder trỏ tới `SecretBoxScreen` hoặc placeholder | `lib/app/router.dart`
+- [x] T129 [US6] Tích hợp vào `KudosScreen` + `PersonalStatsCard` — nút "Mở hộp bí mật" `onTap` → `ref.read(kudosViewModelProvider.notifier).openNextSecretBox()`. Trong `KudosScreen` dùng `ref.listen` để lắng nghe `openedBoxResult` → navigate khi có kết quả. Button disabled khi `secretBoxesUnopened == 0` | `lib/features/kudos/presentation/widgets/personal_stats_card.dart`, `lib/features/kudos/presentation/screens/kudos_screen.dart`
+- [x] T130 [P] Append seed data cho `secret_boxes` table (ít nhất 2-3 rows cho test user, `is_opened=false`) — chỉ dùng `psql -h localhost -p 54322 -U postgres -d postgres -f supabase/seed.sql`, KHÔNG chạy `db reset` | `supabase/seed.sql`
+- [x] T131 Chạy `flutter test` — verify tất cả 8 test cases mới PASS | Test runner
+
+**Checkpoint**: Secret Box flow hoàn chỉnh. Button enable/disable đúng. 2-call pattern hoạt động. Navigation trigger đúng.
+
+---
+
+## Phase 14: Verify #3 — TopGiftRecipientsCard hiển thị rewardName (US7)
+
+**Mục tiêu**: Xác nhận widget hiển thị `rewardName` (mô tả phần thưởng) thay vì timestamp. Mỗi row tap → navigate Profile người khác (`bEpdheM0yU`).
+
+**Kiểm thử độc lập**: Top 10 list hiển thị "Nhận được 1 áo phông SAA" thay vì ngày giờ. Tap row → push `/profile/:userId`.
+
+- [x] T141 Đọc `top_gift_recipients_card.dart` — kiểm tra: (1) widget có dùng `recipient.rewardName` không; (2) có `GestureDetector` với `onTap` → navigate profile không | `lib/features/kudos/presentation/widgets/top_gift_recipients_card.dart`
+- [x] T142 [US7] Nếu chưa hiển thị `rewardName`: viết test (`rewardName` visible trên màn hình) + sửa widget để hiển thị `recipient.rewardName` (12px/400, màu `AppColors.primary` `#FFEA9E`) thay thế field hiện tại | `lib/features/kudos/presentation/widgets/top_gift_recipients_card.dart`, `test/widget/kudos/top_gift_recipients_card_test.dart`
+- [x] T143 [P] [US7] Nếu chưa có tap navigation: viết test (tap row → `onUserTap(userId)` callback) + bọc row trong `GestureDetector(onTap: () => onUserTap(recipient.user.id))`. Caller truyền callback `onUserTap` → `context.push('/profile/$userId')` | `lib/features/kudos/presentation/widgets/top_gift_recipients_card.dart`
+
+**Checkpoint**: Top 10 hiển thị `rewardName` đúng. Tap navigate sang profile.
+
+---
+
+## Phase 15: Final Validation
+
+**Mục đích**: Đảm bảo toàn bộ feature "sạch" sau khi hoàn thành Phases 11-14.
+
+- [x] T150 [P] Chạy `flutter analyze` — 0 errors, 0 warnings | Toàn project
+- [x] T151 [P] Chạy `dart format .` — 0 formatting issues | Toàn project
+- [x] T152 Chạy `flutter test` — 100% pass, coverage ≥ 80% cho ViewModel + Repository | `test/`
+- [x] T153 [P] Verify `kudos_screen.dart` build() ≤ 80 dòng — nếu vượt, tách widget con phù hợp | `lib/features/kudos/presentation/screens/kudos_screen.dart`
+
+**Checkpoint**: Feature hoàn chỉnh. Tất cả tests pass. Lint clean. Constitution tuân thủ 100%.
+
+---
+
+## Phụ thuộc Phases 11–15
+
+```
+Phase 12 (Fix #2 x2 bonus) ─── nên làm TRƯỚC Phase 13
+    │
+    v
+Phase 11 (Bug #1 Spotlight) ─── song song với Phase 12
+Phase 13 (Feature #2 Secret Box) ─── sau Phase 12
+Phase 14 (Verify #3 TopGift) ─── song song với Phase 11, 12, 13
+    │
+    v
+Phase 15 (Final Validation) ─── sau tất cả
+```

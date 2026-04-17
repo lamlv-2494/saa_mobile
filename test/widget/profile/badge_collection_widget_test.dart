@@ -32,7 +32,7 @@ void main() {
       await tester.pumpWidget(_buildWidget(2));
       await tester.pumpAndSettle();
 
-      expect(find.text('Badge collection'), findsOneWidget);
+      expect(find.text(t.profile.badgeCollection), findsOneWidget);
     });
 
     testWidgets('hiển thị tên badge cho mỗi badge', (tester) async {

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:saa_mobile/features/kudos/data/models/kudos.dart';
 import 'package:saa_mobile/features/kudos/presentation/widgets/sender_info_widget.dart';
+import 'package:saa_mobile/i18n/strings.g.dart';
 import '../../helpers/kudos_test_helpers.dart';
 
 void main() {
@@ -63,9 +64,9 @@ void main() {
       await tester.pumpWidget(buildTestWidget(kudos));
       await tester.pumpAndSettle();
 
-      expect(find.text('User not found.'), findsOneWidget);
+      expect(find.text(t.profile.userNotFound), findsOneWidget);
       // Không hiển thị fallback anonymous sender text
-      expect(find.text('Anonymous sender'), findsNothing);
+      expect(find.text(t.kudos.anonymousSender), findsNothing);
     });
 
     testWidgets('tap KHÔNG navigate — sender đã xóa không có profile', (tester) async {
@@ -80,7 +81,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('User not found.'));
+      await tester.tap(find.text(t.profile.userNotFound));
       expect(tapped, false);
     });
   });
@@ -109,8 +110,8 @@ void main() {
       await tester.pumpWidget(buildTestWidget(kudos));
       await tester.pumpAndSettle();
 
-      // Default locale is EN → "Anonymous sender"
-      expect(find.text('Anonymous sender'), findsAtLeast(1));
+      // Default locale → i18n fallback
+      expect(find.text(t.kudos.anonymousSender), findsAtLeast(1));
     });
 
     testWidgets('badge ẩn hoàn toàn khi anonymous', (tester) async {
@@ -144,7 +145,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Anonymous sender text
-      final senderText = find.text('Anonymous sender');
+      final senderText = find.text(t.kudos.anonymousSender);
       if (senderText.evaluate().isNotEmpty) {
         await tester.tap(senderText.first);
       }

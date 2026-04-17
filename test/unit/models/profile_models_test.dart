@@ -106,7 +106,7 @@ void main() {
 
       expect(state.kudosList, isEmpty);
       expect(state.iconBadges, isEmpty);
-      expect(state.kudosFilter, KudosFilterType.received);
+      expect(state.kudosFilter, KudosFilterType.sent);
       expect(state.hasMoreKudos, true);
       expect(state.isLoadingMoreKudos, false);
       expect(state.profile, isNull);
@@ -115,10 +115,10 @@ void main() {
 
     test('copyWith cập nhật kudosFilter', () {
       const state = ProfileState();
-      final updated = state.copyWith(kudosFilter: KudosFilterType.sent);
+      final updated = state.copyWith(kudosFilter: KudosFilterType.received);
 
-      expect(updated.kudosFilter, KudosFilterType.sent);
-      expect(state.kudosFilter, KudosFilterType.received);
+      expect(updated.kudosFilter, KudosFilterType.received);
+      expect(state.kudosFilter, KudosFilterType.sent);
     });
   });
 

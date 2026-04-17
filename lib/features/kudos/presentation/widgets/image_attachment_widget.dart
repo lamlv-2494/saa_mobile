@@ -35,7 +35,10 @@ class ImageAttachmentWidget extends ConsumerWidget {
     final sizeInMb = bytes.length / (1024 * 1024);
     if (sizeInMb > 5) {
       if (context.mounted) {
-        _showError(context, t.sendKudos.imageSizeError.replaceAll('{max}', '5'));
+        _showError(
+          context,
+          t.sendKudos.imageSizeError.replaceAll('{max}', '5'),
+        );
       }
       return;
     }
@@ -62,17 +65,14 @@ class ImageAttachmentWidget extends ConsumerWidget {
       runSpacing: 8,
       children: [
         ...previews.asMap().entries.map(
-              (e) => _ImageThumbnail(
-                url: e.value,
-                onRemove: () => ref
-                    .read(sendKudosViewModelProvider.notifier)
-                    .removeImage(e.key),
-              ),
-            ),
-        if (canAdd)
-          _AddImageButton(
-            onTap: () => _pickImage(context, ref),
+          (e) => _ImageThumbnail(
+            url: e.value,
+            onRemove: () => ref
+                .read(sendKudosViewModelProvider.notifier)
+                .removeImage(e.key),
           ),
+        ),
+        if (canAdd) _AddImageButton(onTap: () => _pickImage(context, ref)),
       ],
     );
   }

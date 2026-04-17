@@ -58,9 +58,7 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
   }
 
   void _onTitleChanged() {
-    ref
-        .read(sendKudosViewModelProvider.notifier)
-        .updateTitle(_titleCtrl.text);
+    ref.read(sendKudosViewModelProvider.notifier).updateTitle(_titleCtrl.text);
   }
 
   void _onMessageChanged() {
@@ -84,8 +82,7 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
   }
 
   Future<void> _submit() async {
-    final result =
-        await ref.read(sendKudosViewModelProvider.notifier).submit();
+    final result = await ref.read(sendKudosViewModelProvider.notifier).submit();
     if (!mounted) return;
     if (result != null) {
       Navigator.of(context).pop(true);
@@ -145,8 +142,10 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
             children: [
               // ── App Bar ──
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     Assets.icons.icKudosLogo.svg(height: 28),
@@ -203,15 +202,15 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
                               ),
 
                             // ── Recipient ──
-                            _FieldLabel(
-                              label: t.sendKudos.recipientLabel,
-                            ),
+                            _FieldLabel(label: t.sendKudos.recipientLabel),
                             const SizedBox(height: 8),
                             RecipientDropdownMenuWidget(
                               hasError: errors.containsKey('recipient'),
                             ),
                             if (errors.containsKey('recipient'))
-                              _ErrorText(errors['recipient']!.localizedError(t)),
+                              _ErrorText(
+                                errors['recipient']!.localizedError(t),
+                              ),
                             const SizedBox(height: 16),
 
                             // ── Title ──
@@ -242,14 +241,16 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 FormattingToolbarWidget(
-                                    controller: _messageCtrl),
+                                  controller: _messageCtrl,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: FittedBox(
                                     child: GestureDetector(
                                       onTap: () => launchUrl(
                                         Uri.parse(
-                                            'https://sun-asterisk.com/kudos-guidelines'),
+                                          'https://sun-asterisk.com/kudos-guidelines',
+                                        ),
                                       ),
                                       child: Text(
                                         t.sendKudos.communityStandards,
@@ -303,8 +304,7 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
                                       _hashtagDropdownKey.currentState?.open(),
                                   hasError: errors.containsKey('hashtag'),
                                 ),
-                                HashtagDropdownWidget(
-                                    key: _hashtagDropdownKey),
+                                HashtagDropdownWidget(key: _hashtagDropdownKey),
                               ],
                             ),
                             if (errors.containsKey('hashtag'))
@@ -337,14 +337,16 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
                               firstChild: const SizedBox.shrink(),
                               secondChild: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 40, top: 8),
+                                  left: 40,
+                                  top: 8,
+                                ),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _StyledTextField(
                                       controller: _nicknameCtrl,
-                                      hintText: t.sendKudos
+                                      hintText: t
+                                          .sendKudos
                                           .anonymousNicknamePlaceholder,
                                       maxLength: 50,
                                     ),
@@ -360,12 +362,10 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
                                   ],
                                 ),
                               ),
-                              crossFadeState:
-                                  (state?.isAnonymous ?? false)
-                                      ? CrossFadeState.showSecond
-                                      : CrossFadeState.showFirst,
-                              duration:
-                                  const Duration(milliseconds: 200),
+                              crossFadeState: (state?.isAnonymous ?? false)
+                                  ? CrossFadeState.showSecond
+                                  : CrossFadeState.showFirst,
+                              duration: const Duration(milliseconds: 200),
                             ),
                             const SizedBox(height: 20),
                           ],
@@ -376,8 +376,10 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
               // ── Bottom Action Bar ──
               const Divider(color: AppColors.divider, height: 1),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Row(
                   children: [
                     // Cancel
@@ -444,10 +446,7 @@ class _ErrorText extends StatelessWidget {
       padding: const EdgeInsets.only(top: 4),
       child: Text(
         text,
-        style: GoogleFonts.montserrat(
-          fontSize: 12,
-          color: AppColors.errorRed,
-        ),
+        style: GoogleFonts.montserrat(fontSize: 12, color: AppColors.errorRed),
       ),
     );
   }
@@ -481,8 +480,8 @@ class _StyledTextField extends StatelessWidget {
           final borderColor = hasError
               ? AppColors.errorRed
               : hasFocus
-                  ? AppColors.textAccent
-                  : const Color(0xFF998C5F);
+              ? AppColors.textAccent
+              : const Color(0xFF998C5F);
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -609,9 +608,7 @@ class _CancelButton extends StatelessWidget {
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: isDisabled
-              ? const Color(0x7F2E3940)
-              : const Color(0xFF2E3940),
+          color: isDisabled ? const Color(0x7F2E3940) : const Color(0xFF2E3940),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(

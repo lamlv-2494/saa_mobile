@@ -91,8 +91,9 @@ class _ShimmerItem extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius:
-            circular ? BorderRadius.circular(width / 2) : BorderRadius.circular(4),
+        borderRadius: circular
+            ? BorderRadius.circular(width / 2)
+            : BorderRadius.circular(4),
         gradient: LinearGradient(
           begin: Alignment(-1.0 + 2.0 * progress, 0),
           end: Alignment(-1.0 + 2.0 * progress + 1.0, 0),
