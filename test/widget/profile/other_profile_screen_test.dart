@@ -11,10 +11,25 @@ import 'package:saa_mobile/features/profile/presentation/widgets/badge_collectio
 import 'package:saa_mobile/features/profile/presentation/widgets/kudos_section_header_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/profile_info_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/send_kudos_button_widget.dart';
+import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:saa_mobile/shared/widgets/home_header_widget.dart';
 import 'package:saa_mobile/shared/widgets/personal_stats_card.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 import '../../helpers/profile_test_helpers.dart';
+
+// ─── Fake Providers ───
+
+class _FakeLocaleNotifier extends StateNotifier<Locale>
+    implements LocaleNotifier {
+  _FakeLocaleNotifier() : super(const Locale('vi'));
+
+  @override
+  void changeLocale(String code) => state = Locale(code);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 // ─── Fake ViewModels ───
 
@@ -57,6 +72,7 @@ Widget _buildScreen(
   return ProviderScope(
     overrides: [
       otherProfileViewModelProvider.overrideWith(vmFactory),
+      localeNotifierProvider.overrideWith((_) => _FakeLocaleNotifier()),
     ],
     child: TranslationProvider(
       child: MaterialApp(
@@ -141,7 +157,7 @@ void main() {
       expect(find.byType(PersonalStatsCard), findsNothing);
     });
 
-    testWidgets('hiển thị SliverAppBar transparent với SVG back icon', (tester) async {
+    testWidgets('hiển thị HomeHeaderWidget fixed overlay', (tester) async {
       await tester.pumpWidget(
         _buildScreen(
           testUserId,
@@ -150,9 +166,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // SliverAppBar phải có backgroundColor transparent (không dùng Material BackButton)
-      expect(find.byType(SliverAppBar), findsOneWidget);
-      expect(find.byType(BackButton), findsNothing);
+      expect(find.byType(HomeHeaderWidget), findsOneWidget);
     });
   });
 

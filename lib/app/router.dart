@@ -31,7 +31,19 @@ GoRouter createRouter(Ref ref) {
     routes: [
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, _) => const MainScaffold()),
-      GoRoute(path: '/send-kudos', builder: (_, _) => const SendKudosScreen()),
+      GoRoute(
+        path: '/send-kudos',
+        builder: (_, state) {
+          final extra = state.extra;
+          if (extra is Map<String, String>) {
+            return SendKudosScreen(
+              recipientId: extra['recipientId'],
+              recipientName: extra['recipientName'],
+            );
+          }
+          return const SendKudosScreen();
+        },
+      ),
       GoRoute(
         path: '/kudos/:kudosId',
         builder: (_, state) =>

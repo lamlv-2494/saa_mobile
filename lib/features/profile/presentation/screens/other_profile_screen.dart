@@ -7,7 +7,6 @@ import 'package:saa_mobile/app/main_scaffold.dart';
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:saa_mobile/features/profile/presentation/viewmodels/other_profile_viewmodel.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/badge_collection_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/kudos_section_header_widget.dart';
 import 'package:saa_mobile/features/profile/presentation/widgets/profile_info_widget.dart';
@@ -16,6 +15,8 @@ import 'package:saa_mobile/features/profile/presentation/widgets/profile_kudos_l
 import 'package:saa_mobile/features/profile/presentation/widgets/send_kudos_button_widget.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
+import 'package:saa_mobile/shared/providers/locale_provider.dart';
+import 'package:saa_mobile/shared/widgets/home_header_widget.dart';
 
 class OtherProfileScreen extends ConsumerStatefulWidget {
   const OtherProfileScreen({super.key, required this.userId});
@@ -51,94 +52,138 @@ class _OtherProfileScreenState extends ConsumerState<OtherProfileScreen> {
   }
 
   void _handleSendKudos(String userId, String userName) {
-    context.push('/send-kudos');
+    context.push(
+      '/send-kudos',
+      extra: {'recipientId': userId, 'recipientName': userName},
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(otherProfileViewModelProvider(widget.userId));
+    final locale = ref.watch(localeNotifierProvider);
+    final topPadding = MediaQuery.of(context).padding.top;
+    final headerHeight = topPadding + 60.0;
 
     return Scaffold(
       backgroundColor: AppColors.bgDark,
-      body: async.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.textAccent),
-        ),
-        error: (err, _) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                t.profile.userNotFound,
-                style: GoogleFonts.montserrat(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
+      body: Stack(
+        children: [
+          // Background: keyvisual — full viewport per Figma
+          Positioned.fill(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Assets.images.keyVisualBg.image(
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  errorBuilder: (_, _, _) =>
+                      const ColoredBox(color: AppColors.bgDark),
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () => Navigator.of(context).maybePop(),
-                child: Text(
-                  t.profile.retry,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textAccent,
+                // Shadow Left gradient
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color(0xFF00101A),
+                        Color(0xFF10181F),
+                        Color.fromRGBO(0, 16, 26, 0),
+                      ],
+                      stops: [0.0007, 0.1861, 0.772],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                // Shadow Bottom gradient
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Color(0xFF00101A),
+                        Color(0xFF00101A),
+                        Color.fromRGBO(0, 16, 26, 0),
+                      ],
+                      stops: [0.0, 0.2541, 1.0],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        data: (state) {
-          final profile = state.profile;
-          if (profile == null) return const SizedBox.shrink();
 
-          // Self-redirect: if viewing own profile, switch to profile tab
-          final authState = ref.read(authViewModelProvider).valueOrNull;
-          final currentUserId = authState?.whenOrNull(
-            authenticated: (user) => user.id,
-          );
-          if (currentUserId != null && currentUserId == widget.userId) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ref.read(currentTabIndexProvider.notifier).state = 3;
-              if (context.canPop()) context.pop();
-            });
-          }
-
-          return RefreshIndicator(
-            color: AppColors.textAccent,
-            onRefresh: () => ref
-                .read(otherProfileViewModelProvider(widget.userId).notifier)
-                .refresh(),
-            child: CustomScrollView(
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  leading: GestureDetector(
-                    onTap: () => context.pop(),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        Assets.icons.icChevronLeft.path,
-                        width: 24,
-                        height: 24,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.textWhite,
-                          BlendMode.srcIn,
+          // Content
+          async.when(
+            loading: () => Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: headerHeight),
+                child: const CircularProgressIndicator(
+                  color: AppColors.textAccent,
+                ),
+              ),
+            ),
+            error: (err, _) => Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: headerHeight),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      t.profile.userNotFound,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: Text(
+                        t.profile.retry,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textAccent,
                         ),
                       ),
                     ),
-                  ),
-                  floating: true,
+                  ],
                 ),
-                SliverToBoxAdapter(
+              ),
+            ),
+            data: (state) {
+              final profile = state.profile;
+              if (profile == null) return const SizedBox.shrink();
+
+              // Self-redirect: if viewing own profile, switch to profile tab
+              final authState = ref.read(authViewModelProvider).valueOrNull;
+              final currentUserId = authState?.whenOrNull(
+                authenticated: (user) => user.id,
+              );
+              if (currentUserId != null && currentUserId == widget.userId) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ref.read(currentTabIndexProvider.notifier).state = 3;
+                  if (context.canPop()) context.pop();
+                });
+              }
+
+              return RefreshIndicator(
+                color: AppColors.textAccent,
+                onRefresh: () => ref
+                    .read(otherProfileViewModelProvider(widget.userId).notifier)
+                    .refresh(),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // Space for fixed header
+                      SizedBox(height: headerHeight),
                       ProfileInfoWidget(profile: profile),
                       const SizedBox(height: 16),
                       if (state.badges.isNotEmpty) ...[
@@ -195,10 +240,22 @@ class _OtherProfileScreenState extends ConsumerState<OtherProfileScreen> {
                     ],
                   ),
                 ),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+
+          // App Header fixed on top (same as Profile screen)
+          HomeHeaderWidget(
+            opacity: 1.0,
+            hasUnreadNotifications: false,
+            currentLocaleCode: locale.languageCode,
+            onLocaleChanged: (code) {
+              ref.read(localeNotifierProvider.notifier).changeLocale(code);
+            },
+            onSearchTap: () {},
+            onNotificationTap: () {},
+          ),
+        ],
       ),
     );
   }

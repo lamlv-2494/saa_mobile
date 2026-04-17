@@ -147,44 +147,44 @@ class _KudosScreenState extends ConsumerState<KudosScreen> {
             Stack(
               children: [
                 // ─── Background Image Layer ───
-                // Trải dài từ top (behind AppBar) xuống ~500px.
-                // Theo design: Hero Banner Background 812px, nhưng
-                // phần visible trước khi scroll chỉ khoảng 450-500px.
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 500,
+                Positioned.fill(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Assets.images.kudosKeyVisualBg.image(
+                      Assets.images.keyVisualBg.image(
+                        width: double.infinity,
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
+                        errorBuilder: (_, _, _) =>
+                            const ColoredBox(color: AppColors.bgDark),
                       ),
-                      // Left shadow gradient
+                      // Shadow Left gradient
                       Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              AppColors.bgDark,
+                              Color(0xFF00101A),
                               Color(0xFF10181F),
-                              Colors.transparent,
+                              Color.fromRGBO(0, 16, 26, 0),
                             ],
-                            stops: [0.0, 0.18, 0.77],
+                            stops: [0.0007, 0.1861, 0.772],
                           ),
                         ),
                       ),
-                      // Bottom shadow gradient
+                      // Shadow Bottom gradient
                       Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
-                            colors: [AppColors.bgDark, Colors.transparent],
-                            stops: [0.0, 0.6],
+                            colors: [
+                              Color(0xFF00101A),
+                              Color(0xFF00101A),
+                              Color.fromRGBO(0, 16, 26, 0),
+                            ],
+                            stops: [0.0, 0.2541, 1.0],
                           ),
                         ),
                       ),

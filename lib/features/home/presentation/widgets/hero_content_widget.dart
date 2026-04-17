@@ -139,7 +139,9 @@ class _HeroBackground extends StatelessWidget {
       children: [
         // Key Visual BG
         Assets.images.keyVisualBg.image(
+          width: double.infinity,
           fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
           errorBuilder: (_, _, _) => const ColoredBox(color: AppColors.bgDark),
         ),
         // Shadow Left gradient
@@ -161,10 +163,14 @@ class _HeroBackground extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color.fromRGBO(0, 16, 26, 0), Color(0xFF00101A)],
-              stops: [0.3, 1.0],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Color(0xFF00101A),
+                Color(0xFF00101A),
+                Color.fromRGBO(0, 16, 26, 0),
+              ],
+              stops: [0.0, 0.2541, 1.0],
             ),
           ),
         ),

@@ -57,15 +57,49 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       backgroundColor: AppColors.bgDark,
       body: Stack(
         children: [
-          // Background: keyvisual image behind header + profile info area
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Assets.images.keyVisualBg.image(
-              height: headerHeight + 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
+          // Background: keyvisual — full viewport height per Figma (bg group: 812px)
+          Positioned.fill(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Assets.images.keyVisualBg.image(
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.topCenter,
+                  errorBuilder: (_, _, _) =>
+                      const ColoredBox(color: AppColors.bgDark),
+                ),
+                // Shadow Left gradient (Figma: 6885:10336)
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color(0xFF00101A),
+                        Color(0xFF10181F),
+                        Color.fromRGBO(0, 16, 26, 0),
+                      ],
+                      stops: [0.0007, 0.1861, 0.772],
+                    ),
+                  ),
+                ),
+                // Shadow Bottom gradient (Figma: 6885:10337, rotate -90deg)
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Color(0xFF00101A),
+                        Color(0xFF00101A),
+                        Color.fromRGBO(0, 16, 26, 0),
+                      ],
+                      stops: [0.0, 0.2541, 1.0],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 

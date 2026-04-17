@@ -42,6 +42,8 @@ class LanguageDropdown extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             side: const BorderSide(color: Color(0xFF998C5F)),
           ),
+          constraints: const BoxConstraints(minWidth: 0, maxWidth: 90),
+          menuPadding: EdgeInsets.zero,
           itemBuilder: (_) => _localeOptions.map((option) {
             final (code, label, flagIcon) = option;
             final isSelected = code == currentLocaleCode;
@@ -58,8 +60,9 @@ class LanguageDropdown extends StatelessWidget {
                   borderRadius: BorderRadius.circular(isSelected ? 2 : 0),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
+                    const SizedBox(width: 4),
                     flagIcon.svg(width: 24, height: 24),
                     const SizedBox(width: 4),
                     Text(

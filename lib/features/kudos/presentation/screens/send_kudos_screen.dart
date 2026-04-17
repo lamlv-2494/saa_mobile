@@ -16,7 +16,14 @@ import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
 
 class SendKudosScreen extends ConsumerStatefulWidget {
-  const SendKudosScreen({super.key});
+  const SendKudosScreen({
+    super.key,
+    this.recipientId,
+    this.recipientName,
+  });
+
+  final String? recipientId;
+  final String? recipientName;
 
   @override
   ConsumerState<SendKudosScreen> createState() => _SendKudosScreenState();
@@ -41,6 +48,20 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
     _titleCtrl.addListener(_onTitleChanged);
     _messageCtrl.addListener(_onMessageChanged);
     _nicknameCtrl.addListener(_onNicknameChanged);
+    _prefillRecipient();
+  }
+
+  void _prefillRecipient() {
+    final id = widget.recipientId;
+    final name = widget.recipientName;
+    if (id != null && name != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(sendKudosViewModelProvider.notifier).selectRecipient(
+              id: id,
+              name: name,
+            );
+      });
+    }
   }
 
   @override
@@ -137,7 +158,55 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.bgDark,
-        body: SafeArea(
+        body: Stack(
+          children: [
+            // Background: keyvisual — full viewport
+            Positioned.fill(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Assets.images.keyVisualBg.image(
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    errorBuilder: (_, _, _) =>
+                        const ColoredBox(color: AppColors.bgDark),
+                  ),
+                  // Shadow Left gradient
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Color(0xFF00101A),
+                          Color(0xFF10181F),
+                          Color.fromRGBO(0, 16, 26, 0),
+                        ],
+                        stops: [0.0007, 0.1861, 0.772],
+                      ),
+                    ),
+                  ),
+                  // Shadow Bottom gradient
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Color(0xFF00101A),
+                          Color(0xFF00101A),
+                          Color.fromRGBO(0, 16, 26, 0),
+                        ],
+                        stops: [0.0, 0.2541, 1.0],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Content
+            SafeArea(
           child: Column(
             children: [
               // ── App Bar ──
@@ -409,6 +478,8 @@ class _SendKudosScreenState extends ConsumerState<SendKudosScreen> {
               ),
             ],
           ),
+        ),
+          ],
         ),
       ),
     );

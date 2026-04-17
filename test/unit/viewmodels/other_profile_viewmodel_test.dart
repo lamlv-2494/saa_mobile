@@ -263,6 +263,159 @@ void main() {
       ).called(1);
     });
 
+    test('set isLoadingMoreKudos = true trong lúc đang load (intermediate state)',
+        () async {
+      // Arrange — page 1 trả 20 items
+      stubBuildSuccess(kudosCount: 20);
+
+      final container = createOtherProfileContainer(
+        mockProfileRepo: mockProfileRepo,
+        mockKudosRepo: mockKudosRepo,
+      );
+      addTearDown(container.dispose);
+
+      await container
+          .read(otherProfileViewModelProvider(_testUserId).future);
+
+      // Capture tất cả intermediate states
+      final loadingStates = <bool>[];
+      container.listen(
+        otherProfileViewModelProvider(_testUserId),
+        (_, next) {
+          final value = next.value;
+          if (value != null) {
+            loadingStates.add(value.isLoadingMoreKudos);
+          }
+        },
+        fireImmediately: false,
+      );
+
+      // Stub page 2
+      final page2Kudos =
+          List.generate(5, (i) => createKudos(id: 'page2-$i'));
+      when(
+        () => mockProfileRepo.getKudosHistory(
+          userId: _testUserId,
+          filter: 'received',
+          page: 2,
+          limit: 20,
+        ),
+      ).thenAnswer((_) async => page2Kudos);
+
+      // Act
+      final notifier = container
+          .read(otherProfileViewModelProvider(_testUserId).notifier);
+      await notifier.loadMoreKudos();
+
+      // Assert — phải có ít nhất 1 state với isLoadingMoreKudos = true
+      expect(
+        loadingStates.any((loading) => loading == true),
+        true,
+        reason: 'isLoadingMoreKudos phải được set true trước khi gọi API',
+      );
+      // State cuối cùng phải là false
+      expect(loadingStates.last, false);
+    });
+
+    test('không load thêm khi isLoadingMoreKudos = true (guard double-trigger)',
+        () async {
+      // Arrange — page 1 trả 20 items
+      stubBuildSuccess(kudosCount: 20);
+
+      final container = createOtherProfileContainer(
+        mockProfileRepo: mockProfileRepo,
+        mockKudosRepo: mockKudosRepo,
+      );
+      addTearDown(container.dispose);
+
+      await container
+          .read(otherProfileViewModelProvider(_testUserId).future);
+
+      // Stub page 2 — delay để có thể gọi 2 lần liên tiếp
+      when(
+        () => mockProfileRepo.getKudosHistory(
+          userId: _testUserId,
+          filter: 'received',
+          page: 2,
+          limit: 20,
+        ),
+      ).thenAnswer((_) async {
+        await Future.delayed(const Duration(milliseconds: 50));
+        return List.generate(5, (i) => createKudos(id: 'page2-$i'));
+      });
+
+      // Act — gọi loadMoreKudos 2 lần liên tiếp (không await lần đầu)
+      final notifier = container
+          .read(otherProfileViewModelProvider(_testUserId).notifier);
+      final future1 = notifier.loadMoreKudos();
+      final future2 = notifier.loadMoreKudos(); // lần 2 phải bị guard
+      await Future.wait([future1, future2]);
+
+      // Assert — tổng số lần gọi getKudosHistory phải là 2 (1 build + 1 load more)
+      // Nếu guard không hoạt động → sẽ là 3 (1 build + 2 load more)
+      verify(
+        () => mockProfileRepo.getKudosHistory(
+          userId: any(named: 'userId'),
+          filter: any(named: 'filter'),
+          page: any(named: 'page'),
+          limit: any(named: 'limit'),
+        ),
+      ).called(2); // build(page 1) + loadMore(page 2) = 2
+    });
+
+    test('reset isLoadingMoreKudos = false khi load more lỗi', () async {
+      // Arrange
+      stubBuildSuccess(kudosCount: 20);
+
+      final container = createOtherProfileContainer(
+        mockProfileRepo: mockProfileRepo,
+        mockKudosRepo: mockKudosRepo,
+      );
+      addTearDown(container.dispose);
+
+      await container
+          .read(otherProfileViewModelProvider(_testUserId).future);
+
+      // Capture intermediate states
+      final loadingStates = <bool>[];
+      container.listen(
+        otherProfileViewModelProvider(_testUserId),
+        (_, next) {
+          final value = next.value;
+          if (value != null) {
+            loadingStates.add(value.isLoadingMoreKudos);
+          }
+        },
+        fireImmediately: false,
+      );
+
+      // Stub page 2 — lỗi
+      when(
+        () => mockProfileRepo.getKudosHistory(
+          userId: _testUserId,
+          filter: 'received',
+          page: 2,
+          limit: 20,
+        ),
+      ).thenThrow(Exception('API error'));
+
+      // Act
+      final notifier = container
+          .read(otherProfileViewModelProvider(_testUserId).notifier);
+      await notifier.loadMoreKudos();
+
+      // Assert — phải có state với isLoadingMoreKudos = true (trước khi lỗi)
+      expect(
+        loadingStates.any((loading) => loading == true),
+        true,
+        reason: 'isLoadingMoreKudos phải được set true trước khi gọi API',
+      );
+      // State cuối cùng phải reset về false
+      final state =
+          container.read(otherProfileViewModelProvider(_testUserId)).value!;
+      expect(state.isLoadingMoreKudos, false);
+    });
+
     test('rollback page khi load more lỗi', () async {
       // Arrange
       stubBuildSuccess(kudosCount: 20);

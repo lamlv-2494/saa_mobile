@@ -74,7 +74,15 @@ class OtherProfileViewModel
 
   Future<void> loadMoreKudos() async {
     final currentState = state.valueOrNull;
-    if (currentState == null || !currentState.hasMoreKudos) return;
+    if (currentState == null ||
+        !currentState.hasMoreKudos ||
+        currentState.isLoadingMoreKudos) {
+      return;
+    }
+
+    state = AsyncValue.data(
+      currentState.copyWith(isLoadingMoreKudos: true),
+    );
 
     final filterStr = currentState.kudosFilter == KudosFilterType.sent
         ? 'sent'
@@ -92,10 +100,14 @@ class OtherProfileViewModel
         currentState.copyWith(
           kudosList: [...currentState.kudosList, ...newKudos],
           hasMoreKudos: newKudos.length >= _pageLimit,
+          isLoadingMoreKudos: false,
         ),
       );
     } catch (_) {
       _currentPage--;
+      state = AsyncValue.data(
+        currentState.copyWith(isLoadingMoreKudos: false),
+      );
     }
   }
 
