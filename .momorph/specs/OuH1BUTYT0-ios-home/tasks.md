@@ -156,18 +156,64 @@
 
 ---
 
+## Phase 10: US2-v2 — Countdown 20-day cyclic + persist (refactor)
+
+> **Scope**: Refactor từ "đếm tới `eventInfo.eventDate`" → "chu kỳ 20 ngày + persist SharedPreferences + auto-reset khi ≤ 0 + clear key khi logout". Tham chiếu [spec.md US2](spec.md) và [plan.md Phase 3-v2](plan.md).
+>
+> **Test criteria (US2-v2)**: Lần đầu mở app hiển thị `20/00/00`; kill + mở lại tiếp tục đếm đúng; khi countdown về 0 tự reset về 20 ngày; logout → key `home_countdown_end_time` bị xoá; label "Coming soon" giữ nguyên VN/EN.
+
+### 10.1 Foundation — i18n (verify only)
+
+- [x] T067 Verify i18n key `t.home.comingSoon` tồn tại và cùng value `"Coming soon"` ở cả `strings_vi.i18n.json` và `strings_en.i18n.json` (đã tồn tại — chỉ cần confirm không cần re-generate)
+
+### 10.2 CountdownRepository — TDD (Red → Green)
+
+- [x] T068 [US2] Viết unit test FAIL `test/unit/repositories/countdown_repository_test.dart` — 5 cases dùng `SharedPreferences.setMockInitialValues`: (a) `getOrInitEndTime()` khi storage rỗng → tạo `now + 20d`, persist; (b) storage chứa string không parse được → tái khởi tạo; (c) storage có ISO-8601 hợp lệ → trả nguyên giá trị; (d) `resetEndTime()` → ghi `now + 20d`; (e) `clear()` → `prefs.remove('home_countdown_end_time')`
+- [x] T069 [US2] Implement `lib/features/home/data/repositories/countdown_repository.dart` — abstract `CountdownRepository` + class `CountdownRepositoryImpl(SharedPreferences prefs, {DateTime Function() now = DateTime.now})`. Constants: `_kKey = 'home_countdown_end_time'`, `_kPeriod = Duration(days: 20)`. Try-catch `DateTime.parse()` → fallback re-init. Verify T068 PASS
+- [x] T070 [P] [US2] Tạo `lib/features/home/presentation/providers/countdown_repository_provider.dart` — `Provider<CountdownRepository>` inject `sharedPreferencesProvider` (đã tồn tại tại `lib/shared/providers/locale_provider.dart`)
+
+### 10.3 CountdownTimerWidget refactor — TDD (Red → Green)
+
+- [x] T071 [US2] Viết widget test FAIL (overwrite) `test/widget/home/countdown_timer_test.dart` — 4 cases: (a) render với fake repo `endTime = fixedNow + 5d` → hiển thị `05/00/00`; (b) khi `nowBuilder()` trả giá trị ≥ endTime → widget gọi `resetEndTime()` và render giá trị mới (~20 ngày); (c) clock tampering: `nowBuilder()` đẩy lùi 2 ngày → countdown tăng; (d) unmount widget + `tester.pump(Duration(seconds: 2))` → không exception (Timer đã cancel)
+- [x] T072 [US2] Refactor `lib/features/home/presentation/widgets/countdown_timer_widget.dart` — BỎ param `eventDate`. THÊM `required CountdownRepository repository`, `DateTime Function() nowBuilder = DateTime.now`. `initState` async `_endTime = await widget.repository.getOrInitEndTime()`. `Timer.periodic(1s)` → tính `remaining = _endTime.difference(widget.nowBuilder())`; nếu ≤ 0 → `_endTime = await widget.repository.resetEndTime()` + setState. `dispose()` cancel Timer. KHÔNG import `flutter_riverpod` (widget thuần StatefulWidget)
+
+### 10.4 Wiring upstream
+
+- [x] T073 [US2] Sửa `lib/features/home/presentation/widgets/hero_content_widget.dart` — thêm param `required CountdownRepository countdownRepository`, truyền `repository: countdownRepository` xuống `CountdownTimerWidget`. Xoá việc truyền `eventInfo.eventDate` cho countdown. Đảm bảo label "Coming soon" dùng `t.home.comingSoon` (verify đã OK tại [hero_content_widget.dart:60](lib/features/home/presentation/widgets/hero_content_widget.dart#L60))
+- [x] T074 [US2] Sửa `lib/features/home/presentation/screens/home_screen.dart` — `ref.read(countdownRepositoryProvider)` và truyền xuống `HeroContentWidget(countdownRepository: ...)`
+
+### 10.5 Accessibility
+
+- [x] T075 [P] [US2] Trong `countdown_timer_widget.dart`: bọc block MINUTES bằng `Semantics(liveRegion: true, label: '{minutes} phút')`. DAYS và HOURS dùng `Semantics(label: ...)` tĩnh (không liveRegion) theo spec §3.4
+
+### 10.6 Logout flow integration — TDD (Red → Green)
+
+- [x] T076 [US2] Viết unit test FAIL `test/unit/viewmodels/auth_viewmodel_test.dart` — mock `CountdownRepository` + `AuthRepository`. Test `signOut()` phải gọi `countdownRepository.clear()` **trước** `authRepository.signOut()` (dùng `mocktail.verifyInOrder`). Verify state chuyển sang `AuthState.unauthenticated()` sau cùng
+- [x] T077 [US2] Sửa `lib/features/auth/presentation/viewmodels/auth_viewmodel.dart` — trong `signOut()`, thêm `await ref.read(countdownRepositoryProvider).clear();` ở dòng đầu tiên trước `final repo = ref.read(authRepositoryProvider);`. Verify T076 PASS
+
+### 10.7 Validation
+
+- [x] T078 Chạy `flutter test` — toàn bộ suite pass (bao gồm 5 test CountdownRepository + 4 test CountdownTimerWidget refactored + test signOut order + tests cũ không vỡ)
+- [x] T079 Chạy `flutter analyze` — 0 warnings/errors
+- [x] T080 Chạy `dart format .` — không có file cần format lại
+- [ ] T081 Manual smoke test trên simulator: (a) install fresh → mở app → verify `20/00/00`, key đã lưu; (b) kill app (swipe khỏi recents) → mở lại → verify countdown tiếp tục không reset; (c) logout → login lại → verify countdown reset về `20/00/00` và key mới được tạo
+- [ ] T082 Commit: `feat(home): countdown 20-day cyclic with SharedPreferences persistence (spec v2)`
+
+---
+
 ## Dependencies
 
 ```
-Phase 1 (Setup)           → không phụ thuộc
-Phase 2 (Data Layer)      → Phase 1 (cần models, assets)
-Phase 3 (US11 - Nav)      → Phase 1 (cần icons, theme)
-Phase 4 (US1/9/10)        → Phase 2 + 3 (cần data layer + scaffold)
-Phase 5 (US2 - Countdown) → Phase 4 (cần HomeScreen layout)
-Phase 6 (US3/5 - Awards)  → Phase 4 (cần HomeScreen + ViewModel)
-Phase 7 (US4/6/7 - Kudos) → Phase 4 (cần HomeScreen + ViewModel)
-Phase 8 (Polish)          → Phase 5 + 6 + 7 (tất cả features)
-Phase 9 (flutter_gen)     → Phase 8 (tất cả widgets đã implement)
+Phase 1 (Setup)            → không phụ thuộc
+Phase 2 (Data Layer)       → Phase 1 (cần models, assets)
+Phase 3 (US11 - Nav)       → Phase 1 (cần icons, theme)
+Phase 4 (US1/9/10)         → Phase 2 + 3 (cần data layer + scaffold)
+Phase 5 (US2-v1)           → Phase 4 (cần HomeScreen layout) — sẽ được THAY THẾ bởi Phase 10
+Phase 6 (US3/5 - Awards)   → Phase 4
+Phase 7 (US4/6/7 - Kudos)  → Phase 4
+Phase 8 (Polish)           → Phase 5 + 6 + 7
+Phase 9 (flutter_gen)      → Phase 8
+Phase 10 (US2-v2 refactor) → Phase 5 + 9 (cần CountdownTimerWidget hiện hữu + flutter_gen)
 ```
 
 ### Song song hóa
@@ -180,6 +226,9 @@ Phase 6 || Phase 7: Có thể chạy song song (không phụ thuộc nhau)
 Phase 9: T055 || T056 || T057 || T058 (home widgets song song)
          T059 || T060 (shared widgets song song)
          T061 || T062 || T063 (auth widgets song song)
+Phase 10: T070 song song với T068 (provider file độc lập với test)
+          T075 có thể song song với T073-T074 (Semantics wrapping chỉ chạm countdown_timer_widget.dart)
+          T076 song song với T071 (2 test file khác nhau)
 ```
 
 ---
@@ -202,17 +251,30 @@ Phase 9: T055 || T056 || T057 || T058 (home widgets song song)
 
 | Metric | Giá trị |
 |--------|---------|
-| Tổng tasks | 66 |
+| Tổng tasks | 82 |
 | Phase 1 (Setup) | 7 tasks |
 | Phase 2 (Foundation) | 8 tasks |
 | Phase 3 (US11) | 4 tasks |
 | Phase 4 (US1/9/10) | 5 tasks |
-| Phase 5 (US2) | 7 tasks |
+| Phase 5 (US2-v1) | 7 tasks |
 | Phase 6 (US3/5) | 5 tasks |
 | Phase 7 (US4/6/7) | 6 tasks |
 | Phase 8 (Polish) | 8 tasks |
 | Phase 9 (flutter_gen) | 16 tasks |
-| Tasks song song được | 25 tasks [P] |
-| User stories covered | US1-US11 |
-| Tasks hoàn thành | 66/66 ✅ |
-| Tasks còn lại | 0 |
+| **Phase 10 (US2-v2 refactor)** | **16 tasks** |
+| Tasks song song được | 28 tasks [P] |
+| User stories covered | US1-US11 + US2-v2 |
+| Tasks hoàn thành | 80/82 ✅ |
+| Tasks còn lại | 2 (T081 manual smoke test + T082 commit — user action) |
+
+### Phase 10 breakdown
+
+| Subphase | Tasks | Scope |
+|----------|-------|-------|
+| 10.1 i18n verify | T067 | Confirm `comingSoon` key đã tồn tại, cùng value VN/EN |
+| 10.2 CountdownRepository | T068–T070 | TDD repository + provider |
+| 10.3 CountdownTimerWidget | T071–T072 | TDD refactor widget (bỏ eventDate, nhận repo) |
+| 10.4 Wiring upstream | T073–T074 | HeroContent + HomeScreen pass repo xuống |
+| 10.5 Accessibility | T075 | Semantics liveRegion cho MINUTES |
+| 10.6 Logout integration | T076–T077 | TDD AuthViewModel.signOut() clear order |
+| 10.7 Validation | T078–T082 | flutter test/analyze/format + smoke test + commit |

@@ -2,7 +2,25 @@
 
 **Frame**: `OuH1BUTYT0-ios-home`
 **Spec**: `spec.md` | **Design**: `design-style.md`
-**Created**: 2026-04-10
+**Created**: 2026-04-10 | **Updated**: 2026-04-17 (countdown behavior v2: 20-day cyclic + persist)
+
+---
+
+## Trạng thái triển khai hiện tại (tính đến 2026-04-17)
+
+| Phase | Mô tả | Trạng thái |
+|-------|-------|-----------|
+| Phase 0 | Assets + flutter_gen setup + AppColors + i18n + Freezed models + HomeRepository | ✅ Done |
+| Phase 0.5 | flutter_gen migration (toàn bộ asset đã dùng `Assets.images.*` / `Assets.icons.*`) | ✅ Done |
+| Phase 1 | MainScaffold + BottomNavBar + router `/home` | ✅ Done |
+| Phase 2 | HomeScreen layout + HomeHeaderWidget + HomeViewModel (AsyncNotifier) | ✅ Done |
+| Phase 3 (v1) | CountdownTimerWidget + HeroContent (đếm ngược theo `eventInfo.eventDate`) | ✅ Done — **SẼ refactor theo v2** |
+| Phase 4 | AwardsSection + AwardCard + horizontal list | ✅ Done |
+| Phase 5 | KudosSection + KudosFab | ✅ Done |
+| Phase 6 | Pull-to-refresh + language switcher + skeleton/error | ✅ Done |
+| **Phase 3-v2 (NEW)** | **CountdownRepository + refactor widget + logout clear** | 🔴 **TODO — scope của update này** |
+
+> **Scope update v2**: Chỉ cần thực hiện **Phase 3-v2** (mô tả chi tiết bên dưới). Các phase khác giữ nguyên, không đụng tới trừ 3 file cần sửa (countdown_timer_widget.dart, hero_content_widget.dart, auth_viewmodel.dart).
 
 ---
 
@@ -31,6 +49,26 @@
 - **i18n**: Thêm keys vào `strings_vi.i18n.json` và `strings_en.i18n.json` (slang)
 - **Theme**: Mở rộng `AppColors` với tokens mới từ design-style.md
 
+### Countdown Architecture (NEW — spec v2)
+
+Tách riêng **khỏi** `HomeViewModel` để tuân thủ single-responsibility:
+
+```
+CountdownTimerWidget (StatefulWidget)
+  └─ Timer.periodic(1s) tick → gọi repository
+        ↓
+CountdownRepository (abstract + impl)
+  └─ SharedPreferences (key: home_countdown_end_time, ISO-8601)
+```
+
+- **CountdownRepository** interface:
+  - `Future<DateTime> getOrInitEndTime()` — đọc key; nếu chưa có/parse lỗi → khởi tạo `now + 20d` và persist
+  - `Future<DateTime> resetEndTime()` — gán `now + 20d`, persist, trả về
+  - `Future<void> clear()` — `prefs.remove(key)` (gọi trong logout flow)
+- **Widget trách nhiệm**: giữ Timer tick, tính `remaining = endTime.difference(now)`, re-build UI, gọi `resetEndTime()` khi remaining ≤ 0. KHÔNG truy cập SharedPreferences trực tiếp.
+- **Provider**: `countdownRepositoryProvider` (Riverpod `Provider<CountdownRepository>`) — inject `SharedPreferences` từ `sharedPreferencesProvider` sẵn có.
+- **Logout flow**: `AuthViewModel.signOut()` PHẢI gọi `ref.read(countdownRepositoryProvider).clear()` trước khi clear auth state.
+
 ### Backend (Supabase)
 
 - **Tables**: `events`, `award_categories` (xem `database-schema.sql`). **Lưu ý**: Không có bảng `kudos_info` riêng — dữ liệu KudosInfo (banner, title, description, isEnabled) cần được lưu trong bảng `events` (thêm columns) hoặc tạo bảng `feature_configs` mới. Tạm thời Phase 0-4 dùng mock data, quyết định DB structure khi implement Kudos feature
@@ -54,6 +92,8 @@
 | `lib/features/home/data/models/home_state.dart` | Freezed state model cho HomeViewModel (eventInfo, awards, kudosInfo, unreadCount) |
 | `lib/features/home/data/datasources/home_remote_datasource.dart` | Supabase queries cho Home |
 | `lib/features/home/data/repositories/home_repository.dart` | Repository pattern |
+| `lib/features/home/data/repositories/countdown_repository.dart` | **(NEW spec v2)** Đọc/ghi/clear `countdownEndTime` qua SharedPreferences, auto-init lần đầu, reset 20 ngày |
+| `lib/features/home/presentation/providers/countdown_repository_provider.dart` | Riverpod `Provider<CountdownRepository>`, inject `sharedPreferencesProvider` |
 | **App (shared scaffold)** | |
 | `lib/app/main_scaffold.dart` | MainScaffold chứa BottomNavBar + IndexedStack 4 tab (shared, không thuộc feature) |
 | **Presentation Layer** | |
@@ -77,6 +117,7 @@
 | **Tests** | |
 | `test/unit/viewmodels/home_viewmodel_test.dart` | Unit test ViewModel |
 | `test/unit/repositories/home_repository_test.dart` | Unit test Repository |
+| `test/unit/repositories/countdown_repository_test.dart` | **(NEW)** Unit test CountdownRepository: getOrInit (storage rỗng), parse-error → reinit, reset 20 ngày, clear key; dùng `SharedPreferences.setMockInitialValues` |
 | `test/widget/home/home_screen_test.dart` | Widget test màn hình |
 | `test/widget/home/countdown_timer_test.dart` | Widget test đếm ngược |
 | `test/widget/home/award_card_test.dart` | Widget test card giải thưởng |
@@ -95,6 +136,9 @@
 | `lib/i18n/strings_vi.i18n.json` | Thêm keys Home: coming_soon, days, hours, minutes, about_award, about_kudos, etc. |
 | `lib/i18n/strings_en.i18n.json` | Tương tự bản EN |
 | `pubspec.yaml` | Thêm `flutter_gen` + `flutter_gen_runner`, config `flutter_gen:`, font declarations, asset paths |
+| `lib/features/auth/presentation/viewmodels/auth_viewmodel.dart` | **(NEW)** Trong `signOut()`, gọi `ref.read(countdownRepositoryProvider).clear()` trước khi clear auth state — đảm bảo account kế tiếp bắt đầu chu kỳ 20 ngày mới |
+| `lib/features/home/presentation/widgets/countdown_timer_widget.dart` | **(NEW spec v2)** Bỏ param `eventDate`. Thay bằng: đọc `countdownEndTime` từ `CountdownRepository`, Timer.periodic tick mỗi giây tính `endTime.difference(now)`, auto gọi `resetEndTime()` khi remaining ≤ 0 |
+| `lib/features/home/presentation/widgets/hero_content_widget.dart` | **(NEW spec v2)** Bỏ truyền `eventInfo.eventDate` xuống `CountdownTimerWidget` (countdown không còn phụ thuộc event date) |
 
 ### Dependencies
 
@@ -110,9 +154,9 @@ Các packages còn lại đã có: `flutter_riverpod`, `go_router`, `supabase_fl
 
 ## Phương pháp triển khai
 
-### Phase 0: Chuẩn bị Assets & Foundation (US không — nền tảng)
+### Phase 0: Chuẩn bị Assets & Foundation — ✅ **DONE**
 
-**Mục tiêu**: Assets, flutter_gen setup, theme tokens, i18n keys, data models
+**Mục tiêu (đã hoàn thành)**: Assets, flutter_gen setup, theme tokens, i18n keys, data models
 
 1. Tải assets từ Figma: Key Visual BG, Root Further logo, award images, Kudos banner, icon SVGs (search, bell, pen, kudos logo, nav icons, flag VN)
 2. Thêm custom font `Digital Numbers` vào `pubspec.yaml` (nếu chưa có) + `SVN-Gotham`
@@ -136,9 +180,9 @@ Các packages còn lại đã có: `flutter_riverpod`, `go_router`, `supabase_fl
 > - KHÔNG hardcode string path: ~~`Image.asset('assets/images/...')`~~
 > - Xem đầy đủ mapping tại `design-style.md` §6
 
-### Phase 0.5: flutter_gen Migration (nền tảng — sau khi setup xong)
+### Phase 0.5: flutter_gen Migration — ✅ **DONE**
 
-**Mục tiêu**: Migrate toàn bộ hardcoded asset string paths → flutter_gen type-safe references
+**Mục tiêu (đã hoàn thành)**: Migrate toàn bộ hardcoded asset string paths → flutter_gen type-safe references
 
 > **Hiện trạng**: Tất cả widget đang dùng `Image.asset('assets/...')` và `SvgPicture.asset('assets/...')`.
 > Cần migrate sang `Assets.images.*` / `Assets.icons.*` theo constitution v1.3.0.
@@ -166,9 +210,9 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 
 **Test**: Chạy toàn bộ `flutter test` sau migration để đảm bảo không break.
 
-### Phase 1: Main Scaffold + Bottom Nav + Router (US11)
+### Phase 1: Main Scaffold + Bottom Nav + Router (US11) — ✅ **DONE**
 
-**Mục tiêu**: Navigation frame hoạt động
+**Mục tiêu (đã hoàn thành)**: Navigation frame hoạt động
 
 1. Tạo `MainScaffold` trong `lib/app/main_scaffold.dart` (KHÔNG trong features/ — vì shared cho 4 tab, theo constitution: shared code ngoài feature folder)
 2. `MainScaffold` = Scaffold + `BottomNavBar` + `IndexedStack` cho 4 tab pages
@@ -176,9 +220,9 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 4. Placeholder cho 3 tab còn lại (Awards, Kudos, Profile)
 5. **Test**: Widget test bottom nav highlight + tap navigation
 
-### Phase 2: Home Screen Layout + Header (US1, US9, US10)
+### Phase 2: Home Screen Layout + Header (US1, US9, US10) — ✅ **DONE**
 
-**Mục tiêu**: Scroll layout + sticky header
+**Mục tiêu (đã hoàn thành)**: Scroll layout + sticky header
 
 1. Tạo `HomeScreen` (`ConsumerStatefulWidget` — cần StatefulWidget cho `ScrollController` dispose):
    ```
@@ -223,21 +267,95 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
    - Locale thay đổi → invalidate provider → refetch
 5. **Test**: Unit test ViewModel (loading, success, error states). Widget test header badge.
 
-### Phase 3: Hero Content + Countdown (US1, US2)
+### Phase 3-v2: Countdown Refactor (US2) — **ONLY PHASE IN SCOPE**
 
-**Mục tiêu**: Hero section pixel-perfect
+**Mục tiêu**: Refactor countdown từ "đếm tới eventDate" → "chu kỳ 20 ngày + persist + auto-reset + clear khi logout".
 
-1. Hero background: `Stack` với Key Visual image + gradient overlays (Shadow Left, Shadow Bottom)
-2. `HeroContentWidget` — Root Further logo + countdown + event info + CTA row
-3. `CountdownTimerWidget` (`StatefulWidget` với `Timer.periodic` mỗi giây) — tính days/hours/minutes từ hardcode event date. **QUAN TRỌNG**: cancel Timer trong `dispose()` để tránh memory leak. Dùng `StatefulWidget` (không phải ConsumerStatefulWidget) vì countdown là pure local logic, không cần Riverpod
-4. `CountdownDigitBox` — gradient border box + Digital Numbers font
-5. `EventInfoRow` — label + highlighted value
-6. Tạo shared `PrimaryButton` + `OutlineButton` (theo design-style §1.6 states)
-7. **Test**: Unit test countdown logic (future date, past date → 00). Widget test button states.
+**Nguyên tắc phân lớp** (tuân constitution "widget con KHÔNG dùng ConsumerWidget"):
+- `CountdownTimerWidget` **vẫn là `StatefulWidget`** (không phải Consumer). Nhận `CountdownRepository` qua constructor.
+- `HeroContentWidget` (đã là StatelessWidget, không Consumer) sẽ nhận `countdownRepository` qua constructor và truyền xuống.
+- `HomeScreen` (ConsumerStatefulWidget — đã có) sẽ `ref.read(countdownRepositoryProvider)` 1 lần và truyền xuống `HeroContentWidget`.
+- **Testability**: `CountdownTimerWidget` nhận thêm optional `DateTime Function() nowBuilder` (default `() => DateTime.now()`) để test clock tampering.
 
-### Phase 4: Awards Section (US3, US5)
+**Bước thực hiện (TDD strict):**
 
-**Mục tiêu**: Horizontal scrollable award cards
+1. **i18n keys (bước trước code)**:
+   - Thêm vào `lib/i18n/strings_vi.i18n.json` và `lib/i18n/strings_en.i18n.json`: `"home.comingSoon": "Coming soon"` (CÙNG value cho cả 2 locale — quyết định #9).
+   - Chạy `dart run build_runner build` để regenerate `strings.g.dart`.
+
+2. **TDD — CountdownRepository (Red)**:
+   File test: `test/unit/repositories/countdown_repository_test.dart`. Viết 5 test cases FAIL (dùng `SharedPreferences.setMockInitialValues(...)`):
+   - `getOrInitEndTime()` khi storage rỗng → tạo `now + 20d`, persist key `home_countdown_end_time`, trả về đúng value
+   - `getOrInitEndTime()` khi storage chứa string không parse được → tái khởi tạo `now + 20d`
+   - `getOrInitEndTime()` khi storage có ISO-8601 hợp lệ → trả về nguyên giá trị (không ghi đè)
+   - `resetEndTime()` → gán `now + 20d`, ghi đè storage
+   - `clear()` → `prefs.remove('home_countdown_end_time')`, lần `getOrInitEndTime` kế tiếp sẽ tái init
+
+3. **TDD — CountdownRepository (Green)**:
+   - File: `lib/features/home/data/repositories/countdown_repository.dart`.
+   - Abstract class `CountdownRepository` + impl `CountdownRepositoryImpl(SharedPreferences prefs, {DateTime Function() now = DateTime.now})`.
+   - Constant `_kKey = 'home_countdown_end_time'`, `_kPeriod = Duration(days: 20)`.
+   - File: `lib/features/home/presentation/providers/countdown_repository_provider.dart`:
+     ```dart
+     final countdownRepositoryProvider = Provider<CountdownRepository>((ref) {
+       return CountdownRepositoryImpl(ref.watch(sharedPreferencesProvider));
+     });
+     ```
+
+4. **TDD — CountdownTimerWidget refactor (Red)**:
+   File test: `test/widget/home/countdown_timer_test.dart` (đã tồn tại — cập nhật). Test cases:
+   - Render với endTime = now + 5 ngày → hiển thị `05 / 00 / 00` (± tick) — **inject fake repository + fixed `nowBuilder`**
+   - Khi endTime ≤ now → widget gọi `resetEndTime()` và hiển thị ~`20 / 00 / 00`
+   - Clock tampering: `nowBuilder` trả giá trị tiến hơn endTime → trigger reset (same behavior as endTime ≤ now)
+   - `dispose()`: verify không có pending Timer (dùng `tester.pump(Duration(seconds: 2))` sau unmount — không crash)
+
+5. **TDD — CountdownTimerWidget refactor (Green)**:
+   Sửa `lib/features/home/presentation/widgets/countdown_timer_widget.dart`:
+   - Xoá param `eventDate`; thêm `required CountdownRepository repository`, `DateTime Function() nowBuilder = DateTime.now`.
+   - `initState` async load: `_endTime = await widget.repository.getOrInitEndTime()` rồi `setState`.
+   - `Timer.periodic(Duration(seconds: 1))`: tính `remaining = _endTime.difference(widget.nowBuilder())`; nếu `remaining.isNegative || remaining == Duration.zero` → `_endTime = await widget.repository.resetEndTime()` + setState.
+   - `dispose()` cancel Timer.
+   - **KHÔNG import** `package:flutter_riverpod/flutter_riverpod.dart` — widget thuần, không Consumer.
+
+6. **Sửa HeroContentWidget**:
+   - Thêm param `required CountdownRepository countdownRepository` (qua constructor).
+   - Bỏ truyền `eventInfo.eventDate` xuống `CountdownTimerWidget`.
+   - Truyền `repository: countdownRepository` vào `CountdownTimerWidget`.
+   - Thêm label "Coming soon" (text style 14px/300, nếu chưa có — verify tại [hero_content_widget.dart:59-68](lib/features/home/presentation/widgets/hero_content_widget.dart#L59-L68) — đã có rồi, chỉ đảm bảo dùng `t.home.comingSoon`).
+
+7. **Sửa HomeScreen** (`home_screen.dart`):
+   - `ref.read(countdownRepositoryProvider)` và truyền xuống `HeroContentWidget(countdownRepository: ...)`.
+
+8. **Logout flow integration — TDD (Red)**:
+   Test `test/unit/viewmodels/auth_viewmodel_test.dart`:
+   - signOut() PHẢI gọi `countdownRepository.clear()` **trước** `authRepository.signOut()`.
+   - Mock 2 repositories, verify thứ tự call (mocktail `verifyInOrder`).
+
+9. **Logout flow integration — Green**:
+   Sửa `lib/features/auth/presentation/viewmodels/auth_viewmodel.dart`:
+   ```dart
+   Future<void> signOut() async {
+     await ref.read(countdownRepositoryProvider).clear();  // clear Home-owned storage trước
+     final repo = ref.read(authRepositoryProvider);
+     await repo.signOut();
+     state = const AsyncValue.data(AuthState.unauthenticated());
+   }
+   ```
+   > **Coupling note**: ViewModel truy cập provider khác (không import trực tiếp class giữa features). Giữ coupling ở Riverpod layer — acceptable per risk #8.
+
+10. **Accessibility**:
+    - Bọc khối MINUTES bằng `Semantics(liveRegion: true, child: ...)` để screen reader chỉ announce khi phút thay đổi (theo spec §3.4).
+    - Các khối DAYS/HOURS dùng `Semantics(label: '...')` tĩnh.
+
+11. **Manual smoke test**:
+    - Mở app → quan sát countdown hiển thị `20 / 00 / 00` (lần đầu) hoặc giá trị đang persist.
+    - Kill app → mở lại → countdown tiếp tục đúng (kiểm bằng cách so sánh với `now + 20d - runtime`).
+    - Logout → login lại → countdown reset về `20 / 00 / 00`.
+    - Dev menu (hoặc `flutter run --dart-define=DEBUG_CLEAR_PREFS=true`): không cần manual reset (quyết định #10).
+
+### Phase 4: Awards Section (US3, US5) — ✅ **DONE**
+
+**Mục tiêu (đã hoàn thành)**: Horizontal scrollable award cards
 
 1. Tạo shared `SectionHeaderWidget` (label + divider + title — dùng lại cho Awards + Kudos)
 2. `AwardsSectionWidget` — header + `ListView.builder` horizontal
@@ -248,9 +366,9 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 7. Navigation: "Chi tiết" → Award Detail route (stub)
 8. **Test**: Widget test card content, horizontal scroll, empty state, skeleton loading.
 
-### Phase 5: Kudos Section + FAB (US4, US6, US7)
+### Phase 5: Kudos Section + FAB (US4, US6, US7) — ✅ **DONE**
 
-**Mục tiêu**: Kudos promotion + quick actions
+**Mục tiêu (đã hoàn thành)**: Kudos promotion + quick actions
 
 1. `KudosSectionWidget` — header + banner image + "ĐIỂM MỚI CỦA SAA 2025" + description + "Chi tiết" button
 2. Conditional render: ẩn nếu `homeState.kudosInfo.isEnabled == false`
@@ -258,9 +376,9 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 4. Navigation: "Chi tiết" → Kudos detail (stub), FAB pen → Send Kudos (stub), FAB S → Kudos Feed (stub)
 5. **Test**: Widget test FAB tap (2 icons), Kudos section visibility toggle.
 
-### Phase 6: Theme Description + Pull-to-Refresh + Polish (US1, US8)
+### Phase 6: Theme Description + Pull-to-Refresh + Polish (US1, US8) — ✅ **DONE**
 
-**Mục tiêu**: Hoàn thiện
+**Mục tiêu (đã hoàn thành)**: Hoàn thiện
 
 1. `ThemeDescriptionWidget` — body text block
 2. Implement `RefreshIndicator` cho pull-to-refresh (invalidate tất cả providers)
@@ -275,9 +393,9 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 
 | Loại | Focus | Mục tiêu |
 |------|-------|----------|
-| Unit | `HomeViewModel`, `HomeRepository`, countdown logic | Mỗi provider: loading → success, loading → error, refresh |
-| Widget | Từng widget nhỏ (button, card, countdown, header, nav) | Render đúng, tap navigation, states |
-| Integration | Full HomeScreen flow | Load data → hiển thị → scroll → navigate → pull-refresh |
+| Unit | `HomeViewModel`, `HomeRepository`, **`CountdownRepository`** | Mỗi provider: loading → success, loading → error, refresh. Countdown: init khi rỗng, parse-error → reinit, reset 20d, clear trên logout |
+| Widget | Từng widget nhỏ (button, card, countdown, header, nav) | Render đúng, tap navigation, states. Countdown: tick mỗi giây, auto-reset khi ≤ 0, dispose cancel Timer |
+| Integration | Full HomeScreen flow + **logout clear countdown** | Load data → hiển thị → scroll → navigate → pull-refresh. Logout → verify key `home_countdown_end_time` bị xoá |
 
 ### Quy trình TDD mỗi phase
 
@@ -300,23 +418,38 @@ SvgPicture.asset('assets/icons/ic_search.svg', ...)
 | Nhiều navigation stubs (Awards, Kudos, Profile chưa implement) | Thấp | Dùng placeholder screens, implement sau |
 | Countdown Timer leak khi dispose | Thấp | Cancel Timer trong `dispose()`, hoặc dùng Riverpod `autoDispose` |
 | flutter_gen migration scope rộng | Trung bình | Migrate từng file, chạy test sau mỗi batch. Auth widgets migrate sau cùng (ít ảnh hưởng Home) |
+| Countdown persist ISO-8601 parse lỗi (dữ liệu cũ/corrupt) | Thấp | Try-catch `DateTime.parse()` → fallback tái khởi tạo. Test case (b) trong `countdown_repository_test.dart` cover |
+| Logout flow quên clear countdown key | Trung bình | Viết integration test `auth + countdown_repository` verify key bị remove sau signOut. Đặt call `.clear()` **trước** Supabase signOut để tránh auth state thay đổi trước |
+| Coupling giữa auth feature và countdown repo | Thấp | Tốt nhất inject `CountdownRepository` vào `AuthRepository` qua Riverpod provider, không import trực tiếp giữa 2 feature. Alternative: expose một `LogoutCleaner` registry — nhưng over-engineering cho 1 key; chấp nhận coupling nhẹ |
 
 ---
 
 ## Thứ tự ưu tiên
 
+### Remaining scope (update countdown v2)
+
 ```
-Phase 0   (Foundation)         ──── 0.5 ngày
-Phase 0.5 (flutter_gen migrate) ── 0.5 ngày
-Phase 1   (Scaffold + Nav)     ──── 0.5 ngày
-Phase 2   (Layout + Header)    ──── 1 ngày
-Phase 3   (Hero + Countdown)   ──── 1 ngày
-Phase 4   (Awards Section)     ──── 0.5 ngày
-Phase 5   (Kudos + FAB)        ──── 0.5 ngày
-Phase 6   (Polish)             ──── 0.5 ngày
+Phase 3-v2 (Countdown Refactor)  ──── 1 ngày
+  ├── i18n comingSoon key            0.1d
+  ├── CountdownRepository + tests    0.3d
+  ├── CountdownTimerWidget refactor  0.3d
+  └── Logout integration + tests     0.3d
 ```
 
-**Tổng ước lượng: ~5 ngày** (bao gồm TDD + tests + flutter_gen migration)
+**Tổng ước lượng còn lại: ~1 ngày** (Phase 3-v2 only. Các phase khác đã DONE.)
+
+### Lịch sử (reference — đã hoàn thành)
+
+```
+Phase 0   Foundation              0.5 ngày  ✅
+Phase 0.5 flutter_gen migrate     0.5 ngày  ✅
+Phase 1   Scaffold + Nav          0.5 ngày  ✅
+Phase 2   Layout + Header         1   ngày  ✅
+Phase 3-v1 Hero + Countdown       1   ngày  ✅ (sẽ refactor → v2)
+Phase 4   Awards Section          0.5 ngày  ✅
+Phase 5   Kudos + FAB             0.5 ngày  ✅
+Phase 6   Polish                  0.5 ngày  ✅
+```
 
 ---
 

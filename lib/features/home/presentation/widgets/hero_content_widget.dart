@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/gen/assets.gen.dart';
 import 'package:saa_mobile/features/home/data/models/event_info.dart';
+import 'package:saa_mobile/features/home/data/repositories/countdown_repository.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/countdown_timer_widget.dart';
 import 'package:saa_mobile/features/home/presentation/widgets/event_info_row.dart';
 import 'package:saa_mobile/i18n/strings.g.dart';
@@ -14,11 +15,13 @@ class HeroContentWidget extends StatelessWidget {
   const HeroContentWidget({
     super.key,
     required this.eventInfo,
+    required this.countdownRepository,
     required this.onAboutAwardTap,
     required this.onAboutKudosTap,
   });
 
   final EventInfo eventInfo;
+  final CountdownRepository countdownRepository;
   final VoidCallback onAboutAwardTap;
   final VoidCallback onAboutKudosTap;
 
@@ -68,7 +71,7 @@ class HeroContentWidget extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Countdown timer
-              CountdownTimerWidget(eventDate: eventInfo.eventDate),
+              CountdownTimerWidget(repository: countdownRepository),
               const SizedBox(height: 24),
               // Event info rows
               EventInfoRow(

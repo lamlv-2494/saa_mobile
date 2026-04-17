@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import 'package:saa_mobile/features/auth/data/models/auth_state.dart';
 import 'package:saa_mobile/features/auth/data/repositories/auth_repository.dart';
+import 'package:saa_mobile/features/home/presentation/providers/countdown_repository_provider.dart';
 
 class AuthViewModel extends AsyncNotifier<AuthState> {
   StreamSubscription<sb.AuthState>? _authSubscription;
@@ -45,9 +46,7 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
             } catch (_) {
               // Non-blocking — không ảnh hưởng auth flow
             }
-            state = AsyncValue.data(
-              AuthState.authenticated(user: user),
-            );
+            state = AsyncValue.data(AuthState.authenticated(user: user));
           }
         case sb.AuthChangeEvent.signedOut:
           state = const AsyncValue.data(AuthState.unauthenticated());
@@ -92,13 +91,14 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
       // Auth state will be updated via _listenAuthStateChanges
       // when the OAuth callback returns
     } on Exception catch (e) {
-      state = AsyncValue.data(
-        AuthState.error(message: e.toString()),
-      );
+      state = AsyncValue.data(AuthState.error(message: e.toString()));
     }
   }
 
   Future<void> signOut() async {
+    // Clear Home-owned storage (countdown cycle) before dropping auth session
+    // so the next account starts a fresh 20-day countdown (spec §9 #11).
+    await ref.read(countdownRepositoryProvider).clear();
     final repo = ref.read(authRepositoryProvider);
     await repo.signOut();
     state = const AsyncValue.data(AuthState.unauthenticated());

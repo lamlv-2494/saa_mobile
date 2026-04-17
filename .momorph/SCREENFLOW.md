@@ -12,7 +12,7 @@ Figma File Key: `9ypp4enmFmdK3YAFJLIu6C`
 | # | Screen ID | Tên màn hình | Mô tả |
 |---|-----------|-------------|-------|
 | 1 | `8HGlvYGJWq` | [iOS] Login | Màn hình đăng nhập |
-| 2 | `OuH1BUTYT0` | [iOS] Home | Trang chủ - countdown sự kiện, hệ thống giải thưởng |
+| 2 | `OuH1BUTYT0` | [iOS] Home | Trang chủ - countdown 20 ngày chu kỳ (persist SharedPreferences), hệ thống giải thưởng |
 | 3 | `fO0Kt19sZZ` | [iOS] Sun*Kudos | Trang chính Kudos feed |
 | 4 | `_b68CBWKl5` | [iOS] Sun*Kudos (Notification) | Biến thể với popup thông báo |
 | 5 | `j_a2GQWKDJ` | [iOS] Sun*Kudos_All Kudos | Xem tất cả Kudos |
@@ -35,6 +35,144 @@ Figma File Key: `9ypp4enmFmdK3YAFJLIu6C`
 | 22 | `zIuFaHAid4` | [iOS] Thể lệ | Trang thể lệ |
 | 23 | `sn2mdavs1a` | [iOS] 404 | Trang lỗi 404 |
 | 24 | `k-7zJk2B7s` | [iOS] Access denied | Trang từ chối truy cập |
+
+---
+
+## Chi tiết màn hình: [iOS] Home (OuH1BUTYT0)
+
+### Mô tả
+
+Đây là màn hình trang chủ (tab 0) của ứng dụng Sun* Annual Awards 2025 — điểm đến đầu tiên sau khi đăng nhập. Màn hình giới thiệu theme "ROOT FURTHER", bộ đếm ngược 20 ngày chu kỳ (persist qua SharedPreferences, auto-reset khi về 0 — KHÔNG gắn với ngày sự kiện), thông tin sự kiện (ngày/địa điểm/livestream từ API) và dẫn dắt người dùng tới hai tính năng chính: **Award System** và **Sun*Kudos**.
+
+Cấu trúc màn hình gồm các phần chính:
+
+1. **App Header** (`mms_1_header`): Logo SAA 2025, language switcher (VN/EN), icon Search, icon Bell có badge thông báo chưa đọc. Header có hiệu ứng **fade opacity khi scroll** (0.9 → 0 trong khoảng 0–150px).
+2. **Background** (`mm_media_bg`): Key visual nền tối + 2 shadow (trái, dưới).
+3. **Hero Content** (`mms_2_content`): Theme logo "ROOT FURTHER" + countdown DD:HH:MM chu kỳ 20 ngày (đọc `countdownEndTime` từ SharedPreferences, tick mỗi giây, auto-reset khi về 0) + thông tin sự kiện + 2 nút CTA ("ABOUT AWARD", "ABOUT KUDOS").
+4. **Theme Description** (`mms_3_note`): Text block mô tả tinh thần "Root Further".
+5. **Awards Section** (`mms_4_awards`): Header + horizontal scrollable list các award card (Top Talent, Top Project, …) với nút "Chi tiết" trên từng card.
+6. **Kudos Section** (`mms_5_kudos`): Banner Sun*Kudos + badge "ĐIỂM MỚI CỦA SAA 2025" + mô tả + nút "Chi tiết". Section này **chỉ render** nếu `kudosInfo.isEnabled == true`.
+7. **Floating Action Button** (`mms_6_float button`): FAB bên phải dưới — icon Pencil (gửi Kudos) + icon S/Kudos (mở feed Kudos).
+8. **Bottom Navigation Bar** (`mms_7_nav bar`): 4 tab — SAA 2025 (active), Awards, Kudos, Profile. Lưu ý: nav bar nằm trong `MainScaffold`, không thuộc `HomeScreen`.
+
+### Cấu trúc màn hình (Scroll Architecture)
+
+```
+HomeScreen (ConsumerStatefulWidget)
+└── Scaffold (bgDark)
+    └── Stack
+        ├── RefreshIndicator
+        │   └── CustomScrollView (ScrollController → header fade)
+        │       ├── SliverToBoxAdapter → HeroContentWidget       ← mms_2_content
+        │       ├── SliverToBoxAdapter → ThemeDescriptionWidget  ← mms_3_note
+        │       ├── SliverToBoxAdapter → AwardsSectionWidget     ← mms_4_awards
+        │       └── SliverToBoxAdapter → KudosSectionWidget      ← mms_5_kudos (conditional)
+        ├── HomeHeaderWidget (opacity animated)                  ← mms_1_header
+        └── Positioned(right:20, bottom:16) → KudosFabWidget     ← mms_6_float button
+```
+
+### Bảng design items (Figma)
+
+| Mã Figma | Số thứ tự | Tên thành phần | Loại | Ghi chú |
+|----------|-----------|----------------|------|---------|
+| `6885:9057` | 1 | App Header (`mms_1_header`) | navigation | Logo + VN flag + search + bell |
+| `6885:8979` | bg | Key Visual Background (`mm_media_bg`) | others | Background image + shadows |
+| `6885:8983` | 2 | Hero Content Area (`mms_2_content`) | info_block | Countdown + CTA |
+| `6885:8984` | 2.1 | Root Further Logo (`mms_2.1_MM_MEDIA_Logo/RootFuther`) | info_block | Theme logo |
+| `6885:8986` | 2.x | Countdown Timer (`countdown time`) | info_block | DD:HH:MM chu kỳ 20 ngày, persist `home_countdown_end_time` |
+| `6885:9016` | 2.x | Event Info (`event info`) | info_block | 3 dòng: thời gian, địa điểm, livestream |
+| `6885:9026` | 2.2 | Button "ABOUT AWARD" (`mms_2.2_Button`) | button | CTA — điều hướng chưa implement |
+| `6885:9027` | 2.3 | Button "ABOUT KUDOS" (`mms_2.3_Button`) | button | CTA — điều hướng chưa implement |
+| `6885:9028` | 3 | Theme Description Text (`mms_3_note`) | others | Text "Root Further is not merely…" |
+| `6885:9030` | 4 | Awards Section (`mms_4_awards`) | card | Container |
+| `6885:9031` | 4.1 | Awards Section Header (`mms_4.1_header`) | others | "Hệ thống giải thưởng" |
+| `6885:9032` | 4.2 | Award Card List (`mms_4.2_award list`) | list_item | Horizontal scroll |
+| `6885:9033..9035` | 4.2.x | Award Card (Top Talent/Project/…) | others | Card template — tap "Chi tiết" |
+| `6885:9039` | 5 | Kudos Section (`mms_5_kudos`) | info_block | Conditional render |
+| `6885:9040` | 5.1 | Kudos Section Header (`mms_5.1_header`) | others | "Phong trào ghi nhận" |
+| `6885:9041` | 5.2 | Kudos Banner (`mms_5.2_mm_media_Sunkudos`) | info_block | Banner S KUDOS |
+| `6885:9055` | 5.3 | Kudos Details Button (`mms_5.3_Button`) | button | "Chi tiết" → tab Kudos |
+| `6885:9058` | 6 | FAB (`mms_6_float button`) | others | 2 icon (Pencil + Kudos Logo) |
+| `6885:9056` | 7 | Bottom Nav Bar (`mms_7_nav bar`) | navigation | Nằm ở `MainScaffold` |
+
+### Các thành phần tương tác
+
+| Thành phần | Hành động | Kết quả / Điều hướng |
+|-----------|----------|---------------------|
+| Language switcher (VN flag, App Header) | Tap | Mở `LanguageDropdown` overlay → `localeNotifierProvider.changeLocale(code)` → reload ViewModel |
+| Icon Search (App Header) | Tap | TODO `context.push('/search')` — hiện chưa implement |
+| Icon Bell (App Header) | Tap | TODO `context.push('/notifications')` — hiện chưa implement |
+| Nút "ABOUT AWARD" (`mms_2.2_Button`) | Tap | TODO — dự kiến điều hướng tới Awards overview |
+| Nút "ABOUT KUDOS" (`mms_2.3_Button`) | Tap | TODO — dự kiến điều hướng tới Kudos overview |
+| "Chi tiết" trên Award card | Tap | Set `initialAwardSlugProvider = award.slug` + `currentTabIndexProvider = 1` → Award tab |
+| "Chi tiết" Kudos section (`mms_5.3_Button`) | Tap | `currentTabIndexProvider = 2` → Kudos tab (`fO0Kt19sZZ`) |
+| FAB icon Pencil | Tap | `context.push('/send-kudos')` → [iOS] Send Kudos (`7fFAb-K35a`) |
+| FAB icon S/Kudos | Tap | `currentTabIndexProvider = 2` → [iOS] Sun*Kudos (`fO0Kt19sZZ`) |
+| Pull-to-refresh | Kéo xuống | `homeViewModelProvider.notifier.refresh()` → reload 4 API song song |
+| Scroll | Lên/xuống | Header fade opacity 0.9 → 0 theo offset [0, 150] |
+| Tab "SAA 2025" | Tap | Trang hiện tại (active — không điều hướng) |
+| Tab "Awards" | Tap | `currentTabIndexProvider = 1` → Awards (`c-QM3_zjkG`) |
+| Tab "Kudos" | Tap | `currentTabIndexProvider = 2` → Sun*Kudos (`fO0Kt19sZZ`) |
+| Tab "Profile" | Tap | `currentTabIndexProvider = 3` → Profile bản thân (`hSH7L8doXB`) |
+
+### Điểm vào (Entry Points)
+
+| Điểm vào | Từ màn hình | Điều kiện |
+|----------|------------|-----------|
+| Đăng nhập thành công | [iOS] Login (`8HGlvYGJWq`) | Google OAuth success |
+| Tab "SAA 2025" | Bất kỳ màn hình có bottom nav | Đã đăng nhập |
+| Deep link `/` | Ngoài ứng dụng | Đã đăng nhập |
+
+### Điểm ra (Exit Points)
+
+| Điểm ra | Đến màn hình | Hành động |
+|---------|-------------|----------|
+| "Chi tiết" award card | Award tab ([iOS] Award_Top talent `c-QM3_zjkG`) | Tap card CTA |
+| "Chi tiết" Kudos section | [iOS] Sun*Kudos (`fO0Kt19sZZ`) | Tap `mms_5.3_Button` |
+| FAB Pencil | [iOS] Send Kudos (`7fFAb-K35a`) | Tap icon Pencil → `context.push('/send-kudos')` |
+| FAB S/Kudos | [iOS] Sun*Kudos (`fO0Kt19sZZ`) | Tap icon Kudos Logo |
+| Language switcher | Overlay `LanguageDropdown` | Tap VN/EN |
+| Tab "Awards" | Awards (`c-QM3_zjkG`) | Tap bottom tab |
+| Tab "Kudos" | Sun*Kudos (`fO0Kt19sZZ`) | Tap bottom tab |
+| Tab "Profile" | Profile bản thân (`hSH7L8doXB`) | Tap bottom tab |
+
+### API Mapping
+
+**On Load** — `HomeViewModel._fetchAll()` gọi 4 API song song bằng `Future.wait` + Dart 3 record pattern:
+
+| Method | Endpoint (predicted) | Repository Call | Purpose |
+|--------|----------------------|-----------------|---------|
+| GET | `/event/info?locale={vi\|en}` | `getEventInfo(locale:)` | Theme, date, venue, livestream, description |
+| GET | `/awards?locale={vi\|en}` | `getAwardCategories(locale:)` | Danh sách hạng mục giải thưởng |
+| GET | `/kudos/info` | `getKudosInfo()` | Title, description, isEnabled cho Kudos section |
+| GET | `/notifications/unread-count` | `getUnreadNotificationCount()` | Badge count icon Bell |
+
+### Trạng thái màn hình (States)
+
+| Trạng thái | Mô tả | UI |
+|-----------|-------|-----|
+| Loading | Đang tải dữ liệu lần đầu | Render `_fallbackEventInfo` (Root Further, 26/12/2025, Âu Cơ) — không blank screen |
+| Error | Tải thất bại toàn bộ | Center column text `t.home.errorRetry` + nút `t.home.retry` → gọi `refresh()` |
+| Data (normal) | Đã có đủ 4 data | Hiển thị đầy đủ các section |
+| Kudos disabled | `kudosInfo.isEnabled == false` | Section Kudos bị ẩn hoàn toàn |
+| Awards empty | `awards.isEmpty` | Section vẫn render header, list rỗng (TODO: empty state) |
+| Header scrolled | Offset > 0 | Header fade opacity theo công thức `1 - offset/150`, clamp [0, 0.9] |
+| Countdown reset | `DateTime.now() >= countdownEndTime` (persist key `home_countdown_end_time`) | ViewModel auto gán `countdownEndTime = now + 20 ngày`, ghi lại SharedPreferences, tiếp tục chu kỳ mới (không hiển thị "00/00/00" kéo dài) |
+
+### Ghi chú kỹ thuật (Home)
+
+- **ViewModel**: `HomeViewModel extends AsyncNotifier<HomeState>` — không tham số. State là `HomeState` (Freezed) gồm `eventInfo`, `awards`, `kudosInfo`, `unreadNotificationCount`.
+- **Parallel fetching**: Dùng Dart 3 record pattern `await (...).wait` để tải 4 API song song, rút ngắn thời gian initial load.
+- **Locale reactivity**: `HomeViewModel.build()` dùng `ref.watch(localeNotifierProvider)` → tự reload API khi user đổi VN/EN.
+- **Tab switching**: Không dùng `go_router` push giữa các tab chính — dùng `currentTabIndexProvider` (Riverpod `StateProvider<int>`) để `MainScaffold` rebuild tab content. Chỉ `/send-kudos` dùng `context.push`.
+- **Deep linking giữa Home và Awards**: `initialAwardSlugProvider` (StateProvider) được set trước khi chuyển tab → `AwardScreen` đọc slug này để auto-scroll tới award tương ứng.
+- **Header fade**: Custom `ScrollController` listener tính `_headerOpacity` trong `HomeScreen` (local state) — chỉ `setState` khi delta > 0.01 để tránh rebuild dư.
+- **Fallback loading**: Khi state loading, render `_fallbackEventInfo` hardcoded (Root Further, 26/12/2025 18:00, Âu Cơ Art Center) để giữ layout — phù hợp UX tránh blank screen.
+- **Single ref.watch** (constitution v1.2.0): HomeScreen chỉ watch 2 provider (`homeViewModelProvider`, `localeNotifierProvider`), data truyền xuống widget con qua constructor.
+- **Countdown behavior (spec v2)**: Đếm ngược 20 ngày chu kỳ, persist key `home_countdown_end_time` (ISO-8601) trong SharedPreferences. Timer.periodic mỗi giây chỉ làm tick nguồn; mỗi tick tính `endTime.difference(DateTime.now())`. Khi ≤ 0 → auto reset 20 ngày. Logout flow PHẢI `prefs.remove('home_countdown_end_time')` để account kế tiếp bắt đầu chu kỳ mới.
+- **TODO chưa implement**: điều hướng `/search`, `/notifications`, ABOUT AWARD, ABOUT KUDOS; empty state cho Awards.
+- **i18n**: Tất cả text UI qua `t.home.*` (slang `strings.g.dart`), không hardcode.
+- **Asset paths**: Dùng `Assets.images.keyVisualBg`, `Assets.images.kudosKeyVisualBg` qua flutter_gen (không hardcode path string).
 
 ---
 

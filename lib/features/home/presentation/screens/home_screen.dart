@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:saa_mobile/app/theme/app_colors.dart';
 import 'package:saa_mobile/features/home/data/models/event_info.dart';
 import 'package:saa_mobile/features/home/data/models/home_state.dart';
+import 'package:saa_mobile/features/home/presentation/providers/countdown_repository_provider.dart';
 import 'package:saa_mobile/features/home/presentation/viewmodels/home_viewmodel.dart';
 import 'package:saa_mobile/app/main_scaffold.dart';
 import 'package:saa_mobile/features/award/presentation/screens/award_screen.dart';
@@ -100,6 +101,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               SliverToBoxAdapter(
                 child: HeroContentWidget(
                   eventInfo: homeState.eventInfo,
+                  countdownRepository: ref.read(countdownRepositoryProvider),
                   onAboutAwardTap: () {
                     // TODO: context.push('/awards')
                   },

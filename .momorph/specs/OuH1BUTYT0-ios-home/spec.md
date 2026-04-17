@@ -31,7 +31,9 @@ SAA 2025 là lễ trao giải thường niên dành cho nhân viên Sun*. Màn h
 **Kịch bản 1: Hiển thị thông tin sự kiện**
 - Cho: Người dùng mở app / điều hướng về Home
 - Khi: Màn hình Home được tải
-- Thì: Hiển thị logo "ROOT FURTHER", ngày sự kiện (26/12/2025), địa điểm (Âu Cơ Art Center) và thông tin livestream
+- Thì: Hiển thị logo "ROOT FURTHER", ngày sự kiện, địa điểm và thông tin livestream theo dữ liệu từ API
+
+> **Giá trị mẫu trên thiết kế Figma**: ngày `26/12/2025`, địa điểm `Âu Cơ Art Center`, livestream note dưới dạng 2 dòng. Đây là dữ liệu mockup — giá trị thực sẽ do API `/event/info` trả về và có thể khác theo locale.
 
 **Kịch bản 2: Dữ liệu tải từ API**
 - Cho: Thông tin sự kiện được lấy từ backend
@@ -58,20 +60,52 @@ SAA 2025 là lễ trao giải thường niên dành cho nhân viên Sun*. Màn h
 ### US2: Bộ đếm ngược [P1]
 
 **Là** một Sunner
-**Tôi muốn** xem bộ đếm ngược thời gian thực đến ngày sự kiện
-**Để** cảm nhận sự hào hứng và biết còn bao lâu nữa
+**Tôi muốn** xem bộ đếm ngược 20 ngày liên tục, bền vững qua các lần mở/đóng app
+**Để** cảm nhận sự hào hứng và biết còn bao lâu nữa trước mốc tiếp theo
 
 #### Kịch bản chấp nhận
 
-**Kịch bản 1: Đếm ngược đang chạy**
-- Cho: Ngày sự kiện còn trong tương lai
-- Khi: Màn hình Home đang hiển thị
-- Thì: Bộ đếm ngược hiển thị DAYS, HOURS, MINUTES và cập nhật thời gian thực
+**Kịch bản 1: Khởi tạo lần đầu**
+- Cho: Người dùng mở app lần đầu (chưa có dữ liệu countdown lưu sẵn)
+- Khi: Màn hình Home được tải
+- Thì: Khởi tạo `countdownEndTime = now + 20 ngày` và lưu vào storage cục bộ (SharedPreferences), hiển thị DAYS/HOURS/MINUTES tương ứng
 
-**Kịch bản 2: Đến ngày sự kiện**
-- Cho: Thời gian hiện tại đã qua ngày sự kiện
-- Khi: Bộ đếm ngược về 0
-- Thì: Hiển thị "00 / 00 / 00" (hardcode cố định, không cần xử lý trạng thái đặc biệt)
+**Kịch bản 2: Đếm ngược đang chạy**
+- Cho: Storage đã có `countdownEndTime` trong tương lai
+- Khi: Màn hình Home đang hiển thị
+- Thì: Bộ đếm ngược tính `countdownEndTime - now` và cập nhật DAYS/HOURS/MINUTES mỗi giây theo thời gian thực
+
+**Kịch bản 3: Kill app và mở lại**
+- Cho: App đã bị kill ở trạng thái đếm ngược (ví dụ còn 12 ngày 05 giờ 30 phút)
+- Khi: Người dùng mở lại app
+- Thì: Đọc `countdownEndTime` từ storage, tính lại `countdownEndTime - now` và tiếp tục đếm từ giá trị đúng (không reset, không bị "đóng băng" theo thời gian app không chạy)
+
+**Kịch bản 4: Reset khi về 0**
+- Cho: `countdownEndTime <= now` (bộ đếm ngược đã về 0 hoặc qua hạn, có thể xảy ra khi đang mở app hoặc khi mở lại app sau nhiều ngày)
+- Khi: ViewModel phát hiện `remaining <= 0`
+- Thì: Tự động gán lại `countdownEndTime = now + 20 ngày`, ghi đè vào storage và bắt đầu chu kỳ đếm ngược 20 ngày mới (không hiển thị trạng thái "00 / 00 / 00" kéo dài)
+
+**Kịch bản 5: Format chữ số 2 digit cố định**
+- Cho: Giá trị DAYS/HOURS/MINUTES có thể trong khoảng 0–99
+- Khi: Render các ô số countdown
+- Thì: Luôn padLeft về đúng 2 chữ số (ví dụ `03` thay vì `3`). DAYS tối đa 20 nên không vượt 2 chữ số; HOURS (0–23), MINUTES (0–59) đều vừa 2 chữ số.
+
+**Kịch bản 6: Label "Coming soon"**
+- Cho: Khối countdown được render
+- Khi: Bất kỳ trạng thái nào (chạy bình thường, sau khi reset)
+- Thì: Hiển thị label tĩnh "Coming soon" (i18n key `t.home.comingSoon`) ở phía trên bộ đếm — không thay đổi theo giá trị countdown
+
+**Kịch bản 7: Thiết bị đổi giờ hệ thống (clock tampering)**
+- Cho: Người dùng chỉnh `DateTime.now()` của thiết bị tiến/lùi
+- Khi: ViewModel tính `remaining = endTime - DateTime.now()`
+- Thì:
+  - Nếu giờ bị đẩy **lùi**: countdown có thể hiển thị tăng lên (≤ 20 ngày) — KHÔNG xử lý đặc biệt, chấp nhận behavior này (app không phải ứng dụng bảo mật giờ)
+  - Nếu giờ bị đẩy **tiến** vượt `endTime`: kích hoạt Kịch bản 4 (auto reset 20 ngày)
+
+> **Ghi chú kỹ thuật:**
+> - Persist bằng `SharedPreferences` với key `home_countdown_end_time`, giá trị ISO-8601 string (ví dụ `"2026-05-07T10:30:00.000Z"`) dùng `DateTime.toIso8601String()` / `DateTime.parse()` để tránh lệch timezone.
+> - Dùng `Timer.periodic(Duration(seconds: 1))` làm **nguồn tick** để re-build UI; bên trong mỗi tick PHẢI tính `endTime.difference(DateTime.now())` chứ KHÔNG được giảm counter cục bộ — tránh lệch khi app bị tạm dừng (background/suspended).
+> - Khi widget `dispose`, PHẢI `cancel()` Timer để tránh memory leak.
 
 ---
 
@@ -310,7 +344,7 @@ SAA 2025 là lễ trao giải thường niên dành cho nhân viên Sun*. Màn h
 - Mọi phần tử tương tác phải có vùng nhấn đủ lớn (tối thiểu 44×44 dp)
 - Tỉ lệ tương phản text phải đạt WCAG 2.1 AA (vàng trên nền tối đạt yêu cầu)
 - Label screen reader cho các nút chỉ có icon (tìm kiếm, thông báo, icon FAB)
-- Bộ đếm ngược nên thông báo cập nhật cho công nghệ hỗ trợ theo chu kỳ (không mỗi giây)
+- Bộ đếm ngược: KHÔNG announce cho screen reader mỗi giây (tránh spam). Chỉ announce khi phút (MINUTES) thay đổi — dùng `Semantics(liveRegion: true)` trên khối MINUTES. DAYS/HOURS có thể không cần announce liên tục, chỉ đọc khi user focus thủ công.
 
 ---
 
@@ -325,16 +359,26 @@ Không có — Màn hình Home chỉ hiển thị và điều hướng.
 |--------|-------|------|---------|
 | Ảnh nền hero (Key Visual) | Asset tĩnh (bundled) | Image | `Assets.images.keyVisualBg` — background hero, gradient overlay |
 | Logo chủ đề sự kiện | Asset tĩnh | Image | `Assets.images.rootFurtherLogo` — branding "ROOT FURTHER" |
-| Ngày sự kiện | API | DateTime | Định dạng: dd/MM/yyyy |
+| Ngày sự kiện | API | DateTime | Định dạng: dd/MM/yyyy (chỉ để hiển thị "Event Date", KHÔNG dùng cho countdown) |
 | Địa điểm sự kiện | API | String | Tên địa điểm |
 | Thông tin livestream | API | String | Text tĩnh, KHÔNG nhấn được (chỉ hiển thị, không link) |
-| Bộ đếm ngược | Tính toán | Days/Hours/Minutes | Thời gian thực từ ngày sự kiện |
-| Mô tả chủ đề | API / Tĩnh | String | Đoạn text dài về Root Further |
+| Bộ đếm ngược | Storage cục bộ (SharedPreferences) | Days/Hours/Minutes | Tính từ `countdownEndTime - now`, chu kỳ 20 ngày, tự reset khi về 0 |
+| Mô tả chủ đề | API (`/event/info?locale={vi\|en}`) | String | `themeDescription` — đoạn text dài về Root Further, đa ngôn ngữ theo locale |
 | Danh mục giải thưởng | API | List\<Award\> | name, image, description |
 | Thông tin phần Kudos | API / Tĩnh | Object | banner, title, description |
 | Số thông báo | API | Integer | Số chưa đọc cho badge |
 
-### 4.3 Data Models (Dự kiến)
+### 4.3 Storage Schema (Persistence cục bộ)
+
+| Key | Loại | Type | Mục đích | Khởi tạo / Reset |
+|-----|------|------|----------|------------------|
+| `home_countdown_end_time` | `SharedPreferences` | `String` (ISO-8601 DateTime) | Thời điểm kết thúc chu kỳ đếm ngược 20 ngày | Tạo lần đầu khi mount Home và chưa tồn tại. Ghi đè mỗi khi chu kỳ reset. **Clear khi user logout.** |
+
+> **Format**: `DateTime.toIso8601String()` khi ghi, `DateTime.parse()` khi đọc. Nếu giá trị đọc không parse được → xem như chưa tồn tại, tái khởi tạo.
+>
+> **Scope**: Per-session. Logout flow PHẢI gọi `prefs.remove('home_countdown_end_time')` để account kế tiếp (hoặc login lại) bắt đầu chu kỳ mới.
+
+### 4.4 Data Models (Dự kiến)
 
 ```dart
 // Thông tin sự kiện (sử dụng freezed theo constitution)
@@ -342,7 +386,7 @@ Không có — Màn hình Home chỉ hiển thị và điều hướng.
 class EventInfo with _$EventInfo {
   const factory EventInfo({
     required String themeName,
-    required DateTime eventDate,
+    required DateTime eventDate, // CHỈ để format hiển thị "Thời gian: dd/MM/yyyy" — KHÔNG dùng cho countdown (xem US2)
     required String venue,
     required String livestreamNote,
     required String themeDescription,
@@ -400,10 +444,16 @@ class KudosInfo with _$KudosInfo {
 ## 6. Quản lý State
 
 ### 6.1 State cục bộ (Component)
-- Giá trị bộ đếm ngược (days, hours, minutes) — cập nhật qua `Timer` mỗi giây
+- **Widget `CountdownTimerWidget` (StatefulWidget)** giữ:
+  - `countdownEndTime` (DateTime) đọc qua `CountdownRepository` / ViewModel khi `initState`. Nếu chưa có trong storage → gọi service khởi tạo `now + 20 ngày` và persist.
+  - `Timer.periodic(Duration(seconds: 1))` làm **nguồn tick** gọi `setState`; mỗi tick tính `endTime.difference(DateTime.now())` (KHÔNG decrement counter) → miễn nhiễm app suspension/background.
+  - Khi `remaining <= 0` → gọi service để reset (`endTime = now + 20d`, persist) rồi `setState` với giá trị mới.
+  - `dispose()` PHẢI cancel Timer.
 - Vị trí cuộn hiện tại (cho hiệu ứng opacity header) — `ScrollController`
 - Pull-to-refresh indicator state
 - Index tab nav dưới đang chọn
+
+> **Phân lớp (constitution compliance)**: Logic persist/read/reset countdown PHẢI nằm trong `CountdownRepository` (hoặc service tương đương) — widget chỉ gọi API của repository. Widget giữ tick Timer + render. Không truy cập `SharedPreferences` trực tiếp từ widget.
 
 ### 6.2 State toàn cục (Riverpod Providers)
 - `homeViewModelProvider` — `AsyncNotifierProvider<HomeViewModel, HomeState>`:
@@ -414,11 +464,12 @@ class KudosInfo with _$KudosInfo {
 - `localeNotifierProvider` — `StateNotifierProvider<LocaleNotifier, Locale>` (shared)
 - `currentTabIndexProvider` — `StateProvider<int>` — Tab nav dưới đang chọn
 
-### 6.3 Yêu cầu Cache
+### 6.3 Yêu cầu Cache / Persistence
 - Thông tin sự kiện: Cache trong phiên (ít thay đổi)
 - Danh mục giải thưởng: Cache 5 phút (có thể cập nhật định kỳ)
 - Thông tin Kudos: Cache trong phiên
 - Số thông báo: Làm mới khi focus màn hình / pull-to-refresh
+- **Countdown endTime**: Persist per-session trong `SharedPreferences` với key `home_countdown_end_time` (giá trị ISO-8601 string). Được rehydrate mỗi lần màn hình Home mount; được ghi lại khi reset (về 0) hoặc khi khởi tạo lần đầu. **PHẢI được xóa (`prefs.remove`) trong logout flow** để account kế tiếp bắt đầu chu kỳ 20 ngày mới.
 
 ---
 
@@ -448,9 +499,9 @@ Màn hình Home
 
 | Nguyên tắc | Tuân thủ |
 |------------|----------|
-| I. Kiến trúc MVVM | ViewModel xử lý API calls, logic đếm ngược. Screen chỉ render UI. |
+| I. Kiến trúc MVVM | `HomeViewModel` xử lý API calls (event/awards/kudos/notifications). `CountdownRepository` (tách riêng) xử lý đọc/ghi/reset `countdownEndTime` qua `SharedPreferences`. `CountdownTimerWidget` (StatefulWidget) chỉ giữ Timer tick + gọi repository API. Screen chỉ render UI. |
 | II. Clean Code | Widget nhỏ, không hardcode (theme colors, i18n cho text). Asset paths qua flutter_gen (`Assets.xxx`), không hardcode string. |
-| III. Test-First | Unit tests cho logic đếm ngược, viewmodel. Widget tests cho tương tác chính. |
+| III. Test-First | Unit tests `CountdownRepository` cover: (a) load/save `countdownEndTime` qua `SharedPreferences` (dùng `SharedPreferences.setMockInitialValues`), (b) khởi tạo lần đầu khi storage rỗng, (c) parse lỗi → tái khởi tạo, (d) auto-reset khi endTime ≤ now, (e) clear key khi logout. Unit tests cho logic tick: tính `remaining` đúng khi endTime tương lai, clock tampering (giờ bị đẩy tiến/lùi). Widget tests cover render countdown, label "Coming soon", tap CTA. ViewModel tests cho 4 API + locale reload. |
 | IV. Chất lượng Code | Lint rules, format, không dùng deprecated APIs. |
 | V. Dependencies | Chỉ dùng packages đã duyệt (Riverpod, go_router, freezed, dio). |
 
@@ -460,7 +511,7 @@ Màn hình Home
 
 | # | Câu hỏi | Quyết định |
 |---|---------|-----------|
-| 1 | Hành vi khi hết đếm ngược | Hardcode cố định, không cần xử lý trạng thái hết hạn |
+| 1 | Hành vi bộ đếm ngược | Đếm ngược cố định 20 ngày. Thời điểm kết thúc (`countdownEndTime`) được lưu trong SharedPreferences; kill/mở lại app vẫn đếm tiếp đúng. Khi về 0 thì auto reset lại 20 ngày (ghi đè `countdownEndTime = now + 20d`). Không liên quan tới ngày sự kiện từ API. |
 | 2 | Feature flag Kudos | Dựa vào backend — gọi API kiểm tra, nếu không có thì ẩn section |
 | 3 | Số lượng danh mục giải | Hardcode 6 giải (Top Talent, Top Project, Top Project Leader, Best Manager, MVP, Signature 2025 Creator) |
 | 4 | Link livestream | Không nhấn được — chỉ hiển thị text tĩnh |
@@ -468,3 +519,6 @@ Màn hình Home
 | 6 | Ngôn ngữ hỗ trợ | 2 ngôn ngữ: VN và EN (sử dụng slang) |
 | 7 | Hero image source | Asset tĩnh đóng gói trong app (không tải từ API) |
 | 8 | Asset referencing | Sử dụng flutter_gen type-safe access (`Assets.xxx`), không hardcode path string (constitution v1.3.0) |
+| 9 | Label "Coming soon" trên countdown | Giữ nguyên text "Coming soon" ở cả VN và EN (không dịch). Key i18n có thể vẫn là `t.home.comingSoon` nhưng cùng value cho 2 locale. |
+| 10 | Manual reset countdown (debug/QA) | KHÔNG cần — chỉ dựa vào cơ chế reset tự nhiên (về 0) hoặc xóa app/clear app data để test. |
+| 11 | Countdown persistence scope | Per-session (tied to auth). Khi user logout → PHẢI clear key `home_countdown_end_time` khỏi SharedPreferences. Khi user login lại (cùng hoặc khác account) và mount Home lần đầu → khởi tạo mới `now + 20 ngày`. |
